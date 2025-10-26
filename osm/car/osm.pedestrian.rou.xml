@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-10-26 14:34:28.530634 by osmWebWizard.py v1_24_0+0000-b72eb3fabc8
+<configuration>
+    <net-file value="C:\Program Files (x86)\Eclipse\Sumo\tools\2025-10-26-14-34-17\osm.net.xml.gz"/>
+    <output-trip-file value="C:\Program Files (x86)\Eclipse\Sumo\tools\2025-10-26-14-34-17\osm.pedestrian.trips.xml"/>
+    <route-file value="C:\Program Files (x86)\Eclipse\Sumo\tools\2025-10-26-14-34-17\osm.pedestrian.rou.xml"/>
+    <pedestrians value="True"/>
+    <prefix value="ped"/>
+    <vehicle-class value="pedestrian"/>
+    <fringe-factor value="1"/>
+    <seed value="46"/>
+    <max-distance value="2000.0"/>
+    <insertion-density value="10.0"/>
+</configuration>
+-->
+
+<!-- generated on 2025-10-26 14:34:28 by Eclipse SUMO duarouter Version 1.24.0
+<duarouterConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
+
+    <input>
+        <net-file value="C:\Program Files (x86)\Eclipse\Sumo\tools\2025-10-26-14-34-17\osm.net.xml.gz"/>
+        <route-files value="C:\Program Files (x86)\Eclipse\Sumo\tools\2025-10-26-14-34-17\osm.pedestrian.trips.xml"/>
+    </input>
+
+    <output>
+        <output-file value="C:\Program Files (x86)\Eclipse\Sumo\tools\2025-10-26-14-34-17\osm.pedestrian.rou.xml"/>
+        <alternatives-output value="NUL"/>
+    </output>
+
+    <time>
+        <begin value="0.0"/>
+        <end value="3600.0"/>
+    </time>
+
+    <report>
+        <no-warnings value="true"/>
+        <ignore-errors value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+</duarouterConfiguration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+</routes>
