@@ -1,0 +1,2 @@
+- Press 'F10' and switch lefthand to True
+- Press 'F9' and load XML decals called demo_decals.xml
