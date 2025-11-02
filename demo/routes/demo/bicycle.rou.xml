@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-11-02 21:16:17.908520 by randomTrips.py v1_24_0+0000-b72eb3fabc8
+<configuration>
+    <net-file value="../networks/demo.net.xml"/>
+    <output-trip-file value="../routes/demo/bicycle.trips.xml"/>
+    <route-file value="../routes/demo/bicycle.rou.xml"/>
+    <prefix value="bicycle"/>
+    <vehicle-class value="bicycle"/>
+    <fringe-factor value="max"/>
+    <end value="100.0"/>
+    <period value="10.0"/>
+</configuration>
+-->
+
+<!-- generated on 2025-11-02 21:16:17 by Eclipse SUMO duarouter Version 1.24.0
+<duarouterConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
+
+    <input>
+        <net-file value="../networks/demo.net.xml"/>
+        <route-files value="../routes/demo/bicycle.trips.xml"/>
+    </input>
+
+    <output>
+        <output-file value="../routes/demo/bicycle.rou.xml"/>
+        <alternatives-output value="NUL"/>
+    </output>
+
+    <time>
+        <begin value="0"/>
+        <end value="100.0"/>
+    </time>
+
+    <report>
+        <no-warnings value="true"/>
+        <ignore-errors value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+</duarouterConfiguration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vType id="bicycle_bicycle" vClass="bicycle"/>
+    <vehicle id="bicycle0" type="bicycle_bicycle" depart="0.00">
+        <route edges="GowSt_2_1 TorPl_1_2 BynPl_1_1 BynPl_1_2 BynPl_1_3 GorSq_1_2 GorSq_1_3"/>
+    </vehicle>
+    <vehicle id="bicycle1" type="bicycle_bicycle" depart="10.00">
+        <route edges="GorSq_2_1 GorSq_2_2 GorSq_2_3"/>
+    </vehicle>
+    <vehicle id="bicycle2" type="bicycle_bicycle" depart="20.00">
+        <route edges="MalSt_2_1 TorPl_2_1 TorPl_1_2 MalSt_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle3" type="bicycle_bicycle" depart="30.00">
+        <route edges="TorPl_1_1 TorPl_1_2 BynPl_1_1 BynPl_1_2 BynPl_1_3 GorSq_1_2 GorSq_1_3"/>
+    </vehicle>
+    <vehicle id="bicycle4" type="bicycle_bicycle" depart="40.00">
+        <route edges="GowSt_1_1 TorPl_1_2 BynPl_1_1 BynPl_1_2 BynPl_1_3 GorSq_1_2 GorSq_1_3"/>
+    </vehicle>
+    <vehicle id="bicycle5" type="bicycle_bicycle" depart="50.00">
+        <route edges="GorSq_2_1 GorSq_2_2 BynPl_2_1 BynPl_2_2 BynPl_2_3 TorPl_2_1 GowSt_2_2"/>
+    </vehicle>
+    <vehicle id="bicycle6" type="bicycle_bicycle" depart="60.00">
+        <route edges="GorSq_1_1 BynPl_2_1 BynPl_2_2 BynPl_2_3 BynPl_1_1 BynPl_1_2 BynPl_1_3 GorSq_2_3"/>
+    </vehicle>
+    <vehicle id="bicycle7" type="bicycle_bicycle" depart="70.00">
+        <route edges="GowSt_2_1 GowSt_2_2"/>
+    </vehicle>
+    <vehicle id="bicycle8" type="bicycle_bicycle" depart="80.00">
+        <route edges="GorSq_2_1 GorSq_2_2 BynPl_2_1 BynPl_2_2 BynPl_2_3 TorPl_2_1 GowSt_2_2"/>
+    </vehicle>
+    <vehicle id="bicycle9" type="bicycle_bicycle" depart="90.00">
+        <route edges="MalSt_2_1 BynPl_1_1 BynPl_1_2 BynPl_1_3 GorSq_1_2 GorSq_1_3"/>
+    </vehicle>
+</routes>

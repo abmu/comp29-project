@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-11-02 21:16:17.781096 by randomTrips.py v1_24_0+0000-b72eb3fabc8
+<configuration>
+    <net-file value="../networks/demo.net.xml"/>
+    <output-trip-file value="../routes/demo/bicycle.trips.xml"/>
+    <route-file value="../routes/demo/bicycle.rou.xml"/>
+    <prefix value="bicycle"/>
+    <vehicle-class value="bicycle"/>
+    <fringe-factor value="max"/>
+    <end value="100.0"/>
+    <period value="10.0"/>
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vType id="bicycle_bicycle" vClass="bicycle"/>
+    <trip id="bicycle0" depart="0.00" from="GowSt_2_1" to="GorSq_1_3" type="bicycle_bicycle"/>
+    <trip id="bicycle1" depart="10.00" from="GorSq_2_1" to="GorSq_2_3" type="bicycle_bicycle"/>
+    <trip id="bicycle2" depart="20.00" from="MalSt_2_1" to="MalSt_1_1" type="bicycle_bicycle"/>
+    <trip id="bicycle3" depart="30.00" from="TorPl_1_1" to="GorSq_1_3" type="bicycle_bicycle"/>
+    <trip id="bicycle4" depart="40.00" from="GowSt_1_1" to="GorSq_1_3" type="bicycle_bicycle"/>
+    <trip id="bicycle5" depart="50.00" from="GorSq_2_1" to="GowSt_2_2" type="bicycle_bicycle"/>
+    <trip id="bicycle6" depart="60.00" from="GorSq_1_1" to="GorSq_2_3" type="bicycle_bicycle"/>
+    <trip id="bicycle7" depart="70.00" from="GowSt_2_1" to="GowSt_2_2" type="bicycle_bicycle"/>
+    <trip id="bicycle8" depart="80.00" from="GorSq_2_1" to="GowSt_2_2" type="bicycle_bicycle"/>
+    <trip id="bicycle9" depart="90.00" from="MalSt_2_1" to="GorSq_1_3" type="bicycle_bicycle"/>
+</routes>

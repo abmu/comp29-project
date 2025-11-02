@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-11-02 21:16:17.517813 by randomTrips.py v1_24_0+0000-b72eb3fabc8
+<configuration>
+    <net-file value="../networks/demo.net.xml"/>
+    <output-trip-file value="../routes/demo/car.trips.xml"/>
+    <route-file value="../routes/demo/car.rou.xml"/>
+    <prefix value="car"/>
+    <fringe-factor value="max"/>
+    <end value="100.0"/>
+    <period value="5.0"/>
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <trip id="car0" depart="0.00" from="GowSt_2_1" to="GorSq_1_3"/>
+    <trip id="car1" depart="5.00" from="GowSt_1_1" to="GorSq_2_3"/>
+    <trip id="car2" depart="10.00" from="MalSt_2_1" to="GorSq_1_3"/>
+    <trip id="car3" depart="15.00" from="GowSt_2_1" to="GorSq_1_3"/>
+    <trip id="car4" depart="20.00" from="GowSt_1_1" to="GowSt_1_2"/>
+    <trip id="car5" depart="25.00" from="GowSt_1_1" to="GorSq_1_3"/>
+    <trip id="car6" depart="30.00" from="GowSt_1_1" to="GowSt_1_2"/>
+    <trip id="car7" depart="35.00" from="MalSt_2_1" to="GorSq_1_3"/>
+    <trip id="car8" depart="40.00" from="GowSt_2_1" to="GorSq_1_3"/>
+    <trip id="car9" depart="45.00" from="MalSt_2_1" to="GorSq_2_3"/>
+    <trip id="car10" depart="50.00" from="GowSt_1_1" to="GorSq_1_3"/>
+    <trip id="car11" depart="55.00" from="GowSt_2_1" to="TorPl_2_2"/>
+    <trip id="car12" depart="60.00" from="MalSt_2_1" to="GorSq_1_3"/>
+    <trip id="car13" depart="65.00" from="GowSt_1_1" to="GorSq_2_3"/>
+    <trip id="car14" depart="70.00" from="GowSt_1_1" to="GorSq_2_3"/>
+    <trip id="car15" depart="75.00" from="GowSt_1_1" to="GorSq_2_3"/>
+    <trip id="car16" depart="80.00" from="GowSt_2_1" to="GorSq_2_3"/>
+    <trip id="car17" depart="85.00" from="GowSt_2_1" to="GorSq_2_3"/>
+    <trip id="car18" depart="90.00" from="GowSt_1_1" to="TorPl_2_2"/>
+    <trip id="car19" depart="95.00" from="GowSt_2_1" to="GowSt_2_2"/>
+</routes>

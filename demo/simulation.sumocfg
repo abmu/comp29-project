@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-11-02 13:53:05 by Eclipse SUMO GUI Version 1.24.0
--->
-
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
         <net-file value="networks/demo.net.xml"/>
-        <route-files value="routes/demo.rou.xml"/>
+        <route-files value="routes/demo/bicycle.rou.xml,routes/demo/car.rou.xml,routes/demo/pedestrian.rou.xml"/>
     </input>
+
+    <time>
+        <begin value="0"/>
+        <end value="3600"/>
+    </time>
+
+    <gui_only>
+        <gui-settings-file value="viewsettings.xml"/>
+    </gui_only>
 
 </sumoConfiguration>

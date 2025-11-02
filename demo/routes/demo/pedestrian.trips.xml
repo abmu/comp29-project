@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-11-02 21:16:18.164031 by randomTrips.py v1_24_0+0000-b72eb3fabc8
+<configuration>
+    <net-file value="../networks/demo.net.xml"/>
+    <output-trip-file value="../routes/demo/pedestrian.trips.xml"/>
+    <route-file value="../routes/demo/pedestrian.rou.xml"/>
+    <pedestrians value="True"/>
+    <prefix value="pedestrian"/>
+    <fringe-factor value="max"/>
+    <end value="100.0"/>
+    <period value="3.0"/>
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <person id="pedestrian0" depart="0.00">
+        <walk from="GowSt_2_1" to="GorSq_1_3"/>
+    </person>
+    <person id="pedestrian1" depart="3.00">
+        <walk from="GorSq_2_1" to="GorSq_2_3"/>
+    </person>
+    <person id="pedestrian2" depart="6.00">
+        <walk from="MalSt_2_1" to="MalSt_1_1"/>
+    </person>
+    <person id="pedestrian3" depart="9.00">
+        <walk from="TorPl_1_1" to="GorSq_1_3"/>
+    </person>
+    <person id="pedestrian4" depart="12.00">
+        <walk from="GowSt_1_1" to="GorSq_1_3"/>
+    </person>
+    <person id="pedestrian5" depart="15.00">
+        <walk from="GorSq_2_1" to="GowSt_2_2"/>
+    </person>
+    <person id="pedestrian6" depart="18.00">
+        <walk from="GorSq_1_1" to="GorSq_2_3"/>
+    </person>
+    <person id="pedestrian7" depart="21.00">
+        <walk from="GowSt_2_1" to="GowSt_2_2"/>
+    </person>
+    <person id="pedestrian8" depart="24.00">
+        <walk from="GorSq_2_1" to="GowSt_2_2"/>
+    </person>
+    <person id="pedestrian9" depart="27.00">
+        <walk from="MalSt_2_1" to="GorSq_1_3"/>
+    </person>
+    <person id="pedestrian10" depart="30.00">
+        <walk from="MalSt_2_1" to="MalSt_1_1"/>
+    </person>
+    <person id="pedestrian11" depart="33.00">
+        <walk from="GowSt_1_1" to="GorSq_1_3"/>
+    </person>
+    <person id="pedestrian12" depart="36.00">
+        <walk from="TorPl_1_1" to="GowSt_1_2"/>
+    </person>
+    <person id="pedestrian13" depart="39.00">
+        <walk from="GorSq_1_1" to="GorSq_1_3"/>
+    </person>
+    <person id="pedestrian14" depart="42.00">
+        <walk from="TorPl_1_1" to="GowSt_2_2"/>
+    </person>
+    <person id="pedestrian15" depart="45.00">
+        <walk from="MalSt_2_1" to="MalSt_1_1"/>
+    </person>
+    <person id="pedestrian16" depart="48.00">
+        <walk from="GowSt_2_1" to="TorPl_2_2"/>
+    </person>
+    <person id="pedestrian17" depart="51.00">
+        <walk from="GowSt_1_1" to="GowSt_2_2"/>
+    </person>
+    <person id="pedestrian18" depart="54.00">
+        <walk from="MalSt_2_1" to="GowSt_2_2"/>
+    </person>
+    <person id="pedestrian19" depart="57.00">
+        <walk from="TorPl_1_1" to="GowSt_2_2"/>
+    </person>
+    <person id="pedestrian20" depart="60.00">
+        <walk from="MalSt_2_1" to="GorSq_1_3"/>
+    </person>
+    <person id="pedestrian21" depart="63.00">
+        <walk from="GorSq_2_1" to="GorSq_2_3"/>
+    </person>
+    <person id="pedestrian22" depart="66.00">
+        <walk from="GorSq_1_1" to="GorSq_2_3"/>
+    </person>
+    <person id="pedestrian23" depart="69.00">
+        <walk from="GorSq_1_1" to="GorSq_2_3"/>
+    </person>
+    <person id="pedestrian24" depart="72.00">
+        <walk from="GowSt_2_1" to="GowSt_1_2"/>
+    </person>
+    <person id="pedestrian25" depart="75.00">
+        <walk from="GowSt_1_1" to="GorSq_2_3"/>
+    </person>
+    <person id="pedestrian26" depart="78.00">
+        <walk from="GorSq_2_1" to="TorPl_2_2"/>
+    </person>
+    <person id="pedestrian27" depart="81.00">
+        <walk from="GowSt_2_1" to="GowSt_2_2"/>
+    </person>
+    <person id="pedestrian28" depart="84.00">
+        <walk from="GorSq_2_1" to="MalSt_1_1"/>
+    </person>
+    <person id="pedestrian29" depart="87.00">
+        <walk from="GorSq_1_1" to="GowSt_1_2"/>
+    </person>
+    <person id="pedestrian30" depart="90.00">
+        <walk from="TorPl_1_1" to="GowSt_2_2"/>
+    </person>
+    <person id="pedestrian31" depart="93.00">
+        <walk from="GowSt_2_1" to="MalSt_1_1"/>
+    </person>
+    <person id="pedestrian32" depart="96.00">
+        <walk from="TorPl_1_1" to="MalSt_1_1"/>
+    </person>
+    <person id="pedestrian33" depart="99.00">
+        <walk from="GorSq_2_1" to="GorSq_1_3"/>
+    </person>
+</routes>
