@@ -7,7 +7,7 @@ NET_NAME = 'demo'
 DIR_PREFIX = '../'
 NETWORK = f'{DIR_PREFIX}networks/{NET_NAME}.net.xml'
 DURATION = '1000' # Seconds - for how long new entities should be spawned
-SEED = '42'
+SEED = '43'
 
 # Find default SUMO tools
 SUMO_HOME = os.environ.get('SUMO_HOME')
