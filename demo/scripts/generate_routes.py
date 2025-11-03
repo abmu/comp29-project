@@ -11,26 +11,15 @@ SEED = '42'
 
 # Find default SUMO tools
 SUMO_HOME = os.environ.get('SUMO_HOME')
-TOOLS = os.path.join(SUMO_HOME, 'tools')
+if not SUMO_HOME:
+    raise EnvironmentError('SUMO_HOME is not set.')
 
-if not SUMO_HOME or not os.path.exists(TOOLS):
-    raise EnvironmentError('SUMO_HOME is not set, or SUMO tools not found.')
+TOOLS = os.path.join(SUMO_HOME, 'tools')
+if not os.path.exists(TOOLS):
+    raise FileNotFoundError('SUMO tools not found.')
 
 # Create directory in routes folder
 Path(f'{DIR_PREFIX}routes/{NET_NAME}/').mkdir(exist_ok=True)
-
-
-
-
-# POISSSON
-
-# RANDOM DEPART
-
-# ADD EXTRA PEDESTRIAN WALK PATH GOING INTO/FROM SCHOOL BUILDING AND PARKS
-
-
-
-
 
 vehicles = [
     {
@@ -39,6 +28,7 @@ vehicles = [
             '-n', NETWORK,
             '-e', DURATION,
             '-p', '5',
+            '--poisson',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/car.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/car.rou.xml',
             '--fringe-factor', 'max', # ensure the vehicles only spawn from the very edges, rather than the middle of the road
@@ -52,6 +42,7 @@ vehicles = [
             '-n', NETWORK,
             '-e', DURATION,
             '-p', '10',
+            '--poisson',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/bicycle.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/bicycle.rou.xml',
             '--fringe-factor', 'max',
@@ -66,6 +57,7 @@ vehicles = [
             '-n', NETWORK,
             '-e', DURATION,
             '-p', '3',
+            '--poisson',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/pedestrian.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/pedestrian.rou.xml',
             '--fringe-factor', 'max',
