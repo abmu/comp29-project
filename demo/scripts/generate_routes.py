@@ -1,7 +1,7 @@
 import os
-import subprocess
 import shutil
 from pathlib import Path
+from utils import run_command
 
 NET_NAME = 'demo'
 DIR_PREFIX = '../'
@@ -18,14 +18,6 @@ if not SUMO_HOME or not os.path.exists(TOOLS):
 
 # Create directory in routes folder
 Path(f'{DIR_PREFIX}routes/{NET_NAME}/').mkdir(exist_ok=True)
-
-
-def run_command(cmd: list[str]) -> None:
-    '''Run command and stream its output'''
-    print(f'Running > {" ".join(cmd)}')
-    res = subprocess.run(cmd, text=True)
-    if res.returncode != 0:
-        raise RuntimeError(f'Command failed: {" ".join(cmd)}')
 
 
 
@@ -89,5 +81,6 @@ for v in vehicles:
     random_trip = os.path.join(TOOLS, 'randomTrips.py')
     duarouter = shutil.which('duarouter')
 
-    # generate trip (Start A ==> Finish B) and route (Start A -> 1 -> 2 -> ... -> n -> Finish B)
+    # generate trip and route
+    # NB: a trip defines a random start A and end B, whereas a route defines the exact edges to traverse to get from that start A to end B
     run_command(['python', random_trip] + v['args'])
