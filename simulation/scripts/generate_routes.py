@@ -18,6 +18,8 @@ TOOLS = os.path.join(SUMO_HOME, 'tools')
 if not os.path.exists(TOOLS):
     raise FileNotFoundError('SUMO tools not found.')
 
+random_trip = os.path.join(TOOLS, 'randomTrips.py')
+
 # Create directory in routes folder
 Path(f'{DIR_PREFIX}routes/{NET_NAME}/').mkdir(exist_ok=True)
 
@@ -70,8 +72,6 @@ vehicles = [
 
 for v in vehicles:
     print(f'Generating {v["name"]} trips')
-    random_trip = os.path.join(TOOLS, 'randomTrips.py')
-    duarouter = shutil.which('duarouter')
 
     # generate trip and route
     # NB: a trip defines a random start A and end B, whereas a route defines the exact edges to traverse to get from that start A to end B

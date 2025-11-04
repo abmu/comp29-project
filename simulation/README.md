@@ -1,0 +1,26 @@
+# SUMO Environment
+
+## Usage
+To generate new entity routes, change into the `scripts/` folder, adjust the `generate_routes.py` file as necessary, and then run it:
+```
+cd .\scripts\
+python .\generate_routes.py
+```
+
+To run the simulation, go to the local root directory, and run the following:
+```
+sumo-gui .\simulation.sumocfg
+```
+
+
+## Network Guide
+Lanes names:
+- (Street Name)\_(Lane Number)\_(Segment Number)
+
+Junction names: 
+- EJ\_(X) -> End Junction X
+- CJ\_(Y) -> Connecting Junction Y
+
+
+## Dependencies
+Before you begin, ensure you have Simulation of Urban MObility (SUMO) installed.
