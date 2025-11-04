@@ -21,6 +21,9 @@ Junction names:
 - EJ\_(X) -> End Junction X
 - CJ\_(Y) -> Connecting Junction Y
 
+Detector names:
+- CJ\_(Y)\_(N/E/S/W)B_(Z) -> Connecting Junction Y, N/E/S/W Bound Lane Z
+
 
 ## Dependencies
 Before you begin, ensure you have Simulation of Urban MObility (SUMO) installed.
