@@ -13,10 +13,15 @@ from reward import get_reward
 
 traci.start(SUMO_CONFIG)
 
+total_reward = 0
+
 for step in range(TOTAL_STEPS):
     traci.simulationStep()
+    
     state = get_state(tls_id, detector_ids, crossing_ids)
     reward = get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
+    total_reward += reward
+
     print(f'Step: {step}, State: {state}, Reward: {reward}')
 
 traci.close()

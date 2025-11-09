@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
 
-def discretize(xs: int, thresholds: tuple[int] = (0, 2, 5, 10)) -> int:
+def _discretize(xs: int, thresholds: tuple[int] = (0, 2, 5, 10)) -> int:
     # discretize value to a value between 0-3
     ys = [-1] * len(xs)
     for i, x in enumerate(xs):
@@ -22,7 +22,7 @@ def discretize(xs: int, thresholds: tuple[int] = (0, 2, 5, 10)) -> int:
     return ys
 
 
-def _get_current_tls_phase(tls_id: str) -> str:
+def get_current_tls_phase(tls_id: str) -> str:
     # get the current phase of the default traffic light system (8 phases => 3-3-2)
     return traci.trafficlight.getPhase(tls_id)
 
@@ -30,16 +30,6 @@ def _get_current_tls_phase(tls_id: str) -> str:
 def _get_waiting_vehicles(detector_id: str) -> int:
     # get number of cars/bicycles (up to detector limit) waiting in the lane
     return traci.lanearea.getLastStepVehicleNumber(detector_id)
-
-
-def _get_waiting_peds(crossing_id: str, waiting_edge_ids: tuple[str, str]) -> int:
-    # get number of pedestrians waiting to use a crossing 
-    possible_peds = traci.edge.getLastStepPersonIDs(waiting_edge_ids[0]) + traci.edge.getLastStepPersonIDs(waiting_edge_ids[1])
-    count = 0
-    for ped in possible_peds:
-        if traci.person.getNextEdge(ped) == crossing_id:
-            count += 1
-    return count
 
 
 def get_all_waiting_vehicles(detectors: list[list[str]]) -> list[int]:
@@ -53,6 +43,16 @@ def get_all_waiting_vehicles(detectors: list[list[str]]) -> list[int]:
     return waiting_vehicles
 
 
+def _get_waiting_peds(crossing_id: str, waiting_edge_ids: tuple[str, str]) -> int:
+    # get number of pedestrians waiting to use a crossing 
+    possible_peds = traci.edge.getLastStepPersonIDs(waiting_edge_ids[0]) + traci.edge.getLastStepPersonIDs(waiting_edge_ids[1])
+    count = 0
+    for ped in possible_peds:
+        if traci.person.getNextEdge(ped) == crossing_id:
+            count += 1
+    return count
+
+
 def get_all_waiting_peds(crossings: list[tuple[str, str, str]]) -> list[int]:
     # return the number of waiting pedestrians at the specified crossings
     waiting_peds = []
@@ -64,7 +64,7 @@ def get_all_waiting_peds(crossings: list[tuple[str, str, str]]) -> list[int]:
 
 def get_state(tls: str, detectors: list[list[str]], crossings: list[tuple[str, str, str]]) -> tuple[int, ...]:
     # get current phase of traffic light system
-    tls_phase = _get_current_tls_phase(tls)
+    tls_phase = get_current_tls_phase(tls)
 
     # get number of vehicles waiting in each queue
     waiting_vehicles = get_all_waiting_vehicles(detectors)
@@ -73,7 +73,7 @@ def get_state(tls: str, detectors: list[list[str]], crossings: list[tuple[str, s
     waiting_peds = get_all_waiting_peds(crossings)
 
     # discretize to limit number of distinct values/combinations
-    waiting_vehicles = discretize(waiting_vehicles)
-    waiting_peds = discretize(waiting_peds)
+    waiting_vehicles = _discretize(waiting_vehicles)
+    waiting_peds = _discretize(waiting_peds)
 
     return (tls_phase, ) + tuple(waiting_vehicles) + tuple(waiting_peds)
