@@ -11,11 +11,6 @@
         <additional-files value="networks/demo/detectors.add.xml"/>
     </input>
 
-    <time>
-        <begin value="0"/>
-        <end value="3600"/>
-    </time>
-
     <gui_only>
         <gui-settings-file value="viewsettings.xml"/>
     </gui_only>
