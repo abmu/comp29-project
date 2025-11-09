@@ -1,13 +1,9 @@
 import os
 import shutil
 from pathlib import Path
+from settings import DIR_PREFIX, NET_NAME, SEED, DURATION
 from utils import run_command
 
-NET_NAME = 'demo'
-DIR_PREFIX = '../'
-NETWORK = f'{DIR_PREFIX}networks/{NET_NAME}/main.net.xml'
-DURATION = '3600' # Seconds - for how long new entities should be spawned
-SEED = '42'
 
 # Find default SUMO tools
 SUMO_HOME = os.environ.get('SUMO_HOME')
@@ -22,6 +18,9 @@ random_trip = os.path.join(TOOLS, 'randomTrips.py')
 
 # Create directory in routes folder
 Path(f'{DIR_PREFIX}routes/{NET_NAME}/').mkdir(exist_ok=True)
+
+# Configure commands for generating the routes
+NETWORK = f'{DIR_PREFIX}networks/{NET_NAME}/main.net.xml'
 
 vehicles = [
     {
@@ -70,9 +69,8 @@ vehicles = [
     }
 ]
 
+# generate trip and route
+# NB: a trip defines a random start A and end B, whereas a route defines the exact edges to traverse to get from that start A to end B
 for v in vehicles:
     print(f'Generating {v["name"]} trips')
-
-    # generate trip and route
-    # NB: a trip defines a random start A and end B, whereas a route defines the exact edges to traverse to get from that start A to end B
     run_command(['python', random_trip] + v['args'])
