@@ -7,9 +7,9 @@ sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
 
-# TODO: Add following rewards
-# - Negative for total wait time for both pedestrians and vehicles
-# - Negative for excessive phase switching
+# TODO
+# Improve reward system by adding the following:
+# - negative for total wait time for both pedestrians and vehicles
 
 
 def get_reward(waiting_vehicles: list[int], waiting_peds: list[int]) -> float:

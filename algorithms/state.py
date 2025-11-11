@@ -7,18 +7,24 @@ sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
 
-def _discretize(xs: int, thresholds: tuple[int] = (0, 2, 5, 10)) -> int:
+# TODO
+# Add option for more simplified state, and more detailed state
+# - simplifying state further by combining 4 pedestrians into one, combine north and south bound, combine east and west bound
+# - add option to display full state with distinction between cars and bicycles, and direction of pedestrians crossing
+
+
+def _discretize(xs: list[int], thresholds: tuple[int] = (0, 2, 5)) -> list[int]:
     # discretize value to a value between 0-3
     ys = [-1] * len(xs)
     for i, x in enumerate(xs):
         if x <= thresholds[0]:
-            ys[i] = 0
+            ys[i] = 0 # zero
         elif x <= thresholds[1]:
-            ys[i] = 1
+            ys[i] = 1 # low
         elif x <= thresholds[2]:
-            ys[i] = 2
+            ys[i] = 2 # moderate
         else:
-            ys[i] = 3
+            ys[i] = 3 # high
     return ys
 
 
