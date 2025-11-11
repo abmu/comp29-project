@@ -13,10 +13,10 @@ from utils import ceil
 # for reference, the 8 traffic light phases defined in 'main.net.xml'
 tls_logic = """
 <tlLogic id="CJ_1" type="static" programID="0" offset="0">
-    <phase duration="30" state="gGggGgrrrrgGggGgrrrrrrrr"/>
+    <phase duration="30" state="GGgGGgrrrrGGgGGgrrrrrrrr"/>
     <phase duration="3"  state="yyyyyyrrrryyyyyyrrrrrrrr"/>
     <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
-    <phase duration="30" state="rrrrrrgGggrrrrrrgGggrrrr"/>
+    <phase duration="30" state="rrrrrrGGggrrrrrrGGggrrrr"/>
     <phase duration="3"  state="rrrrrryyyyrrrrrryyyyrrrr"/>
     <phase duration="2"  state="rrrrrrrrrrrrrrrrrrrrrrrr"/>
     <phase duration="10" state="rrrrrrrrrrrrrrrrrrrrGGGG"/>

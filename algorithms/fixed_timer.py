@@ -14,6 +14,8 @@ from reward import get_reward
 
 traci.start(SUMO_CONFIG)
 
+total_reward = 0
+
 action_loop = [0,0,0,3,3,3,6]
 prev_idx = None
 curr_idx = 0
@@ -29,7 +31,11 @@ while step < TOTAL_STEPS:
     curr_idx = (curr_idx + 1) % len(action_loop)
 
     state = get_state(tls_id, detector_ids, crossing_ids)
+    reward = get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
+    total_reward += reward
 
-    print(f'Step: {step}, State: {state}')
+    print(f'Step: {step}, State: {state}, Reward: {reward}')
+
+print(f'Total Reward: {total_reward}')
 
 traci.close()
