@@ -13,13 +13,14 @@ from state import get_state, get_all_waiting_vehicles, get_all_waiting_peds
 from action import ACTION_SPACE, perform_action
 from reward import get_reward
 
+RANDOM_SEED = 42
+random.seed(RANDOM_SEED)
 
 # TODO
 #
 # REMINDER
 # FIX POISSION RANDOM TRIP GENERATION!!!
 #
-
 
 Q = {} # {(state, action): value}
 
@@ -39,11 +40,11 @@ def choose_action(state: tuple[int, ...]) -> int:
     # choose action using an epsilon-greedy policy
     if random.random() < EPSILON:
         # exploration - choose random action
-        return random.choice(ACTION_SPACE)
+        return random.choice(list(ACTION_SPACE.keys()))
     else:
         # exploitation - choose action with highest Q-value
         qs = [get_q(state, a) for a in ACTION_SPACE]
-        return ACTION_SPACE[np.argmax(qs)]
+        return list(ACTION_SPACE.keys())[np.argmax(qs)]
 
 
 def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...]) -> None:
@@ -53,22 +54,24 @@ def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tup
     Q[(state, action)] = old_q + ALPHA * (reward + GAMMA * best_next - old_q)
 
 
-total_reward = 0
-
 traci.start(SUMO_CONFIG)
 
-for step in range(TOTAL_STEPS):
-    state = get_state(tls_id, detector_ids, crossing_ids)
-    action = choose_action(state)
-    
-    ....duration = perform_action(tls_id, action)
+total_reward = 0
 
-    traci.simulationStep()
+prev_action = None
+
+step = 0
+while step < TOTAL_STEPS:
+    state = get_state(tls_id, detector_ids, crossing_ids)
+    curr_action = choose_action(state)
     
+    step = perform_action(tls_id, step, TOTAL_STEPS, curr_action, prev_action)
+
+    prev_action = curr_action
+
     next_state = get_state(tls_id, detector_ids, crossing_ids)
     reward = get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
-    update_q(state, action, reward, next_state)
-
+    update_q(state, curr_action, reward, next_state)
     total_reward += reward
 
     print(f'Step: {step}, State: {state}, Reward: {reward}')
