@@ -15,6 +15,7 @@ from reward import get_reward
 
 
 # TODO
+#
 # REMINDER
 # FIX POISSION RANDOM TRIP GENERATION!!!
 #
