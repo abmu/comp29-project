@@ -12,7 +12,7 @@ import traci
 # - add option to get full in-depth state with distinction between cars and bicycles, and direction of pedestrians crossing
 
 
-def _discretize(xs: list[int], thresholds: tuple[int] = (0, 2, 5)) -> list[int]:
+def _discretize(xs: list[int], thresholds: tuple[int] = (0, 5, 10)) -> list[int]:
     # discretize value to a value between 0-3
     ys = [-1] * len(xs)
     for i, x in enumerate(xs):

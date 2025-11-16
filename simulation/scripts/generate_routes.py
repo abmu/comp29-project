@@ -1,5 +1,7 @@
 import os
 import shutil
+import random
+import argparse
 from pathlib import Path
 from settings import DIR_PREFIX, NET_NAME, SEED, DURATION
 from utils import run_command
@@ -8,7 +10,7 @@ from utils import run_command
 # TODO
 # Make simulation and routes more accurate
 # - improve pedestrians accuracy by varying fringe-factor -- simulates pedestrians going into/out of buildings
-# - adjust weight of edges to make certain ones more likely to spawn vehicles, rather than random choice -- simulates commonly used/ main roads
+# - manually adjust weight of edges to make certain edges more likely to spawn, rather than random choice -- simulates commonly used/ main roads
 
 
 # Find default SUMO tools
@@ -22,6 +24,16 @@ if not os.path.exists(TOOLS):
 
 random_trip = os.path.join(TOOLS, 'randomTrips.py')
 
+# Parse arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('--seed', type=int, default=int(SEED))
+parser.add_argument('--car-density', type=float, default=1.0)
+parser.add_argument('--bicycle-density', type=float, default=1.0)
+parser.add_argument('--pedestrian-density', type=float, default=.10)
+args = parser.parse_args()
+
+random.seed(args.seed)
+
 # Create directory in routes folder
 Path(f'{DIR_PREFIX}routes/{NET_NAME}/').mkdir(exist_ok=True)
 
@@ -33,45 +45,48 @@ vehicles = [
         'name': 'car',
         'args': [
             '-n', NETWORK,
-            '-e', DURATION,
-            '-p', '5',
+            '-e', str(DURATION),
+            '-p', str(5 / args.car_density),
             '--binomial', '100',
             # '--insertion-density', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/car.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/car.rou.xml',
             '--fringe-factor', 'max', # ensure the vehicles only spawn from the very edges, rather than the middle of the road
+            '--random-factor', f'{random.uniform(1.0, 5.0)}', # randomise weight of edges
             '--prefix', 'car',
-            '--seed', SEED
+            '--seed', str(args.seed)
         ]
     },
     {
         'name': 'bicycle',
         'args': [
             '-n', NETWORK,
-            '-e', DURATION,
-            '-p', '10',
+            '-e', str(DURATION),
+            '-p', str(5 / args.bicycle_density),
             '--binomial', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/bicycle.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/bicycle.rou.xml',
             '--fringe-factor', 'max',
+            '--random-factor', f'{random.uniform(1.0, 5.0)}',
             '--prefix', 'bicycle',
             '--vehicle-class', 'bicycle',
-            '--seed', SEED
+            '--seed', str(args.seed)
         ]
     },
     {
         'name': 'pedestrian',
         'args': [
             '-n', NETWORK,
-            '-e', DURATION,
-            '-p', '3',
+            '-e', str(DURATION),
+            '-p', str(2 / args.pedestrian_density),
             '--binomial', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/pedestrian.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/pedestrian.rou.xml',
             # '--fringe-factor', 'max',
+            '--random-factor', f'{random.uniform(1.0, 5.0)}',
             '--prefix', 'pedestrian',
             '--pedestrians',
-            '--seed', SEED
+            '--seed', str(args.seed)
         ]
     }
 ]

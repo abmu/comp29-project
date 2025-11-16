@@ -8,19 +8,12 @@ import traci
 
 import numpy as np
 import random
-from settings import SUMO_CONFIG, TOTAL_STEPS, tls_id, detector_ids, crossing_ids
+from settings import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, detector_ids, crossing_ids
+from utils import generate_routes, file_dump
 from state import get_state, get_all_waiting_vehicles, get_all_waiting_peds
 from action import ACTION_SPACE, perform_action
 from reward import get_reward
 
-
-# TODO
-#
-# Generate new routes dynamically after each episode to ensure new training data and prevent overfitting, random weighted edges, random density
-
-
-RANDOM_SEED = 42
-random.seed(RANDOM_SEED)
 
 Q = {} # {(state, action): value}
 
@@ -30,6 +23,7 @@ GAMMA = 0.9 # discount factor
 EPSILON = 1.0 # exploration rate
 EPSILON_DECAY = 0.995
 EPSILON_MIN = 0.005
+
 EPISODES = 100
 
 
@@ -62,6 +56,15 @@ episode_rewards = []
 
 for episode in range(EPISODES):
 
+    # generate a new route
+    random.seed(SEED)
+    car_density = random.uniform(0.25, 4.0)
+    bicycle_density = random.uniform(0.25, 4.0)
+    pedestrian_density = random.uniform(0.25, 4.0)
+    generate_routes(SEED, car_density, bicycle_density, pedestrian_density)
+    SEED += 1
+
+    # run episode training
     total_reward = 0
     step = 0
     traci.start(SUMO_CONFIG)
@@ -85,6 +88,4 @@ for episode in range(EPISODES):
     EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 
     print(f'Episode: {episode + 1}, Total Reward: {total_reward}, Epsilon: {EPSILON}')
-
-with open('./q_learning.txt', 'w') as f:
-    f.write(str(episode_rewards) + '\n' + str(Q))
+    file_dump('./q_learning.txt', str(episode_rewards))
