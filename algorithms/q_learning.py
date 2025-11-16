@@ -16,9 +16,6 @@ from reward import get_reward
 
 # TODO
 #
-# REMINDER
-# FIX POISSION RANDOM TRIP GENERATION !!!
-#
 # Generate new routes dynamically after each episode to ensure new training data and prevent overfitting
 #
 # Automate training process by removing GUI
