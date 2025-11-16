@@ -16,11 +16,7 @@ from reward import get_reward
 
 # TODO
 #
-# Generate new routes dynamically after each episode to ensure new training data and prevent overfitting
-#
-# Reduce epsilon
-#
-# Create separate python package for the state, action, reward files
+# Generate new routes dynamically after each episode to ensure new training data and prevent overfitting, random weighted edges, random density
 
 
 RANDOM_SEED = 42
@@ -31,7 +27,9 @@ Q = {} # {(state, action): value}
 # Q-learning hyperparameters
 ALPHA = 0.1 # learning rate
 GAMMA = 0.9 # discount factor
-EPSILON = 0.2 # exploration rate
+EPSILON = 1.0 # exploration rate
+EPSILON_DECAY = 0.995
+EPSILON_MIN = 0.005
 EPISODES = 100
 
 
@@ -63,11 +61,11 @@ def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tup
 episode_rewards = []
 
 for episode in range(EPISODES):
-    traci.start(SUMO_CONFIG)
 
     total_reward = 0
-
     step = 0
+    traci.start(SUMO_CONFIG)
+
     while step < TOTAL_STEPS:
         state = get_state(tls_id, detector_ids, crossing_ids)
         action = choose_action(state)
@@ -76,16 +74,17 @@ for episode in range(EPISODES):
 
         next_state = get_state(tls_id, detector_ids, crossing_ids)
         reward = get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
-        update_q(state, action, reward, next_state)
         total_reward += reward
+        update_q(state, action, reward, next_state)
 
         print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
 
-    print(f'Episode: {episode + 1}, Total Reward: {total_reward}')
-    episode_rewards.append(total_reward)
-
     traci.close()
 
-print(f'Q-Table: {Q}, Episode Rewards: {episode_rewards}')
+    episode_rewards.append(total_reward)
+    EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
+
+    print(f'Episode: {episode + 1}, Total Reward: {total_reward}, Epsilon: {EPSILON}')
+
 with open('./q_learning.txt', 'w') as f:
-    f.write(str(Q) + '\n' + str(episode_rewards))
+    f.write(str(episode_rewards) + '\n' + str(Q))

@@ -7,14 +7,35 @@ sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
 
-# TODO
-# Improve reward system by adding the following:
-# - negative for total wait time for both pedestrians and vehicles
+def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[float]]) -> float:
+    # calculate reward -- penalize higher queue lengths, number of pedestrians waiting, and wait times
+    waiting_vehicles = [wait_time for vehicles in waiting_vehicles for wait_time in vehicles]
+    vehicles_count = len(waiting_vehicles)
+    vehicles_wait = sum(waiting_vehicles)
+    avg_veh_wait = vehicles_wait / vehicles_count if vehicles_count > 0 else 0.0
+    max_veh_wait = max(waiting_vehicles) if vehicles_count > 0 else 0.0
 
+    waiting_peds = [wait_time for peds in waiting_peds for wait_time in peds]
+    peds_count = len(waiting_peds)
+    peds_wait = sum(waiting_peds)
+    avg_ped_wait = peds_wait / peds_count if peds_count > 0 else 0.0
+    max_ped_wait = max(waiting_peds) if peds_count > 0 else 0.0
 
-def get_reward(waiting_vehicles: list[int], waiting_peds: list[int]) -> float:
-    # penalize higher average queue lengths and number of pedestrians waiting
-    total_vehicles = sum(waiting_vehicles)
-    total_peds = sum(waiting_peds)
-    reward = -float(total_vehicles + 0.5*total_peds)
+    # weights
+    a = 0.5 # vehicle count
+    b = 1.0 # average vehicle wait
+    c = 0.1 # max vehicle wait
+    d = 1.0 # pedestrian count
+    e = 2.0 # average pedestrian wait
+    f = 0.1 # max pedestrian wait
+
+    reward = -(
+        a * vehicles_count +
+        b * avg_veh_wait +
+        c * max_veh_wait +
+        d * peds_count +
+        e * avg_ped_wait +
+        f * max_ped_wait
+    )
+
     return reward

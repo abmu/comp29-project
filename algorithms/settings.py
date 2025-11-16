@@ -1,13 +1,13 @@
 # SUMO simulation settings
-SIMULATION_TIME = 3600
+SIMULATION_TIME = 3600 / 4
 STEP_LENGTH = 0.10
 TOTAL_STEPS = int(SIMULATION_TIME / STEP_LENGTH)
 GUI_DELAY = 100
 
 SUMO_CONFIG = [
-    'sumo-gui',
-    '--delay', str(GUI_DELAY),
-    # 'sumo',
+    # 'sumo-gui',
+    # '--delay', str(GUI_DELAY),
+    'sumo',
     '--no-warnings',
     '--duration-log.disable',
     '--no-step-log',

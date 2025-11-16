@@ -8,8 +8,8 @@ import traci
 
 
 # TODO
-# Add option for more simplified state, and more detailed state
-# - add option to display full state with distinction between cars and bicycles, and direction of pedestrians crossing
+# Add option for more detailed state
+# - add option to get full in-depth state with distinction between cars and bicycles, and direction of pedestrians crossing
 
 
 def _discretize(xs: list[int], thresholds: tuple[int] = (0, 2, 5)) -> list[int]:
@@ -32,38 +32,38 @@ def get_current_tls_phase(tls_id: str) -> str:
     return traci.trafficlight.getPhase(tls_id)
 
 
-def _get_waiting_vehicles(detector_id: str) -> int:
-    # get number of cars/bicycles (up to detector limit) waiting in the lane
-    return traci.lanearea.getLastStepVehicleNumber(detector_id)
+def _get_waiting_vehicles(detector_id: str) -> list[float]:
+    # get time waiting of cars/bicycles (up to detector limit) waiting in the lane
+    return [traci.vehicle.getWaitingTime(vehicle_id) for vehicle_id in traci.lanearea.getLastStepVehicleIDs(detector_id)]
 
 
-def get_all_waiting_vehicles(detectors: list[list[str]]) -> list[int]:
-    # return the number of waiting vehicles in the specified detectors
+def get_all_waiting_vehicles(detectors: list[list[str]]) -> list[list[float]]:
+    # return the waiting vehicles in the specified detectors
     waiting_vehicles = []
     for detector_group in detectors:
-        count = 0
+        group = []
         for detector in detector_group:
-            count += _get_waiting_vehicles(detector)
-        waiting_vehicles.append(count)
+            group += _get_waiting_vehicles(detector)
+        waiting_vehicles.append(group)
     return waiting_vehicles
 
 
-def _get_waiting_peds(crossing_id: str, waiting_edge_ids: tuple[str, str]) -> int:
-    # get number of pedestrians waiting to use a crossing 
+def _get_waiting_peds(crossing_id: str, waiting_edge_ids: tuple[str, str]) -> list[float]:
+    # get time waiting of pedestrians waiting to use a crossing 
     possible_peds = traci.edge.getLastStepPersonIDs(waiting_edge_ids[0]) + traci.edge.getLastStepPersonIDs(waiting_edge_ids[1])
-    count = 0
+    group = []
     for ped in possible_peds:
         if traci.person.getNextEdge(ped) == crossing_id:
-            count += 1
-    return count
+            group.append(traci.person.getWaitingTime(ped))
+    return group
 
 
-def get_all_waiting_peds(crossings: list[tuple[str, str, str]]) -> list[int]:
-    # return the number of waiting pedestrians at the specified crossings
+def get_all_waiting_peds(crossings: list[tuple[str, str, str]]) -> list[list[float]]:
+    # return the waiting pedestrians at the specified crossings
     waiting_peds = []
     for crossing in crossings:
-        count = _get_waiting_peds(crossing[0], crossing[1:])
-        waiting_peds.append(count)
+        group = _get_waiting_peds(crossing[0], crossing[1:])
+        waiting_peds.append(group)
     return waiting_peds
 
 
@@ -72,10 +72,10 @@ def get_state(tls: str, detectors: list[list[str]], crossings: list[tuple[str, s
     tls_phase = get_current_tls_phase(tls)
 
     # get number of vehicles waiting in each queue
-    waiting_vehicles = get_all_waiting_vehicles(detectors)
+    waiting_vehicles = [len(vehicles) for vehicles in get_all_waiting_vehicles(detectors)]
 
     # get number of pedestrians waiting to use each crossing
-    waiting_peds = get_all_waiting_peds(crossings)
+    waiting_peds = [len(peds) for peds in get_all_waiting_peds(crossings)]
 
     # simplify state
     # combine 4 pedestrian areas into one, combine north and south bound, combine west and east bound
