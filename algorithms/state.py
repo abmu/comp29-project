@@ -9,7 +9,6 @@ import traci
 
 # TODO
 # Add option for more simplified state, and more detailed state
-# - simplifying state further by combining 4 pedestrians into one, combine north and south bound, combine east and west bound
 # - add option to display full state with distinction between cars and bicycles, and direction of pedestrians crossing
 
 
@@ -77,6 +76,11 @@ def get_state(tls: str, detectors: list[list[str]], crossings: list[tuple[str, s
 
     # get number of pedestrians waiting to use each crossing
     waiting_peds = get_all_waiting_peds(crossings)
+
+    # simplify state
+    # combine 4 pedestrian areas into one, combine north and south bound, combine west and east bound
+    waiting_peds = [sum(waiting_peds)]
+    waiting_vehicles = [waiting_vehicles[0] + waiting_vehicles[2], waiting_vehicles[1] + waiting_vehicles[3]]
 
     # discretize to limit number of distinct values/combinations
     waiting_vehicles = _discretize(waiting_vehicles)

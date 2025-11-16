@@ -8,6 +8,7 @@ import traci
 
 from settings import STEP_LENGTH
 from utils import ceil
+from state import get_current_tls_phase
 
 
 # for reference, the 8 traffic light phases defined in 'main.net.xml'
@@ -70,10 +71,12 @@ def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, dura
     
     return curr_step
 
-def perform_action(tls_id: str, curr_step: int, total_steps: int, action: int, prev_action: int | None = None) -> int:
-    # perform specified action, ensuring that the phase switch is also run if action and previous_action are different
-    if prev_action != None and prev_action != action:
-        phase_switch = ACTION_SPACE[prev_action]['phase_switch']
+
+def perform_action(tls_id: str, curr_step: int, total_steps: int, action: int) -> int:
+    # perform specified action, ensuring that the phase switch is also run if action is different to current phase
+    tls_phase = get_current_tls_phase(tls_id)
+    if action != tls_phase:
+        phase_switch = ACTION_SPACE[tls_phase]['phase_switch']
         for act, dur in phase_switch:
             curr_step = _run_action(tls_id, curr_step, total_steps, act, dur)
 

@@ -5,6 +5,12 @@ from settings import DIR_PREFIX, NET_NAME, SEED, DURATION
 from utils import run_command
 
 
+# TODO
+# Make simulation and routes more accurate
+# - improve pedestrians accuracy by varying fringe-factor -- simulates pedestrians going into/out of buildings
+# - adjust weight of edges to make certain ones more likely to spawn vehicles, rather than random choice -- simulates commonly used/ main roads
+
+
 # Find default SUMO tools
 SUMO_HOME = os.environ.get('SUMO_HOME')
 if not SUMO_HOME:
@@ -30,6 +36,7 @@ vehicles = [
             '-e', DURATION,
             '-p', '5',
             '--binomial', '100',
+            # '--insertion-density', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/car.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/car.rou.xml',
             '--fringe-factor', 'max', # ensure the vehicles only spawn from the very edges, rather than the middle of the road
@@ -61,7 +68,7 @@ vehicles = [
             '--binomial', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/pedestrian.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/pedestrian.rou.xml',
-            '--fringe-factor', 'max',
+            # '--fringe-factor', 'max',
             '--prefix', 'pedestrian',
             '--pedestrians',
             '--seed', SEED

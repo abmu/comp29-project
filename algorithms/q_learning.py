@@ -18,7 +18,7 @@ from reward import get_reward
 #
 # Generate new routes dynamically after each episode to ensure new training data and prevent overfitting
 #
-# Automate training process by removing GUI
+# Reduce epsilon
 #
 # Create separate python package for the state, action, reward files
 
@@ -42,46 +42,50 @@ def get_q(state: tuple[int, ...], action: int) -> float:
 
 def choose_action(state: tuple[int, ...]) -> int:
     # choose action using an epsilon-greedy policy
+    actions = list(ACTION_SPACE.keys())
     if random.random() < EPSILON:
         # exploration - choose random action
-        return random.choice(list(ACTION_SPACE.keys()))
+        return random.choice(actions)
     else:
         # exploitation - choose action with highest Q-value
-        qs = [get_q(state, a) for a in ACTION_SPACE]
-        return list(ACTION_SPACE.keys())[np.argmax(qs)]
+        qs = [get_q(state, a) for a in actions]
+        return actions[np.argmax(qs)]
 
 
 def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...]) -> None:
     # update Q-value of state and action combinatoin based on reward and next state
+    actions = list(ACTION_SPACE.keys())
     old_q = get_q(state, action)
-    best_next = max([get_q(next_state, a) for a in ACTION_SPACE])
+    best_next = max(get_q(next_state, a) for a in actions)
     Q[(state, action)] = old_q + ALPHA * (reward + GAMMA * best_next - old_q)
 
+
+episode_rewards = []
 
 for episode in range(EPISODES):
     traci.start(SUMO_CONFIG)
 
     total_reward = 0
 
-    prev_action = None
-
     step = 0
     while step < TOTAL_STEPS:
         state = get_state(tls_id, detector_ids, crossing_ids)
-        curr_action = choose_action(state)
+        action = choose_action(state)
         
-        step = perform_action(tls_id, step, TOTAL_STEPS, curr_action, prev_action)
-
-        prev_action = curr_action
+        step = perform_action(tls_id, step, TOTAL_STEPS, action)
 
         next_state = get_state(tls_id, detector_ids, crossing_ids)
         reward = get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
-        update_q(state, curr_action, reward, next_state)
+        update_q(state, action, reward, next_state)
         total_reward += reward
 
-        print(f'Step: {step}, State: {state}, Reward: {reward}')
+        print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
 
-    print(f'Total Reward: {total_reward}')
-    print(f'Q-Table: {Q}')
+    print(f'Episode: {episode + 1}, Total Reward: {total_reward}')
+    episode_rewards.append(total_reward)
 
     traci.close()
+
+print(f'Q-Table: {Q}, Episode Rewards: {episode_rewards}')
+with open('./q_learning.txt', 'w') as f:
+    f.write(str(Q) + '\n' + str(episode_rewards))

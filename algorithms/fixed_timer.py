@@ -17,18 +17,14 @@ traci.start(SUMO_CONFIG)
 total_reward = 0
 
 action_loop = [0,0,0,3,3,3,6]
-prev_idx = None
 curr_idx = 0
 
 step = 0
 while step < TOTAL_STEPS:
-    prev_action = action_loop[prev_idx] if prev_idx != None else None
-    curr_action = action_loop[curr_idx]
-
-    step = perform_action(tls_id, step, TOTAL_STEPS, curr_action, prev_action)
-
-    prev_idx = curr_idx
+    action = action_loop[curr_idx]
     curr_idx = (curr_idx + 1) % len(action_loop)
+
+    step = perform_action(tls_id, step, TOTAL_STEPS, action)
 
     state = get_state(tls_id, detector_ids, crossing_ids)
     reward = get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
