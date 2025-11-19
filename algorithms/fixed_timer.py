@@ -14,6 +14,9 @@ from action import perform_action
 from reward import get_reward
 
 
+RESULTS_FILE = 'results/fixed_timer.txt'
+
+
 ACTION_LOOP = [0,0,0,3,3,3,6]
 
 EPISODES = 1000
@@ -57,4 +60,4 @@ for episode in range(EPISODES):
     episode_rewards.append(total_reward)
 
     print(f'Total Reward: {total_reward}\n')
-    file_dump('./fixed_timer.txt', str(episode_rewards))
+    file_dump(RESULTS_FILE, str(episode_rewards))

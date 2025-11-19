@@ -7,6 +7,10 @@ sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
 
+# TODO
+# Add a reward parameter which penalises the amount of phase switches made
+
+
 def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[float]]) -> float:
     # calculate reward -- penalize higher queue lengths, number of pedestrians waiting, and wait times
     waiting_vehicles = [wait_time for vehicles in waiting_vehicles for wait_time in vehicles]

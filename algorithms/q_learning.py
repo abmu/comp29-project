@@ -15,6 +15,10 @@ from action import ACTION_SPACE, perform_action
 from reward import get_reward
 
 
+RESULTS_FILE = 'results/q_learning.txt'
+Q_TABLE_FILE = 'results/q_table.txt'
+
+
 Q = {} # {(state, action): value}
 
 # Q-learning hyperparameters
@@ -92,4 +96,5 @@ for episode in range(EPISODES):
     EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 
     print(f'Total Reward: {total_reward}, Epsilon: {EPSILON}\n')
-    file_dump('./q_learning.txt', str(episode_rewards), str(Q))
+    file_dump(RESULTS_FILE, str(episode_rewards))
+    file_dump(Q_TABLE_FILE, str(Q))

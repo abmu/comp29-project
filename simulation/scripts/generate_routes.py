@@ -9,9 +9,9 @@ from utils import run_command
 
 # TODO
 # Make simulation and routes more accurate
+# - test with seed 42 + 98 = 140, fix bug in network where bikes can cause congestion due to overlapping paths
 # - improve pedestrians accuracy by varying fringe-factor -- simulates pedestrians going into/out of buildings
 # - manually adjust weight of edges to make certain edges more likely to spawn, rather than random choice -- simulates commonly used/ main roads
-# - fix bug in network where bikes can cause congestion due to overlapping paths
 
 
 # Find default SUMO tools

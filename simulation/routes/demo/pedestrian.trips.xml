@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-11-19 09:51:08.066040 by randomTrips.py v1_24_0+0000-b72eb3fabc8
+<!-- generated on 2025-11-19 11:07:56.853690 by randomTrips.py v1_24_0+0000-b72eb3fabc8
 <configuration>
     <net-file value="../networks/demo/main.net.xml"/>
     <output-trip-file value="../routes/demo/pedestrian.trips.xml"/>
