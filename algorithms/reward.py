@@ -22,20 +22,20 @@ def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[floa
     max_ped_wait = max(waiting_peds) if peds_count > 0 else 0.0
 
     # weights
-    a = 0.5 # vehicle count
-    b = 1.0 # average vehicle wait
-    c = 0.1 # max vehicle wait
-    d = 1.0 # pedestrian count
-    e = 2.0 # average pedestrian wait
-    f = 0.1 # max pedestrian wait
+    a = 1.0 # vehicle count
+    b = 0.0 # average vehicle wait
+    c = 0.0 # total vehicle wait
+    d = 0.5 # pedestrian count
+    e = 0.0 # average pedestrian wait
+    f = 0.0 # total pedestrian wait
 
     reward = -(
         a * vehicles_count +
         b * avg_veh_wait +
-        c * max_veh_wait +
+        c * vehicles_wait +
         d * peds_count +
         e * avg_ped_wait +
-        f * max_ped_wait
+        f * peds_wait
     )
 
     return reward

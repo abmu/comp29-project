@@ -11,6 +11,7 @@ from utils import run_command
 # Make simulation and routes more accurate
 # - improve pedestrians accuracy by varying fringe-factor -- simulates pedestrians going into/out of buildings
 # - manually adjust weight of edges to make certain edges more likely to spawn, rather than random choice -- simulates commonly used/ main roads
+# - fix bug in network where bikes can cause congestion due to overlapping paths
 
 
 # Find default SUMO tools
@@ -29,7 +30,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type=int, default=int(SEED))
 parser.add_argument('--car-density', type=float, default=1.0)
 parser.add_argument('--bicycle-density', type=float, default=1.0)
-parser.add_argument('--pedestrian-density', type=float, default=.10)
+parser.add_argument('--pedestrian-density', type=float, default=1.0)
+parser.add_argument('--random-factor', type=float, default=1.0)
 args = parser.parse_args()
 
 random.seed(args.seed)
@@ -46,13 +48,13 @@ vehicles = [
         'args': [
             '-n', NETWORK,
             '-e', str(DURATION),
-            '-p', str(5 / args.car_density),
+            '-p', str(10 / args.car_density),
             '--binomial', '100',
             # '--insertion-density', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/car.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/car.rou.xml',
             '--fringe-factor', 'max', # ensure the vehicles only spawn from the very edges, rather than the middle of the road
-            '--random-factor', f'{random.uniform(1.0, 5.0)}', # randomise weight of edges
+            '--random-factor', f'{random.uniform(1.0, args.random_factor)}', # randomise weight of edges
             '--prefix', 'car',
             '--seed', str(args.seed)
         ]
@@ -62,12 +64,12 @@ vehicles = [
         'args': [
             '-n', NETWORK,
             '-e', str(DURATION),
-            '-p', str(5 / args.bicycle_density),
+            '-p', str(10 / args.bicycle_density),
             '--binomial', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/bicycle.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/bicycle.rou.xml',
             '--fringe-factor', 'max',
-            '--random-factor', f'{random.uniform(1.0, 5.0)}',
+            '--random-factor', f'{random.uniform(1.0, args.random_factor)}',
             '--prefix', 'bicycle',
             '--vehicle-class', 'bicycle',
             '--seed', str(args.seed)
@@ -78,12 +80,12 @@ vehicles = [
         'args': [
             '-n', NETWORK,
             '-e', str(DURATION),
-            '-p', str(2 / args.pedestrian_density),
+            '-p', str(4 / args.pedestrian_density),
             '--binomial', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/pedestrian.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/pedestrian.rou.xml',
             # '--fringe-factor', 'max',
-            '--random-factor', f'{random.uniform(1.0, 5.0)}',
+            '--random-factor', f'{random.uniform(1.0, args.random_factor)}',
             '--prefix', 'pedestrian',
             '--pedestrians',
             '--seed', str(args.seed)

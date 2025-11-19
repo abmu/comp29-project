@@ -24,7 +24,7 @@ EPSILON = 1.0 # exploration rate
 EPSILON_DECAY = 0.995
 EPSILON_MIN = 0.005
 
-EPISODES = 100
+EPISODES = 1000
 
 
 def get_q(state: tuple[int, ...], action: int) -> float:
@@ -56,13 +56,17 @@ episode_rewards = []
 
 for episode in range(EPISODES):
 
+    print(f'Episode: {episode + 1}')
+
     # generate a new route
     random.seed(SEED)
-    car_density = random.uniform(0.25, 4.0)
-    bicycle_density = random.uniform(0.25, 4.0)
-    pedestrian_density = random.uniform(0.25, 4.0)
-    generate_routes(SEED, car_density, bicycle_density, pedestrian_density)
+    # car_density = random.uniform(0.5, 2.0)
+    # bicycle_density = random.uniform(0.5, 2.0)
+    # pedestrian_density = random.uniform(0.5, 2.0)
+    generate_routes(SEED)
     SEED += 1
+
+    print(f'Running SUMO...')
 
     # run episode training
     total_reward = 0
@@ -80,12 +84,12 @@ for episode in range(EPISODES):
         total_reward += reward
         update_q(state, action, reward, next_state)
 
-        print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
+        # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
 
     traci.close()
 
     episode_rewards.append(total_reward)
     EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 
-    print(f'Episode: {episode + 1}, Total Reward: {total_reward}, Epsilon: {EPSILON}')
-    file_dump('./q_learning.txt', str(episode_rewards))
+    print(f'Total Reward: {total_reward}, Epsilon: {EPSILON}\n')
+    file_dump('./q_learning.txt', str(episode_rewards), str(Q))

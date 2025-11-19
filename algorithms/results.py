@@ -1,0 +1,22 @@
+import matplotlib.pyplot as plt
+
+FILE_A = 'fixed_timer.txt'
+FILE_B = 'q_learning.txt'
+
+# read python-style lists from text files
+with open(FILE_A, 'r') as f:
+    a_list = eval(f.readlines()[0])
+
+with open(FILE_B, 'r') as f:
+    b_list = eval(f.readlines()[0])
+
+# plot both lists
+plt.figure()
+plt.plot(a_list, label="a")
+plt.plot(b_list, label="b")
+plt.xlabel("Epoch")
+plt.ylabel("Reward")
+plt.title("Plot of lists")
+# plt.grid(True)
+plt.legend()
+plt.show()

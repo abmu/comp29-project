@@ -16,19 +16,23 @@ from reward import get_reward
 
 ACTION_LOOP = [0,0,0,3,3,3,6]
 
-EPISODES = 100
+EPISODES = 1000
 
 episode_rewards = []
 
 for episode in range(EPISODES):
 
+    print(f'Episode: {episode + 1}')
+
     # generate a new route
     random.seed(SEED)
-    car_density = random.uniform(0.25, 4.0)
-    bicycle_density = random.uniform(0.25, 4.0)
-    pedestrian_density = random.uniform(0.25, 4.0)
-    generate_routes(SEED, car_density, bicycle_density, pedestrian_density)
+    # car_density = random.uniform(0.25, 2.0)
+    # bicycle_density = random.uniform(0.5, 1.0)
+    # pedestrian_density = random.uniform(0.5, 2.0)
+    generate_routes(SEED)
     SEED += 1
+
+    print(f'Running SUMO...')
 
     # run fixed timer algorithm
     total_reward = 0
@@ -46,11 +50,11 @@ for episode in range(EPISODES):
         reward = get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
         total_reward += reward
 
-        print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
+        # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
 
     traci.close()
 
     episode_rewards.append(total_reward)
 
-    print(f'Episode: {episode + 1}, Total Reward: {total_reward}')
+    print(f'Total Reward: {total_reward}\n')
     file_dump('./fixed_timer.txt', str(episode_rewards))

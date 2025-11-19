@@ -12,7 +12,7 @@ import traci
 # - add option to get full in-depth state with distinction between cars and bicycles, and direction of pedestrians crossing
 
 
-def _discretize(xs: list[int], thresholds: tuple[int] = (0, 5, 10)) -> list[int]:
+def _discretize(xs: list[int], thresholds: tuple[int] = (0, 6, 12)) -> list[int]:
     # discretize value to a value between 0-3
     ys = [-1] * len(xs)
     for i, x in enumerate(xs):
@@ -83,7 +83,7 @@ def get_state(tls: str, detectors: list[list[str]], crossings: list[tuple[str, s
     waiting_vehicles = [waiting_vehicles[0] + waiting_vehicles[2], waiting_vehicles[1] + waiting_vehicles[3]]
 
     # discretize to limit number of distinct values/combinations
-    waiting_vehicles = _discretize(waiting_vehicles)
-    waiting_peds = _discretize(waiting_peds)
+    waiting_vehicles = _discretize(waiting_vehicles, thresholds=(0, 6, 12))
+    waiting_peds = _discretize(waiting_peds, thresholds=(0, 12, 24))
 
     return (tls_phase, ) + tuple(waiting_vehicles) + tuple(waiting_peds)

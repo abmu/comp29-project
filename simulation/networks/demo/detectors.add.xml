@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-11-04 21:19:00 by Eclipse SUMO netedit Version 1.24.0
+<!-- generated on 2025-11-17 10:53:20 by Eclipse SUMO netedit Version 1.24.0
 -->
 
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
     <!-- Detectors -->
-    <laneAreaDetector id="CJ_1_EB_1" lane="TorPl_1_3_1" pos="4.65" length="30.00" period="300.00" file="detector.CJ_1_EB_1.xml"/>
-    <laneAreaDetector id="CJ_1_NB_1" lane="GowSt_2_1_1" pos="87.06" length="30.00" period="300.00" file="detector.CJ_1_NB_1.xml"/>
-    <laneAreaDetector id="CJ_1_NB_2" lane="GowSt_2_1_2" pos="67.02" length="50.00" period="300.00" file="detector.CJ_1_NB_2.xml"/>
-    <laneAreaDetector id="CJ_1_SB_1" lane="GowSt_1_1_1" pos="141.80" length="30.00" period="300.00" file="detector.CJ_1_SB_1.xml"/>
-    <laneAreaDetector id="CJ_1_SB_2" lane="GowSt_1_1_2" pos="121.76" length="50.00" period="300.00" file="detector.CJ_1_SB_2.xml"/>
-    <laneAreaDetector id="CJ_1_WB_1" lane="TorPl_2_1_1" pos="23.73" length="30.00" period="300.00" file="detector.CJ_1_WB_1.xml"/>
+    <laneAreaDetector id="CJ_1_EB_1_1" lane="TorPl_1_3_1" pos="2.65" length="21.00" period="300.00" file="detector.CJ_1_EB_1.xml"/>
+    <laneAreaDetector id="CJ_1_EB_1_2" lane="TorPl_1_4_1" pos="0.80" length="8.60" period="300.00" file="e2_4.xml"/>
+    <laneAreaDetector id="CJ_1_NB_1_1" lane="GowSt_2_1_1" pos="67.06" length="30.00" period="300.00" file="detector.CJ_1_NB_1.xml"/>
+    <laneAreaDetector id="CJ_1_NB_1_2" lane="GowSt_2_2_1" pos="0.50" length="17.31" period="300.00" file="e2_3.xml"/>
+    <laneAreaDetector id="CJ_1_NB_2_1" lane="GowSt_2_1_2" pos="46.02" length="50.00" period="300.00" file="detector.CJ_1_NB_2.xml"/>
+    <laneAreaDetector id="CJ_1_NB_2_2" lane="GowSt_2_2_2" pos="1.00" length="16.73" period="300.00" file="e2_2.xml"/>
+    <laneAreaDetector id="CJ_1_SB_1_1" lane="GowSt_1_1_1" pos="121.80" length="30.00" period="300.00" file="detector.CJ_1_SB_1.xml"/>
+    <laneAreaDetector id="CJ_1_SB_1_2" lane="GowSt_1_2_1" pos="0.80" length="17.45" period="300.00" file="e2_1.xml"/>
+    <laneAreaDetector id="CJ_1_SB_2_1" lane="GowSt_1_1_2" pos="100.76" length="50.00" period="300.00" file="detector.CJ_1_SB_2.xml"/>
+    <laneAreaDetector id="CJ_1_SB_2_2" lane="GowSt_1_2_2" pos="1.00" length="17.21" period="300.00" file="e2_0.xml"/>
+    <laneAreaDetector id="CJ_1_WB_1_1" lane="TorPl_2_1_1" pos="21.73" length="21.00" period="300.00" file="detector.CJ_1_WB_1.xml" friendlyPos="1"/>
+    <laneAreaDetector id="CJ_1_WB_1_2" lane="TorPl_2_2_1" pos="0.80" length="8.60" period="300.00" file="e2_5.xml"/>
 </additional>
