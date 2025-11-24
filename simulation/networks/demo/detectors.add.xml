@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-11-24T17:11:00.419346+00:00 by Eclipse SUMO netedit 1.25.0
+<!-- generated on 2025-11-24T21:06:13.802361+00:00 by Eclipse SUMO netedit 1.25.0
 -->
 
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
@@ -13,10 +13,10 @@
     <inductionLoop id="CJ_1_SB_2_2" lane="GowSt_1_2_2" pos="2.44" period="300.00" file="detector.CJ_1_SB_2_2.xml"/>
     <inductionLoop id="CJ_1_WB_2_1" lane="TorPl_2_2_1" pos="2.39" period="300.00" file="detector.CJ_1_WB_2_1.xml"/>
     <inductionLoop id="CJ_1_WB_2_2" lane="TorPl_2_2_2" pos="2.38" period="300.00" file="detector.CJ_1_WB_2_2.xml"/>
-    <laneAreaDetector id="CJ_1_EB_1_1" lane="TorPl_1_3_1" pos="4.65" length="30.00" period="300.00" file="detector.CJ_1_EB_1_1.xml"/>
-    <laneAreaDetector id="CJ_1_NB_1_1" lane="GowSt_2_1_1" pos="87.06" length="30.00" friendlyPos="1" period="300.00" file="detector.CJ_1_NB_1_1.xml"/>
-    <laneAreaDetector id="CJ_1_NB_1_2" lane="GowSt_2_1_2" pos="67.02" length="50.00" friendlyPos="1" period="300.00" file="detector.CJ_1_NB_1_2.xml"/>
+    <laneAreaDetector id="CJ_1_EB_1_1" lane="TorPl_1_3_1" pos="5.00" length="30.00" period="300.00" file="detector.CJ_1_EB_1_1.xml"/>
+    <laneAreaDetector id="CJ_1_NB_1_1" lane="GowSt_2_1_1" pos="86.00" length="30.00" friendlyPos="1" period="300.00" file="detector.CJ_1_NB_1_1.xml"/>
+    <laneAreaDetector id="CJ_1_NB_1_2" lane="GowSt_2_1_2" pos="66.00" length="50.00" friendlyPos="1" period="300.00" file="detector.CJ_1_NB_1_2.xml"/>
     <laneAreaDetector id="CJ_1_SB_1_1" lane="GowSt_1_1_1" pos="141.80" length="30.00" period="300.00" file="detector.CJ_1_SB_1_1.xml"/>
     <laneAreaDetector id="CJ_1_SB_1_2" lane="GowSt_1_1_2" pos="121.76" length="50.00" period="300.00" file="detector.CJ_1_SB_1_2.xml"/>
-    <laneAreaDetector id="CJ_1_WB_1_1" lane="TorPl_2_1_1" pos="23.73" length="30.00" period="300.00" file="detector.CJ_1_WB_1_1.xml"/>
+    <laneAreaDetector id="CJ_1_WB_1_1" lane="TorPl_2_1_1" pos="23.75" length="30.00" period="300.00" file="detector.CJ_1_WB_1_1.xml"/>
 </additional>

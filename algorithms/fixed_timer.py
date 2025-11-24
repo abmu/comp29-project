@@ -11,6 +11,7 @@ from utils import file_dump
 from routes import set_route
 from state import get_state
 from action import perform_action
+from reward import cache
 
 
 RESULTS_FILE = 'results/fixed_timer.txt'

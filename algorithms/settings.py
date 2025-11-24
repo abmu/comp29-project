@@ -1,5 +1,5 @@
 # SUMO simulation settings
-GUI = True
+GUI = False
 SIMULATION_TIME = 3600
 STEP_LENGTH = 0.10 * 10
 TOTAL_STEPS = int(SIMULATION_TIME / STEP_LENGTH)
@@ -8,12 +8,14 @@ SEED = 29
 
 SUMO_CONFIG = ['sumo-gui'] if GUI else ['sumo']
 SUMO_CONFIG += [
-    '--no-warnings',
-    '--duration-log.disable',
-    '--no-step-log',
     '-c', '../simulation/simulation.sumocfg',
     '--step-length', str(STEP_LENGTH),
-    '--lateral-resolution', '0'
+    '--lateral-resolution', '0',
+    '--statistic-output', '../simulation/statistics.xml',
+    '--tripinfo-output.write-unfinished',
+    '--duration-log.statistics',
+    # '--no-warnings',
+    # '--no-step-log',
 ]
 
 # ID of the traffic light system
