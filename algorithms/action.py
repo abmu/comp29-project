@@ -66,7 +66,7 @@ def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, dura
     for i in range(steps):
         if curr_step < total_steps:
             traci.simulationStep()
-            reward += get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
+            curr_reward += get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
             curr_step += 1
         else:
             break

@@ -9,9 +9,8 @@ import traci
 from settings import SUMO_CONFIG, TOTAL_STEPS, tls_id, detector_ids, crossing_ids
 from utils import file_dump
 from routes import set_route
-from state import get_state, get_all_waiting_vehicles, get_all_waiting_peds
+from state import get_state
 from action import perform_action
-from reward import get_reward
 
 
 RESULTS_FILE = 'results/fixed_timer.txt'

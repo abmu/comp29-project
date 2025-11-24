@@ -23,10 +23,10 @@ tls_id = 'CJ_1'
 
 # IDs of the lane detectors/cameras
 detector_ids = [
-    [f'{tls_id}_NB_1_1', f'{tls_id}_NB_1_2', f'{tls_id}_NB_2_1', f'{tls_id}_NB_2_2'],
-    [f'{tls_id}_WB_1_1', f'{tls_id}_WB_1_2'],
-    [f'{tls_id}_SB_1_1', f'{tls_id}_SB_1_2', f'{tls_id}_SB_2_1', f'{tls_id}_SB_2_2'],
-    [f'{tls_id}_EB_1_1', f'{tls_id}_EB_1_2'],
+    [f'{tls_id}_NB_1', f'{tls_id}_NB_2'],
+    [f'{tls_id}_WB_1'],
+    [f'{tls_id}_SB_1', f'{tls_id}_SB_2'],
+    [f'{tls_id}_EB_1'],
 ]
 
 # IDs of crossings and the corresponding walking areas
