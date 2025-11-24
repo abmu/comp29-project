@@ -1,5 +1,6 @@
 ### Route folders ###
 simulation/routes/demo/*/
+simulation/networks/demo/detector.*.xml
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

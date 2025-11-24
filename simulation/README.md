@@ -22,7 +22,7 @@ Junction names:
 - CJ\_(Y) -> Connecting Junction Y
 
 Detector names:
-- CJ\_(Y)\_(N/E/S/W)B_(Z) -> Connecting Junction Y, N/E/S/W Bound Lane Z
+- CJ\_(X)\_(N/E/S/W)B_(Y)_(Z) -> Connecting Junction X, N/E/S/W Bound, Side Y, Lane Z
 
 
 ## Random Notes
