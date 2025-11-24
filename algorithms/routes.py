@@ -37,6 +37,6 @@ def set_route(number: int) -> None:
 
 
 if __name__ == "__main__":
-    routes = 1000
-    for i in range(1, routes+1):
+    ROUTES = 1000
+    for i in range(1, ROUTES+1):
         generate_routes(seed=i)

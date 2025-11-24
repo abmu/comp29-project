@@ -8,7 +8,7 @@ import traci
 
 
 # TODO
-# Add a reward parameter which penalises the amount of phase switches made
+# - Add a reward parameter which penalises the amount of phase switches made
 # Add OVERALL REWARD
 # - Number of cars that went through the entire route
 # - Number of pedestrians that went through

@@ -79,7 +79,7 @@ vehicles = [
         'args': [
             '-n', NETWORK,
             '-e', str(DURATION),
-            '-p', str(4 / args.pedestrian_density),
+            '-p', str(5 / args.pedestrian_density),
             '--binomial', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.seed}/pedestrian.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.seed}/pedestrian.rou.xml',

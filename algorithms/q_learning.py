@@ -11,9 +11,8 @@ import random
 from settings import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, detector_ids, crossing_ids
 from utils import file_dump
 from routes import set_route
-from state import get_state, get_all_waiting_vehicles, get_all_waiting_peds
+from state import get_state
 from action import ACTION_SPACE, perform_action
-from reward import get_reward
 
 
 RESULTS_FILE = 'results/q_learning.txt'
@@ -49,12 +48,13 @@ def choose_action(state: tuple[int, ...]) -> int:
         return actions[np.argmax(qs)]
 
 
-def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...]) -> None:
+def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: int) -> None:
     # update Q-value of state and action combinatoin based on reward and next state
     actions = list(ACTION_SPACE.keys())
     old_q = get_q(state, action)
     best_next = max(get_q(next_state, a) for a in actions)
-    Q[(state, action)] = old_q + ALPHA * (reward + GAMMA * best_next - old_q)
+    # Semi-Markov Decision Process
+    Q[(state, action)] = old_q + ALPHA * (reward + (GAMMA ** duration) * best_next - old_q)
 
 
 episode_rewards = []
@@ -79,12 +79,11 @@ for episode in range(EPISODES):
         state = get_state(tls_id, detector_ids, crossing_ids)
         action = choose_action(state)
         
-        step = perform_action(tls_id, step, TOTAL_STEPS, action)
+        step, reward, step_delta = perform_action(tls_id, step, TOTAL_STEPS, action)
 
         next_state = get_state(tls_id, detector_ids, crossing_ids)
-        reward = get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
         total_reward += reward
-        update_q(state, action, reward, next_state)
+        update_q(state, action, reward, next_state, step_delta)
 
         # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
 

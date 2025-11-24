@@ -42,10 +42,9 @@ for episode in range(EPISODES):
         state = get_state(tls_id, detector_ids, crossing_ids)
         action = ACTION_LOOP[curr_idx]
 
-        step = perform_action(tls_id, step, TOTAL_STEPS, action)
+        step, reward, _ = perform_action(tls_id, step, TOTAL_STEPS, action)
 
         curr_idx = (curr_idx + 1) % len(ACTION_LOOP)
-        reward = get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
         total_reward += reward
 
         # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')

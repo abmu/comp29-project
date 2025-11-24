@@ -6,9 +6,10 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
-from settings import STEP_LENGTH
+from settings import STEP_LENGTH, detector_ids, crossing_ids
 from utils import ceil
-from state import get_current_tls_phase
+from state import get_current_tls_phase, get_all_waiting_vehicles, get_all_waiting_peds
+from reward import get_reward
 
 
 # for reference, the 8 traffic light phases defined in 'main.net.xml'
@@ -52,10 +53,10 @@ def _duration_to_steps(duration: int) -> int:
     return ceil(duration / STEP_LENGTH)
 
 
-def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, duration: int) -> int:
-    # peform action changing phase on the traffic light system, and return updated step number
+def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, duration: int, curr_reward: int) -> tuple[int, int]:
+    # peform action changing phase on the traffic light system, and return updated step number and cumulative reward
     if curr_step >= total_steps:
-        return curr_step
+        return curr_step, curr_reward
 
     traci.trafficlight.setPhase(tls_id, action)
     traci.trafficlight.setPhaseDuration(tls_id, duration)
@@ -65,22 +66,25 @@ def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, dura
     for i in range(steps):
         if curr_step < total_steps:
             traci.simulationStep()
+            reward += get_reward(get_all_waiting_vehicles(detector_ids), get_all_waiting_peds(crossing_ids))
             curr_step += 1
         else:
             break
     
-    return curr_step
+    return curr_step, curr_reward
 
 
 def perform_action(tls_id: str, curr_step: int, total_steps: int, action: int) -> int:
     # perform specified action, ensuring that the phase switch is also run if action is different to current phase
+    start_step = curr_step
+    curr_reward = 0
     tls_phase = get_current_tls_phase(tls_id)
     if action != tls_phase:
         phase_switch = ACTION_SPACE[tls_phase]['phase_switch']
         for act, dur in phase_switch:
-            curr_step = _run_action(tls_id, curr_step, total_steps, act, dur)
+            curr_step, curr_reward = _run_action(tls_id, curr_step, total_steps, act, dur, curr_reward)
 
     duration = ACTION_SPACE[action]['duration']
-    curr_step = _run_action(tls_id, curr_step, total_steps, action, duration)
+    curr_step, curr_reward = _run_action(tls_id, curr_step, total_steps, action, duration, curr_reward)
 
-    return curr_step
+    return curr_step, curr_reward, curr_step - start_step
