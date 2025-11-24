@@ -11,15 +11,16 @@ from utils import file_dump
 from routes import set_route
 from state import get_state
 from action import perform_action
-from reward import cache
+from reward import get_cache, compute_stats
 
 
 RESULTS_FILE = 'results/fixed_timer.txt'
+STATS_FILE = 'results/cache_stats.txt'
 
 
 ACTION_LOOP = [0,0,0,3,3,3,6]
 
-EPISODES = 1000
+EPISODES = 100 #1000
 
 episode_rewards = []
 
@@ -55,3 +56,4 @@ for episode in range(EPISODES):
 
     print(f'Total Reward: {total_reward}\n')
     file_dump(RESULTS_FILE, str(episode_rewards))
+    file_dump(STATS_FILE, str(compute_stats(get_cache())))
