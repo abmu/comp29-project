@@ -6,9 +6,9 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
-import random
-from settings import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, detector_ids, crossing_ids
-from utils import generate_routes, file_dump
+from settings import SUMO_CONFIG, TOTAL_STEPS, tls_id, detector_ids, crossing_ids
+from utils import file_dump
+from routes import set_route
 from state import get_state, get_all_waiting_vehicles, get_all_waiting_peds
 from action import perform_action
 from reward import get_reward
@@ -27,13 +27,8 @@ for episode in range(EPISODES):
 
     print(f'Episode: {episode + 1}')
 
-    # generate a new route
-    random.seed(SEED)
-    # car_density = random.uniform(0.25, 2.0)
-    # bicycle_density = random.uniform(0.5, 1.0)
-    # pedestrian_density = random.uniform(0.5, 2.0)
-    generate_routes(SEED)
-    SEED += 1
+    # set SUMO route
+    set_route(episode+1)
 
     print(f'Running SUMO...')
 

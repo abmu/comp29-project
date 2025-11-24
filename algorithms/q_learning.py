@@ -9,7 +9,8 @@ import traci
 import numpy as np
 import random
 from settings import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, detector_ids, crossing_ids
-from utils import generate_routes, file_dump
+from utils import file_dump
+from routes import set_route
 from state import get_state, get_all_waiting_vehicles, get_all_waiting_peds
 from action import ACTION_SPACE, perform_action
 from reward import get_reward
@@ -58,17 +59,14 @@ def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tup
 
 episode_rewards = []
 
+random.seed(SEED)
+
 for episode in range(EPISODES):
 
     print(f'Episode: {episode + 1}')
-
-    # generate a new route
-    random.seed(SEED)
-    # car_density = random.uniform(0.5, 2.0)
-    # bicycle_density = random.uniform(0.5, 2.0)
-    # pedestrian_density = random.uniform(0.5, 2.0)
-    generate_routes(SEED)
-    SEED += 1
+    
+    # set SUMO route
+    set_route(episode+1)
 
     print(f'Running SUMO...')
 

@@ -8,7 +8,6 @@ import traci
 
 
 # TODO
-# Add option for more detailed state
 # - get full in-depth state with distinction between cars and bicycles, and direction of pedestrians crossing
 
 
