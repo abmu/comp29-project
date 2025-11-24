@@ -1,15 +1,13 @@
 # SUMO simulation settings
+GUI = True
 SIMULATION_TIME = 3600
 STEP_LENGTH = 0.10 * 10
 TOTAL_STEPS = int(SIMULATION_TIME / STEP_LENGTH)
-GUI_DELAY = 100
 
 SEED = 29
 
-SUMO_CONFIG = [
-    # 'sumo-gui',
-    # '--delay', str(GUI_DELAY),
-    'sumo',
+SUMO_CONFIG = ['sumo-gui'] if GUI else ['sumo']
+SUMO_CONFIG += [
     '--no-warnings',
     '--duration-log.disable',
     '--no-step-log',
@@ -22,7 +20,7 @@ SUMO_CONFIG = [
 tls_id = 'CJ_1'
 
 # IDs of the lane detectors/cameras
-detector_ids = [
+queue_ids = [
     [f'{tls_id}_NB_1_1', f'{tls_id}_NB_1_2'],
     [f'{tls_id}_WB_1_1'],
     [f'{tls_id}_SB_1_1', f'{tls_id}_SB_1_2'],
@@ -35,4 +33,12 @@ crossing_ids = [
     (f':{tls_id}_c1', f':{tls_id}_w1', f':{tls_id}_w2'),
     (f':{tls_id}_c2', f':{tls_id}_w2', f':{tls_id}_w3'),
     (f':{tls_id}_c3', f':{tls_id}_w3', f':{tls_id}_w0'),
+]
+
+# IDs of induction loops used to detect throughput
+induction_ids = [
+    [f'{tls_id}_NB_2_1', f'{tls_id}_NB_2_2'],
+    [f'{tls_id}_WB_2_1', f'{tls_id}_WB_2_2'],
+    [f'{tls_id}_SB_2_1', f'{tls_id}_SB_2_2'],
+    [f'{tls_id}_EB_2_1', f'{tls_id}_EB_2_2'],
 ]

@@ -15,7 +15,8 @@ import traci
 # - Average weight
 
 
-def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[float]]) -> float:
+def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[float]], vehicle_throughput: list[int], peds_throughput: list[int]) -> float:
+    print(vehicle_throughput, peds_throughput)
     # calculate reward -- penalize higher queue lengths, number of pedestrians waiting, and wait times
     waiting_vehicles = [wait_time for vehicles in waiting_vehicles for wait_time in vehicles]
     vehicles_count = len(waiting_vehicles)

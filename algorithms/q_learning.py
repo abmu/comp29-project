@@ -8,7 +8,7 @@ import traci
 
 import numpy as np
 import random
-from settings import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, detector_ids, crossing_ids
+from settings import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, queue_ids, crossing_ids
 from utils import file_dump
 from routes import set_route
 from state import get_state
@@ -76,12 +76,12 @@ for episode in range(EPISODES):
     traci.start(SUMO_CONFIG)
 
     while step < TOTAL_STEPS:
-        state = get_state(tls_id, detector_ids, crossing_ids)
+        state = get_state(tls_id, queue_ids, crossing_ids)
         action = choose_action(state)
         
         step, reward, step_delta = perform_action(tls_id, step, TOTAL_STEPS, action)
 
-        next_state = get_state(tls_id, detector_ids, crossing_ids)
+        next_state = get_state(tls_id, queue_ids, crossing_ids)
         total_reward += reward
         update_q(state, action, reward, next_state, step_delta)
 

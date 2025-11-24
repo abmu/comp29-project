@@ -36,6 +36,11 @@ def _get_waiting_vehicles(detector_id: str) -> list[float]:
     return [traci.vehicle.getWaitingTime(vehicle_id) for vehicle_id in traci.lanearea.getLastStepVehicleIDs(detector_id)]
 
 
+def _get_vehicle_count(detector_id: str) -> int:
+    # get the number of vehicles crossing the detector
+    return traci.inductionloop.getLastStepVehicleNumber(detector_id)
+
+
 def get_all_waiting_vehicles(detectors: list[list[str]]) -> list[list[float]]:
     # return the waiting vehicles in the specified detectors
     waiting_vehicles = []
@@ -45,6 +50,17 @@ def get_all_waiting_vehicles(detectors: list[list[str]]) -> list[list[float]]:
             group += _get_waiting_vehicles(detector)
         waiting_vehicles.append(group)
     return waiting_vehicles
+
+
+def get_vehicle_throughput(detectors: list[list[str]]) -> list[int]:
+    # return the vehicle count that have crossed the specified detectors
+    throughput = []
+    for detector_group in detectors:
+        count = 0
+        for detector in detector_group:
+            count += _get_vehicle_count(detector)
+        throughput.append(count)
+    return throughput
 
 
 def _get_waiting_peds(crossing_id: str, waiting_edge_ids: tuple[str, str]) -> list[float]:
@@ -57,6 +73,23 @@ def _get_waiting_peds(crossing_id: str, waiting_edge_ids: tuple[str, str]) -> li
     return group
 
 
+def _get_peds_exiting(crossing_id: str, exit_edge_ids: tuple[str, str], threshold: float = 1.5) -> int:
+    # get the number of pedestrians exiting the crossing
+    edge_length = traci.lane.getLength(crossing_id + '_0')
+    crossing_peds = traci.edge.getLastStepPersonIDs(crossing_id)
+    count = 0
+    for ped in crossing_peds:
+        next_edge = traci.person.getNextEdge(ped)
+        ped_pos = traci.person.getLanePosition(ped)
+        if next_edge == exit_edge_ids[0]:
+            remaining = edge_length - ped_pos
+        else:
+            remaining = ped_pos
+        if remaining <= threshold:
+            count += 1
+    return count
+
+
 def get_all_waiting_peds(crossings: list[tuple[str, str, str]]) -> list[list[float]]:
     # return the waiting pedestrians at the specified crossings
     waiting_peds = []
@@ -64,6 +97,15 @@ def get_all_waiting_peds(crossings: list[tuple[str, str, str]]) -> list[list[flo
         group = _get_waiting_peds(crossing[0], crossing[1:])
         waiting_peds.append(group)
     return waiting_peds
+
+
+def get_peds_throughput(crossings: list[tuple[str, str, str]]) -> list[int]:
+    # return the number of pedestrians that have just finished crossing
+    throughput = []
+    for crossing in crossings:
+        count = _get_peds_exiting(crossing[0], crossing[1:])
+        throughput.append(count)
+    return throughput
 
 
 def get_state(tls: str, detectors: list[list[str]], crossings: list[tuple[str, str, str]]) -> tuple[int, ...]:

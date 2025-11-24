@@ -6,7 +6,7 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
-from settings import SUMO_CONFIG, TOTAL_STEPS, tls_id, detector_ids, crossing_ids
+from settings import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids
 from utils import file_dump
 from routes import set_route
 from state import get_state
@@ -38,7 +38,7 @@ for episode in range(EPISODES):
     traci.start(SUMO_CONFIG)
 
     while step < TOTAL_STEPS:
-        state = get_state(tls_id, detector_ids, crossing_ids)
+        state = get_state(tls_id, queue_ids, crossing_ids)
         action = ACTION_LOOP[curr_idx]
 
         step, reward, _ = perform_action(tls_id, step, TOTAL_STEPS, action)
