@@ -61,7 +61,7 @@ def compute_stats(cache: list[list[float | int]]) -> dict[str, dict[str, float |
     return stats
 
 
-def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[float]], vehicle_throughput: list[int], peds_throughput: list[int]) -> float:
+def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[float]], vehicle_throughput: list[int], pedestrian_throughput: list[int]) -> float:
     # reward vehicle and pedestrian throughput, and penalise delays
     waiting_vehicles = [wait_time for vehicles in waiting_vehicles for wait_time in vehicles]
     veh_delay = sum(waiting_vehicles)
@@ -69,20 +69,20 @@ def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[floa
 
     waiting_peds = [wait_time for peds in waiting_peds for wait_time in peds]
     ped_delay = sum(waiting_peds)
-    ped_throughput = sum(peds_throughput)
+    ped_throughput = sum(pedestrian_throughput)
 
     current_cache.append([veh_delay, veh_throughput, ped_delay, ped_throughput])
 
     # weights
-    a = -1.0
-    b = -1.0
-    c = 1
-    d = 1
+    a = - (1.0 / 55.24)  # total current vehicle delay
+    b = 1 / 0.20  # vehicle throughput
+    c = - (1.0 / 156.07)  # total current pedestrian delay
+    d = 1 / 0.18  # pedestrian throughput
 
     reward = (
         a * veh_delay +
-        b * ped_delay +
-        c * veh_throughput +
+        b * veh_throughput +
+        c * ped_delay +
         d * ped_throughput
     )
 

@@ -56,4 +56,4 @@ for episode in range(EPISODES):
 
     print(f'Total Reward: {total_reward}\n')
     file_dump(RESULTS_FILE, str(episode_rewards))
-    file_dump(STATS_FILE, str(compute_stats(get_cache())))
+    # file_dump(STATS_FILE, str(compute_stats(get_cache())))
