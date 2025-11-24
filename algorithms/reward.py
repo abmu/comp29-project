@@ -9,6 +9,10 @@ import traci
 
 # TODO
 # Add a reward parameter which penalises the amount of phase switches made
+# Add OVERALL REWARD
+# - Number of cars that went through the entire route
+# - Number of pedestrians that went through
+# - Average weight
 
 
 def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[float]]) -> float:
@@ -28,18 +32,18 @@ def get_reward(waiting_vehicles: list[list[float]], waiting_peds: list[list[floa
     # weights
     a = 1.0 # vehicle count
     b = 0.0 # average vehicle wait
-    c = 0.0 # total vehicle wait
+    c = 0.0 # max vehicle wait
     d = 0.5 # pedestrian count
     e = 0.0 # average pedestrian wait
-    f = 0.0 # total pedestrian wait
+    f = 0.0 # max pedestrian wait
 
     reward = -(
         a * vehicles_count +
         b * avg_veh_wait +
-        c * vehicles_wait +
+        c * max_veh_wait +
         d * peds_count +
         e * avg_ped_wait +
-        f * peds_wait
+        f * max_ped_wait
     )
 
     return reward

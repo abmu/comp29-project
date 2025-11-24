@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 
 # TODO
-# Use pickles lib to save/load python list from file
+# Use pypy3 to try improve performance
 
 
 FILE_A = 'fixed_timer.txt'
