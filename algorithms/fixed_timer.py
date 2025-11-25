@@ -20,7 +20,7 @@ STATS_FILE = 'results/cache_stats.txt'
 
 ACTION_LOOP = [0,0,0,3,3,3,6]
 
-EPISODES = 100 #1000
+EPISODES = 1000
 
 episode_rewards = []
 
