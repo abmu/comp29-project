@@ -9,15 +9,16 @@ import traci
 import numpy as np
 import random
 from settings import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, queue_ids, crossing_ids
-from utils import file_dump
+from utils import file_dump, file_eval
 from routes import set_route
 from state import get_state
 from action import ACTION_SPACE, perform_action
 
 
+TRAIN_MODE = False
+
 RESULTS_FILE = 'results/q_learning.txt'
 Q_TABLE_FILE = 'results/q_table.txt'
-
 
 Q = {} # {(state, action): value}
 
@@ -29,6 +30,10 @@ EPSILON_DECAY = 0.995
 EPSILON_MIN = 0.005
 
 EPISODES = 1000
+
+if not TRAIN_MODE:
+    Q = file_eval(Q_TABLE_FILE)[0]
+    EPSILON = EPSILON_MIN
 
 
 def get_q(state: tuple[int, ...], action: int) -> float:
@@ -93,5 +98,6 @@ for episode in range(EPISODES):
     EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 
     print(f'Total Reward: {total_reward}, Epsilon: {EPSILON}\n')
-    file_dump(RESULTS_FILE, str(episode_rewards))
-    file_dump(Q_TABLE_FILE, str(Q))
+    if TRAIN_MODE:
+        file_dump(RESULTS_FILE, str(episode_rewards))
+        file_dump(Q_TABLE_FILE, str(Q))
