@@ -8,7 +8,7 @@ import traci
 
 
 # TODO
-# - get full in-depth state with distinction between cars and bicycles, and direction of pedestrians crossing
+# - Get full in-depth state with distinction between cars and bicycles, and direction of pedestrians on crossings
 
 
 def _discretize(xs: list[int], thresholds: tuple[int] = (0, 6, 12)) -> list[int]:
