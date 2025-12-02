@@ -42,9 +42,6 @@ def remove_outliers_rolling(data: np.ndarray, w: int = 20, thresh: float = 1.0) 
             end += 1
 
         local = data[start:end]
-
-        print(len(local))
-
         cleaned[i] = np.nanmean(local)
 
     return cleaned
