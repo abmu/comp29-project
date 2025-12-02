@@ -8,7 +8,7 @@ from utils import run_command
 
 
 # TODO
-# - BUG: fix bug in network where bikes at CJ_1 can sometimes cause congestion
+# - BUG: fix bug in network where bikes at CJ_1 can sometimes cause congestion, e.g. route 388
 # - Improve pedestrians accuracy by varying fringe-factor -- simulates pedestrians going into/out of buildings
 # - Manually adjust weight of edges to make certain edges more likely to spawn, rather than random choice -- simulates commonly used/ main roads
 
