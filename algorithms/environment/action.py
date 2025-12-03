@@ -6,10 +6,10 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
-from settings import STEP_LENGTH, queue_ids, crossing_ids, induction_ids
-from utils import ceil
-from state import get_current_tls_phase, get_all_waiting_vehicles, get_all_waiting_peds, get_vehicle_throughput, get_peds_throughput
-from reward import get_reward
+from .settings import STEP_LENGTH, queue_ids, crossing_ids, induction_ids
+from .utils import ceil
+from .state import get_current_tls_phase, get_all_waiting_vehicles, get_all_waiting_peds, get_vehicle_throughput, get_peds_throughput
+from .reward import get_reward
 
 
 # for reference, the 8 traffic light phases defined in 'main.net.xml'
