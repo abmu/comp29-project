@@ -8,11 +8,8 @@ import traci
 
 import numpy as np
 import random
-from settings import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, queue_ids, crossing_ids
+from environment import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, queue_ids, crossing_ids, ACTION_SPACE, get_state, perform_action, set_route
 from utils import file_dump, file_eval
-from routes import set_route
-from state import get_state
-from action import ACTION_SPACE, perform_action
 
 
 TRAIN_MODE = False

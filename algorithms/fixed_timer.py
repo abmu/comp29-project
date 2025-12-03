@@ -6,12 +6,8 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
-from settings import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids
+from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, set_route, get_state, perform_action, compute_stats
 from utils import file_dump
-from routes import set_route
-from state import get_state
-from action import perform_action
-from reward import get_cache, compute_stats
 
 
 RESULTS_FILE = 'results/fixed_timer.txt'
@@ -55,5 +51,5 @@ for episode in range(EPISODES):
     episode_rewards.append(total_reward)
 
     print(f'Total Reward: {total_reward}\n')
-    file_dump(RESULTS_FILE, str(episode_rewards))
+    # file_dump(RESULTS_FILE, str(episode_rewards))
     # file_dump(STATS_FILE, str(compute_stats(get_cache())))
