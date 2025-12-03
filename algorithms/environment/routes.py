@@ -1,7 +1,7 @@
 import subprocess
 
 
-def generate_routes(seed: int = 42, car_density: float = 1.0, bicycle_density: float = 1.0, pedestrian_density: float = 1.0, random_factor: float = 1.0) -> None:
+def _generate_routes(seed: int = 42, car_density: float = 1.0, bicycle_density: float = 1.0, pedestrian_density: float = 1.0, random_factor: float = 1.0) -> None:
     # generate a new set of routes in the SUMO simulation
     print(f'Generating new routes... (seed: {seed}, car_density: {car_density}, bicycle_density: {bicycle_density}, pedestrian_density: {pedestrian_density}, random_factor: {random_factor})')
     dir_name = '../simulation/scripts'
@@ -39,4 +39,4 @@ def set_route(number: int) -> None:
 if __name__ == "__main__":
     ROUTES = 1000
     for i in range(1, ROUTES+1):
-        generate_routes(seed=i)
+        _generate_routes(seed=i)
