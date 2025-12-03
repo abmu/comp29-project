@@ -92,8 +92,10 @@ vehicles = [
     }
 ]
 
-# generate trip and route
-# NB: a trip defines a random start A and end B, whereas a route defines the exact edges to traverse to get from that start A to end B
-for v in vehicles:
-    print(f'Generating {v["name"]} trips')
-    run_command(['python', random_trip] + v['args'])
+
+if __name__ == "__main__":
+    # generate trips and routes
+    # NB: a trip defines a random start A and end B, whereas a route defines the exact edges to traverse to get from that start A to end B
+    for v in vehicles:
+        print(f'Generating {v["name"]} trips')
+        run_command(['python', random_trip] + v['args'])
