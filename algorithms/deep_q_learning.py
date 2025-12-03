@@ -1,8 +1,38 @@
+import os
+import sys
+
+if not os.environ.get('SUMO_HOME'):
+    raise EnvironmentError('SUMO_HOME is not set.')
+sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
+import traci
+
 import torch
 import torch.nn as nn
+import torch.optim as optim
 import numpy as np
 import random
 from collections import deque
+from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, ACTION_SPACE, get_state, perform_action, set_route
+
+
+TRAIN_MODE = False
+
+RESULTS_FILE = 'results/deep_q_learning.txt'
+
+SEED = 29
+
+LEARNING_RATE = 0.0005
+BATCH_SIZE = 64
+TARGET_UPDATE = 20  # episodes
+GAMMA = 0.9 # discount factor
+EPSILON = 1.0 # exploration rate
+EPSILON_DECAY = 0.995
+EPSILON_MIN = 0.005
+
+EPISODES = 1000
+
+if not TRAIN_MODE:
+    EPSILON = EPSILON_MIN
 
 
 """
@@ -27,7 +57,7 @@ class DQN(nn.Module):
     Replay buffer memory
 """
 class ReplayBuffer:
-    def __init__(self, capacity: int = 1024):
+    def __init__(self, capacity: int = 16384):
         self.buffer = deque(maxlen=capacity)
 
     def push(self, state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: int, done: bool) -> None:
@@ -40,36 +70,23 @@ class ReplayBuffer:
     
     def __len__(self) -> int:
         return len(self.buffer)
-    
 
-state_size = len()
+
+state_size = len(get_state(tls_id, queue_ids, crossing_ids))
+action_size = len(ACTION_SPACE)
+
+policy_net = DQN(state_size, action_size)
+target_net = DQN(state_size, action_size)
+target_net.load_state_dict(policy_net.state_dict())
+
+optimiser = optim.Adam(policy_net.parameters(), lr=LEARNING_RATE)
+memory = ReplayBuffer()
+
 
 
 ....
-old q learning code
-
-
-
-
-TRAIN_MODE = False
-
-RESULTS_FILE = 'results/deep_q_learning.txt'
-
-Q = {} # {(state, action): value}
-
-# Q-learning hyperparameters
-ALPHA = 0.1 # learning rate
-GAMMA = 0.9 # discount factor
-EPSILON = 1.0 # exploration rate
-EPSILON_DECAY = 0.995
-EPSILON_MIN = 0.005
-
-EPISODES = 1000
-
-if not TRAIN_MODE:
-    Q = file_eval(Q_TABLE_FILE)[0]
-    EPSILON = EPSILON_MIN
-
+OLD Q-LEARNING CODE
+...
 
 def get_q(state: tuple[int, ...], action: int) -> float:
     # return Q-value of state and action combination

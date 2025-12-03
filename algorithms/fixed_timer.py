@@ -13,7 +13,6 @@ from utils import file_dump
 RESULTS_FILE = 'results/fixed_timer.txt'
 STATS_FILE = 'results/cache_stats.txt'
 
-
 ACTION_LOOP = [0,0,0,3,3,3,6]
 
 EPISODES = 1000
