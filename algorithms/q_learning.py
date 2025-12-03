@@ -8,11 +8,13 @@ import traci
 
 import numpy as np
 import random
-from environment import SUMO_CONFIG, TOTAL_STEPS, SEED, tls_id, queue_ids, crossing_ids, ACTION_SPACE, get_state, perform_action, set_route
+from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, ACTION_SPACE, get_state, perform_action, set_route
 from utils import file_dump, file_eval
 
 
 TRAIN_MODE = False
+
+SEED = 29
 
 RESULTS_FILE = 'results/q_learning.txt'
 Q_TABLE_FILE = 'results/q_table.txt'

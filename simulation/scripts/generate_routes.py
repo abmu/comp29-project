@@ -26,7 +26,7 @@ random_trip = os.path.join(TOOLS, 'randomTrips.py')
 
 # Parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--seed', type=int, default=42)
+parser.add_argument('--seed', type=int, default=1)
 parser.add_argument('--car-density', type=float, default=1.0)
 parser.add_argument('--bicycle-density', type=float, default=1.0)
 parser.add_argument('--pedestrian-density', type=float, default=1.0)

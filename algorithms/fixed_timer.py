@@ -6,7 +6,7 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
-from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, set_route, get_state, perform_action, compute_stats
+from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, set_route, get_state, perform_action, compute_stats, get_cache
 from utils import file_dump
 
 

@@ -4,8 +4,6 @@ SIMULATION_TIME = 3600
 STEP_LENGTH = 0.10 * 10
 TOTAL_STEPS = int(SIMULATION_TIME / STEP_LENGTH)
 
-SEED = 29
-
 SUMO_CONFIG = ['sumo-gui'] if GUI else ['sumo']
 SUMO_CONFIG += [
     '-c', '../simulation/simulation.sumocfg',
