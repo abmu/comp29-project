@@ -7,10 +7,6 @@ sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
 
-# TODO
-# - Get full in-depth state with distinction between cars and bicycles, and direction of pedestrians on crossings, phase durations, etc.
-
-
 def _discretize(xs: list[int], thresholds: tuple[int] = (0, 6, 12)) -> list[int]:
     # discretize value to a value between 0-3
     ys = [-1] * len(xs)
