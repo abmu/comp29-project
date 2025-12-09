@@ -83,11 +83,11 @@ for episode in range(EPISODES):
         state = get_state(tls_id, queue_ids, crossing_ids)
         action = choose_action(state)
         
-        step, reward, step_delta = perform_action(tls_id, step, TOTAL_STEPS, action)
+        step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
 
         next_state = get_state(tls_id, queue_ids, crossing_ids)
         total_reward += reward
-        update_q(state, action, reward, next_state, step_delta)
+        update_q(state, action, reward, next_state, duration)
 
         # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
 

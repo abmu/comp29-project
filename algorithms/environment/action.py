@@ -52,6 +52,10 @@ def _duration_to_steps(duration: int) -> int:
     # convert duration to number of steps in the simulation
     return ceil(duration / STEP_LENGTH)
 
+def _steps_to_duration(steps: int) -> float:
+    # convert number of steps to duration in the simulation
+    return steps * STEP_LENGTH
+
 
 def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, duration: int, curr_reward: int) -> tuple[int, int]:
     # peform action changing phase on the traffic light system, and return updated step number and cumulative reward
@@ -87,4 +91,4 @@ def perform_action(tls_id: str, curr_step: int, total_steps: int, action: int) -
     duration = ACTION_SPACE[action]['duration']
     curr_step, curr_reward = _run_action(tls_id, curr_step, total_steps, action, duration, curr_reward)
 
-    return curr_step, curr_reward, curr_step - start_step
+    return curr_step, curr_reward, _steps_to_duration(curr_step - start_step)
