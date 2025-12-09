@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 FILE_A = 'fixed_timer.txt'
 FILE_B = 'q_learning.txt'
+FILE_C = 'deep_q_learning.txt'
 
 
 def moving_average(data: np.ndarray, w: int = 5) -> np.ndarray:
@@ -54,13 +55,18 @@ with open(FILE_A, 'r') as f:
 with open(FILE_B, 'r') as f:
     b_list = eval(f.readlines()[0])
 
+with open(FILE_C, 'r') as f:
+    c_list = eval(f.readlines()[0])
+
 a_list = moving_average(remove_outliers_rolling(a_list))
 b_list = moving_average(remove_outliers_rolling(b_list))
+c_list = moving_average(remove_outliers_rolling(c_list))
 
 # plot both lists
 plt.figure()
 plt.plot(a_list, label=f'{FILE_A}')
 plt.plot(b_list, label=f'{FILE_B}')
+plt.plot(c_list, label=f'{FILE_C}')
 plt.xlabel('Epoch')
 plt.ylabel('Reward')
 plt.title('TLS methods')
