@@ -13,6 +13,7 @@ import numpy as np
 import random
 from collections import deque
 from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, ACTION_SPACE, get_state, perform_action, set_route
+from utils import file_dump
 
 
 TRAIN_MODE = False
@@ -24,8 +25,8 @@ SEED = 29
 LEARNING_RATE = 0.0005
 BATCH_SIZE = 64
 TARGET_UPDATE = 20  # episodes
-GAMMA = 0.9 # discount factor
-EPSILON = 1.0 # exploration rate
+GAMMA = 0.9  # discount factor
+EPSILON = 1.0  # exploration rate
 EPSILON_DECAY = 0.995
 EPSILON_MIN = 0.005
 
@@ -83,16 +84,6 @@ optimiser = optim.Adam(policy_net.parameters(), lr=LEARNING_RATE)
 memory = ReplayBuffer()
 
 
-
-....
-OLD Q-LEARNING CODE
-...
-
-def get_q(state: tuple[int, ...], action: int) -> float:
-    # return Q-value of state and action combination
-    return Q.get((state, action), 0.0)
-
-
 def choose_action(state: tuple[int, ...]) -> int:
     # choose action using an epsilon-greedy policy
     actions = list(ACTION_SPACE.keys())
@@ -100,18 +91,40 @@ def choose_action(state: tuple[int, ...]) -> int:
         # exploration - choose random action
         return random.choice(actions)
     else:
-        # exploitation - choose action with highest Q-value
-        qs = [get_q(state, a) for a in actions]
-        return actions[np.argmax(qs)]
+        # exploitation - using DQN
+        state_tensor = torch.FloatTensor(state).unsqueeze(0)
+        with torch.no_grad():
+            q_values = policy_net(state_tensor)
+        return int(torch.argmax(q_values).item())
 
 
-def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: int) -> None:
-    # update Q-value of state and action combinatoin based on reward and next state
-    actions = list(ACTION_SPACE.keys())
-    old_q = get_q(state, action)
-    best_next = max(get_q(next_state, a) for a in actions)
-    # Semi-Markov Decision Process
-    Q[(state, action)] = old_q + ALPHA * (reward + (GAMMA ** duration) * best_next - old_q)
+def train_step() -> None:
+    # perform a train step of the policy network
+    if len(memory) < BATCH_SIZE:
+        return
+
+    states, actions, rewards, next_states, durations, dones = memory.sample(BATCH_SIZE)
+
+    states = torch.FloatTensor(states)
+    actions = torch.LongTensor(actions).unsqueeze(1)
+    rewards = torch.FloatTensor(rewards).unsqueeze(1)
+    next_states = torch.FloatTensor(next_states)
+    durations = torch.FloatTensor(durations).unsqueeze(1)
+    dones = torch.FloatTensor(dones.astype(np.float32)).unsqueeze(1)
+
+    # Q(s,a)
+    q_values = policy_net(states).gather(1, actions)
+
+    # Target Q(s',a')
+    with torch.no_grad():
+        next_q_values = target_net(next_states).max(dim=1)[0].unsqueeze(1)
+        # Use duration for SMDP effect
+        target = rewards + (1 - dones) * (GAMMA ** durations) * next_q_values
+
+    loss = nn.MSELoss()(q_values, target)
+    optimiser.zero_grad()
+    loss.backward()
+    optimiser.step()
 
 
 episode_rewards = []
@@ -136,11 +149,17 @@ for episode in range(EPISODES):
         state = get_state(tls_id, queue_ids, crossing_ids)
         action = choose_action(state)
         
-        step, reward, step_delta = perform_action(tls_id, step, TOTAL_STEPS, action)
+        step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
 
         next_state = get_state(tls_id, queue_ids, crossing_ids)
+        done = step >= TOTAL_STEPS
         total_reward += reward
-        update_q(state, action, reward, next_state, step_delta)
+
+        # save transition
+        memory.push(state, action, reward, next_state, duration, done)
+
+        if TRAIN_MODE:
+            train_step()
 
         # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
 
@@ -152,4 +171,3 @@ for episode in range(EPISODES):
     print(f'Total Reward: {total_reward}, Epsilon: {EPSILON}\n')
     if TRAIN_MODE:
         file_dump(RESULTS_FILE, str(episode_rewards))
-        file_dump(Q_TABLE_FILE, str(Q))
