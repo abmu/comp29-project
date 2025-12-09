@@ -16,7 +16,7 @@ from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_id
 from utils import file_dump
 
 
-TRAIN_MODE = False
+TRAIN_MODE = True
 
 RESULTS_FILE = 'results/deep_q_learning.txt'
 MODEL_FILE = 'results/dqn_model.pt'
@@ -92,20 +92,22 @@ target_net.load_state_dict(policy_net.state_dict())
 optimiser = optim.Adam(policy_net.parameters(), lr=LEARNING_RATE)
 memory = ReplayBuffer()
 
+ACTION_IDS = sorted(ACTION_SPACE.keys())
+ACTION_ID_TO_IDX = {aid: i for i, aid in enumerate(ACTION_IDS)}
+
 
 def choose_action(state: tuple[int, ...]) -> int:
     # choose action using an epsilon-greedy policy
-    actions = sorted(ACTION_SPACE.keys())
     if random.random() < EPSILON:
         # exploration - choose random action
-        return random.choice(actions)
+        return random.choice(ACTION_IDS)
     else:
         # exploitation - using DQN
         state_tensor = torch.FloatTensor(state).unsqueeze(0)
         with torch.no_grad():
             q_values = policy_net(state_tensor)
         nn_index = torch.argmax(q_values).item()
-        return actions[nn_index]
+        return ACTION_IDS[nn_index]
 
 
 def train_step() -> None:
@@ -166,7 +168,8 @@ for episode in range(EPISODES):
         total_reward += reward
 
         # save transition
-        memory.push(state, action, reward, next_state, duration, done)
+        action_idx = ACTION_ID_TO_IDX[action]
+        memory.push(state, action_idx, reward, next_state, duration, done)
 
         if TRAIN_MODE:
             train_step()
