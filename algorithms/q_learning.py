@@ -32,7 +32,8 @@ EPISODES = 1000
 
 if not TRAIN_MODE:
     Q = file_eval(Q_TABLE_FILE)[0]
-    EPSILON = EPSILON_MIN
+    EPSILON = 0
+    EPSILON_MIN = 0
 
 
 def get_q(state: tuple[int, ...], action: int) -> float:

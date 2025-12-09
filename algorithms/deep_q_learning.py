@@ -19,6 +19,7 @@ from utils import file_dump
 TRAIN_MODE = False
 
 RESULTS_FILE = 'results/deep_q_learning.txt'
+MODEL_FILE = 'results/dqn_model.pt'
 
 SEED = 29
 
@@ -79,6 +80,12 @@ traci.close()
 action_size = len(ACTION_SPACE)
 
 policy_net = DQN(state_size, action_size)
+if not TRAIN_MODE:
+    policy_net.load_state_dict(torch.load(MODEL_FILE))
+    policy_net.eval()
+    EPSILON = 0
+    EPSILON_MIN = 0
+
 target_net = DQN(state_size, action_size)
 target_net.load_state_dict(policy_net.state_dict())
 
@@ -179,3 +186,4 @@ for episode in range(EPISODES):
     print(f'Total Reward: {total_reward}, Epsilon: {EPSILON}\n')
     if TRAIN_MODE:
         file_dump(RESULTS_FILE, str(episode_rewards))
+        torch.save(policy_net.state_dict(), MODEL_FILE)
