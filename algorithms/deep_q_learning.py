@@ -73,7 +73,9 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
+traci.start(SUMO_CONFIG)
 state_size = len(get_state(tls_id, queue_ids, crossing_ids))
+traci.close()
 action_size = len(ACTION_SPACE)
 
 policy_net = DQN(state_size, action_size)
@@ -86,7 +88,7 @@ memory = ReplayBuffer()
 
 def choose_action(state: tuple[int, ...]) -> int:
     # choose action using an epsilon-greedy policy
-    actions = list(ACTION_SPACE.keys())
+    actions = sorted(ACTION_SPACE.keys())
     if random.random() < EPSILON:
         # exploration - choose random action
         return random.choice(actions)
@@ -95,7 +97,8 @@ def choose_action(state: tuple[int, ...]) -> int:
         state_tensor = torch.FloatTensor(state).unsqueeze(0)
         with torch.no_grad():
             q_values = policy_net(state_tensor)
-        return int(torch.argmax(q_values).item())
+        nn_index = torch.argmax(q_values).item()
+        return actions[nn_index]
 
 
 def train_step() -> None:
@@ -166,6 +169,11 @@ for episode in range(EPISODES):
     traci.close()
 
     episode_rewards.append(total_reward)
+
+    if TRAIN_MODE and (episode + 1) % TARGET_UPDATE == 0:
+        target_net.load_state_dict(policy_net.state_dict())
+        print("Target network updated")
+
     EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 
     print(f'Total Reward: {total_reward}, Epsilon: {EPSILON}\n')
