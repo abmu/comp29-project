@@ -6,12 +6,12 @@
 #
 # Implement evaluation framework
 # - Exit prematurely if SUMO simulation gets teleports/ bikes get stuck -- check what happens if list element is None is results.py file
-# - Run each algorithm in parallel on the same dataset -- Fixed number of episodes, start a new traci siumlation, change route once every algorithm finishes that episode
 # - Evaluate performance in new seeds, with different traffic densities (more/less pedestrians, more/less vehicles)
-# - Comment on different weights to prioritise either pedestrians or vehicles (currently equal)
+# - Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian)
 # - Explore other methods such as other Q-learning techniques (Double DQN, Dueling DQN) and actor-critic
 #
 # State
+# - Test Q learning with uncompressed vs current compressed state
 # - Get full in-depth state with distinction between cars and bicycles, and direction of pedestrians on crossings, phase durations, etc.
 #
 # Routes
