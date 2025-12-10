@@ -12,7 +12,7 @@ from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_id
 from utils import file_dump, file_eval
 
 
-TRAIN_MODE = False
+TRAIN_MODE = True
 
 RESULTS_FILE = 'results/q_learning.txt'
 Q_TABLE_FILE = 'results/q_table.txt'

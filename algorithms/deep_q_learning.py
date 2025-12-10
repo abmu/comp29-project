@@ -16,7 +16,7 @@ from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_id
 from utils import file_dump
 
 
-TRAIN_MODE = False
+TRAIN_MODE = True
 
 RESULTS_FILE = 'results/deep_q_learning.txt'
 MODEL_FILE = 'results/dqn_model.pt'
