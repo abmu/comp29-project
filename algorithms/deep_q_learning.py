@@ -163,7 +163,7 @@ def run(epsilon: float, epoch: int) -> tuple[float, float]:
 
     traci.close()
 
-    if TRAIN_MODE and (epoch + 1) % TARGET_UPDATE == 0:
+    if TRAIN_MODE and (epoch) % TARGET_UPDATE == 0:
         target_net.load_state_dict(policy_net.state_dict())
         print("Target network updated")
 
@@ -172,23 +172,24 @@ def run(epsilon: float, epoch: int) -> tuple[float, float]:
     return total_reward, epsilon
 
 
-episode_rewards = []
+if __name__ == "__main__":
+    episode_rewards = []
 
-random.seed(SEED)
+    random.seed(SEED)
 
-for episode in range(EPISODES):
+    for episode in range(1, EPISODES+1):
 
-    print(f'Episode: {episode + 1}')
-    
-    # set SUMO route
-    set_route(episode+1)
+        print(f'Episode: {episode}')
+        
+        # set SUMO route
+        set_route(episode)
 
-    # run episode training
-    print(f'Running SUMO...')
-    reward, EPSILON = run(EPSILON, episode)
-    episode_rewards.append(reward)
+        # run episode training
+        print(f'Running SUMO...')
+        reward, EPSILON = run(EPSILON, episode)
+        episode_rewards.append(reward)
 
-    print(f'Total Reward: {reward}, Epsilon: {EPSILON}\n')
-    if TRAIN_MODE:
-        file_dump(RESULTS_FILE, str(episode_rewards))
-        torch.save(policy_net.state_dict(), MODEL_FILE)
+        print(f'Total Reward: {reward}, Epsilon: {EPSILON}\n')
+        if TRAIN_MODE:
+            file_dump(RESULTS_FILE, str(episode_rewards))
+            torch.save(policy_net.state_dict(), MODEL_FILE)

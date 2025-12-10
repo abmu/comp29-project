@@ -87,23 +87,24 @@ def run(epsilon: float) -> tuple[float, float]:
     return total_reward, epsilon
 
 
-episode_rewards = []
+if __name__ == "__main__":
+    episode_rewards = []
 
-random.seed(SEED)
+    random.seed(SEED)
 
-for episode in range(EPISODES):
+    for episode in range(1, EPISODES+1):
 
-    print(f'Episode: {episode + 1}')
-    
-    # set SUMO route
-    set_route(episode+1)
+        print(f'Episode: {episode}')
+        
+        # set SUMO route
+        set_route(episode)
 
-    # run episode training
-    print(f'Running SUMO...')
-    reward, EPSILON = run(EPSILON)
-    episode_rewards.append(reward)
+        # run episode training
+        print(f'Running SUMO...')
+        reward, EPSILON = run(EPSILON)
+        episode_rewards.append(reward)
 
-    print(f'Total Reward: {reward}, Epsilon: {EPSILON}\n')
-    if TRAIN_MODE:
-        file_dump(RESULTS_FILE, str(episode_rewards))
-        file_dump(Q_TABLE_FILE, str(Q))
+        print(f'Total Reward: {reward}, Epsilon: {EPSILON}\n')
+        if TRAIN_MODE:
+            file_dump(RESULTS_FILE, str(episode_rewards))
+            file_dump(Q_TABLE_FILE, str(Q))

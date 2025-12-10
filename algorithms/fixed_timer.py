@@ -42,21 +42,22 @@ def run() -> float:
     return total_reward
 
 
-episode_rewards = []
+if __name__ == "__main__":
+    episode_rewards = []
 
-for episode in range(EPISODES):
+    for episode in range(EPISODES):
 
-    print(f'Episode: {episode + 1}')
+        print(f'Episode: {episode + 1}')
 
-    # set SUMO route
-    set_route(episode+1)
+        # set SUMO route
+        set_route(episode+1)
 
-    # run fixed timer algorithm
-    print(f'Running SUMO...')
-    reward = run()
-    episode_rewards.append(reward)
+        # run fixed timer algorithm
+        print(f'Running SUMO...')
+        reward = run()
+        episode_rewards.append(reward)
 
-    print(f'Total Reward: {reward}\n')
-    if STATS_MODE:
-        file_dump(RESULTS_FILE, str(episode_rewards))
-        file_dump(STATS_FILE, str(compute_stats(get_cache())))
+        print(f'Total Reward: {reward}\n')
+        if STATS_MODE:
+            file_dump(RESULTS_FILE, str(episode_rewards))
+            file_dump(STATS_FILE, str(compute_stats(get_cache())))
