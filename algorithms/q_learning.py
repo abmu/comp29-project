@@ -101,7 +101,6 @@ if __name__ == "__main__":
     random.seed(SEED)
 
     for episode in range(1, EPISODES+1):
-
         print(f'Episode: {episode}')
         
         # set SUMO route

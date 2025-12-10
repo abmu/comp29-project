@@ -139,8 +139,10 @@ def train_step() -> None:
 def run(epoch: int) -> tuple[float, float]:
     # run a single episode and return the reward
     global EPSILON
+
     total_reward = 0
     step = 0
+
     traci.start(SUMO_CONFIG)
 
     while step < TOTAL_STEPS:
@@ -181,7 +183,6 @@ if __name__ == "__main__":
     random.seed(SEED)
 
     for episode in range(1, EPISODES+1):
-
         print(f'Episode: {episode}')
         
         # set SUMO route
