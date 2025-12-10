@@ -41,10 +41,10 @@ def get_q(state: tuple[int, ...], action: int) -> float:
     return Q.get((state, action), 0.0)
 
 
-def choose_action(state: tuple[int, ...]) -> int:
+def choose_action(state: tuple[int, ...], epsilon: float) -> int:
     # choose action using an epsilon-greedy policy
     actions = list(ACTION_SPACE.keys())
-    if random.random() < EPSILON:
+    if random.random() < epsilon:
         # exploration - choose random action
         return random.choice(actions)
     else:
@@ -62,27 +62,15 @@ def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tup
     Q[(state, action)] = old_q + ALPHA * (reward + (GAMMA ** duration) * best_next - old_q)
 
 
-episode_rewards = []
-
-random.seed(SEED)
-
-for episode in range(EPISODES):
-
-    print(f'Episode: {episode + 1}')
-    
-    # set SUMO route
-    set_route(episode+1)
-
-    print(f'Running SUMO...')
-
-    # run episode training
+def run(epsilon: float) -> tuple[float, float]:
+    # run a single episode and return the reward
     total_reward = 0
     step = 0
     traci.start(SUMO_CONFIG)
 
     while step < TOTAL_STEPS:
         state = get_state(tls_id, queue_ids, crossing_ids)
-        action = choose_action(state)
+        action = choose_action(state, epsilon)
         
         step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
 
@@ -94,10 +82,28 @@ for episode in range(EPISODES):
 
     traci.close()
 
-    episode_rewards.append(total_reward)
-    EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
+    epsilon = max(EPSILON_MIN, epsilon * EPSILON_DECAY)
 
-    print(f'Total Reward: {total_reward}, Epsilon: {EPSILON}\n')
+    return total_reward, epsilon
+
+
+episode_rewards = []
+
+random.seed(SEED)
+
+for episode in range(EPISODES):
+
+    print(f'Episode: {episode + 1}')
+    
+    # set SUMO route
+    set_route(episode+1)
+
+    # run episode training
+    print(f'Running SUMO...')
+    reward, EPSILON = run(EPSILON)
+    episode_rewards.append(reward)
+
+    print(f'Total Reward: {reward}, Epsilon: {EPSILON}\n')
     if TRAIN_MODE:
         file_dump(RESULTS_FILE, str(episode_rewards))
         file_dump(Q_TABLE_FILE, str(Q))

@@ -21,6 +21,7 @@ EPISODES = 1000
 
 
 def run() -> float:
+    # run a single episode and return the reward
     total_reward = 0
     curr_idx = 0
     step = 0
