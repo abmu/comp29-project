@@ -136,7 +136,7 @@ def train_step() -> None:
     optimiser.step()
 
 
-def run(epoch: int) -> tuple[float, float]:
+def run(epoch: int = 1) -> tuple[float, float]:
     # run a single episode and return the reward
     global EPSILON
 

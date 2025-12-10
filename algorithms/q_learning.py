@@ -62,7 +62,7 @@ def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tup
     Q[(state, action)] = old_q + ALPHA * (reward + (GAMMA ** duration) * best_next - old_q)
 
 
-def run() -> tuple[float, float]:
+def run(epoch: int = 1) -> tuple[float, float]:
     # run a single episode and return the reward
     global EPSILON
 
@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
         # run episode training
         print(f'Running SUMO...')
-        reward = run()
+        reward = run(episode)
         episode_rewards.append(reward)
 
         print(f'Total Reward: {reward}, Epsilon: {EPSILON}\n')

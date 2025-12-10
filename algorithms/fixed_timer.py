@@ -20,7 +20,7 @@ ACTION_LOOP = [0,0,0,3,3,3,6]
 EPISODES = 1000
 
 
-def run() -> float:
+def run(epoch: int = 1) -> float:
     # run a single episode and return the reward
     total_reward = 0
     curr_idx = 0
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
         # run fixed timer algorithm
         print(f'Running SUMO...')
-        reward = run()
+        reward = run(episode)
         episode_rewards.append(reward)
 
         print(f'Total Reward: {reward}\n')
