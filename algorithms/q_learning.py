@@ -41,10 +41,10 @@ def get_q(state: tuple[int, ...], action: int) -> float:
     return Q.get((state, action), 0.0)
 
 
-def choose_action(state: tuple[int, ...], epsilon: float) -> int:
+def choose_action(state: tuple[int, ...]) -> int:
     # choose action using an epsilon-greedy policy
     actions = list(ACTION_SPACE.keys())
-    if random.random() < epsilon:
+    if random.random() < EPSILON:
         # exploration - choose random action
         return random.choice(actions)
     else:
@@ -62,29 +62,37 @@ def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tup
     Q[(state, action)] = old_q + ALPHA * (reward + (GAMMA ** duration) * best_next - old_q)
 
 
-def run(epsilon: float) -> tuple[float, float]:
+def run() -> tuple[float, float]:
     # run a single episode and return the reward
+    global EPSILON
+
     total_reward = 0
     step = 0
+    
     traci.start(SUMO_CONFIG)
 
     while step < TOTAL_STEPS:
         state = get_state(tls_id, queue_ids, crossing_ids)
-        action = choose_action(state, epsilon)
+        action = choose_action(state)
         
         step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
 
         next_state = get_state(tls_id, queue_ids, crossing_ids)
         total_reward += reward
-        update_q(state, action, reward, next_state, duration)
+
+        if TRAIN_MODE:
+            update_q(state, action, reward, next_state, duration)
 
         # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
 
     traci.close()
 
-    epsilon = max(EPSILON_MIN, epsilon * EPSILON_DECAY)
+    EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 
-    return total_reward, epsilon
+    if TRAIN_MODE:
+        file_dump(Q_TABLE_FILE, str(Q))
+
+    return total_reward
 
 
 if __name__ == "__main__":
@@ -101,10 +109,9 @@ if __name__ == "__main__":
 
         # run episode training
         print(f'Running SUMO...')
-        reward, EPSILON = run(EPSILON)
+        reward = run()
         episode_rewards.append(reward)
 
         print(f'Total Reward: {reward}, Epsilon: {EPSILON}\n')
         if TRAIN_MODE:
             file_dump(RESULTS_FILE, str(episode_rewards))
-            file_dump(Q_TABLE_FILE, str(Q))

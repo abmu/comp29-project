@@ -93,9 +93,9 @@ ACTION_IDS = sorted(ACTION_SPACE.keys())
 ACTION_ID_TO_IDX = {aid: i for i, aid in enumerate(ACTION_IDS)}
 
 
-def choose_action(state: tuple[int, ...], epsilon: float) -> int:
+def choose_action(state: tuple[int, ...]) -> int:
     # choose action using an epsilon-greedy policy
-    if random.random() < epsilon:
+    if random.random() < EPSILON:
         # exploration - choose random action
         return random.choice(ACTION_IDS)
     else:
@@ -136,15 +136,16 @@ def train_step() -> None:
     optimiser.step()
 
 
-def run(epsilon: float, epoch: int) -> tuple[float, float]:
+def run(epoch: int) -> tuple[float, float]:
     # run a single episode and return the reward
+    global EPSILON
     total_reward = 0
     step = 0
     traci.start(SUMO_CONFIG)
 
     while step < TOTAL_STEPS:
         state = get_state(tls_id, queue_ids, crossing_ids)
-        action = choose_action(state, epsilon)
+        action = choose_action(state)
         
         step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
 
@@ -163,13 +164,15 @@ def run(epsilon: float, epoch: int) -> tuple[float, float]:
 
     traci.close()
 
-    if TRAIN_MODE and (epoch) % TARGET_UPDATE == 0:
-        target_net.load_state_dict(policy_net.state_dict())
-        print("Target network updated")
+    EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 
-    epsilon = max(EPSILON_MIN, epsilon * EPSILON_DECAY)
+    if TRAIN_MODE:
+        torch.save(policy_net.state_dict(), MODEL_FILE)
+        if (epoch) % TARGET_UPDATE == 0:
+            target_net.load_state_dict(policy_net.state_dict())
+            print("Target network updated")
 
-    return total_reward, epsilon
+    return total_reward
 
 
 if __name__ == "__main__":
@@ -186,10 +189,9 @@ if __name__ == "__main__":
 
         # run episode training
         print(f'Running SUMO...')
-        reward, EPSILON = run(EPSILON, episode)
+        reward = run(episode)
         episode_rewards.append(reward)
 
         print(f'Total Reward: {reward}, Epsilon: {EPSILON}\n')
         if TRAIN_MODE:
             file_dump(RESULTS_FILE, str(episode_rewards))
-            torch.save(policy_net.state_dict(), MODEL_FILE)
