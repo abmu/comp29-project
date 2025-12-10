@@ -71,26 +71,29 @@ def run(epoch: int = 1) -> tuple[float, float]:
     
     traci.start(SUMO_CONFIG)
 
-    while step < TOTAL_STEPS:
-        state = get_state(tls_id, queue_ids, crossing_ids)
-        action = choose_action(state)
-        
-        step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
+    try:
+        while step < TOTAL_STEPS:
+            state = get_state(tls_id, queue_ids, crossing_ids)
+            action = choose_action(state)
+            
+            step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
 
-        next_state = get_state(tls_id, queue_ids, crossing_ids)
-        total_reward += reward
+            next_state = get_state(tls_id, queue_ids, crossing_ids)
+            total_reward += reward
+
+            if TRAIN_MODE:
+                update_q(state, action, reward, next_state, duration)
+
+            # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
+    except Exception as e:
+        raise
+    finally:
+        traci.close()
+
+        EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 
         if TRAIN_MODE:
-            update_q(state, action, reward, next_state, duration)
-
-        # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
-
-    traci.close()
-
-    EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
-
-    if TRAIN_MODE:
-        file_dump(Q_TABLE_FILE, str(Q))
+            file_dump(Q_TABLE_FILE, str(Q))
 
     return total_reward
 

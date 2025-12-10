@@ -145,34 +145,37 @@ def run(epoch: int = 1) -> tuple[float, float]:
 
     traci.start(SUMO_CONFIG)
 
-    while step < TOTAL_STEPS:
-        state = get_state(tls_id, queue_ids, crossing_ids)
-        action = choose_action(state)
-        
-        step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
+    try:
+        while step < TOTAL_STEPS:
+            state = get_state(tls_id, queue_ids, crossing_ids)
+            action = choose_action(state)
+            
+            step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
 
-        next_state = get_state(tls_id, queue_ids, crossing_ids)
-        done = step >= TOTAL_STEPS
-        total_reward += reward
+            next_state = get_state(tls_id, queue_ids, crossing_ids)
+            done = step >= TOTAL_STEPS
+            total_reward += reward
 
-        # save transition
-        action_idx = ACTION_ID_TO_IDX[action]
-        memory.push(state, action_idx, reward, next_state, duration, done)
+            # save transition
+            action_idx = ACTION_ID_TO_IDX[action]
+            memory.push(state, action_idx, reward, next_state, duration, done)
+
+            if TRAIN_MODE:
+                train_step()
+
+            # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
+    except Exception as e:
+        raise
+    finally:
+        traci.close()
+
+        EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 
         if TRAIN_MODE:
-            train_step()
-
-        # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
-
-    traci.close()
-
-    EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
-
-    if TRAIN_MODE:
-        torch.save(policy_net.state_dict(), MODEL_FILE)
-        if (epoch) % TARGET_UPDATE == 0:
-            target_net.load_state_dict(policy_net.state_dict())
-            print("Target network updated")
+            torch.save(policy_net.state_dict(), MODEL_FILE)
+            if (epoch) % TARGET_UPDATE == 0:
+                target_net.load_state_dict(policy_net.state_dict())
+                print("Target network updated")
 
     return total_reward
 
