@@ -53,7 +53,7 @@ def choose_action(state: tuple[int, ...]) -> int:
         return actions[np.argmax(qs)]
 
 
-def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: int) -> None:
+def update_q(state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: float) -> None:
     # update Q-value of state and action combinatoin based on reward and next state
     actions = list(ACTION_SPACE.keys())
     old_q = get_q(state, action)

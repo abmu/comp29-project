@@ -10,6 +10,8 @@ from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_id
 from utils import file_dump
 
 
+STATS_MODE = False
+
 RESULTS_FILE = 'results/fixed_timer.txt'
 STATS_FILE = 'results/cache_stats.txt'
 
@@ -17,18 +19,8 @@ ACTION_LOOP = [0,0,0,3,3,3,6]
 
 EPISODES = 1000
 
-episode_rewards = []
 
-for episode in range(EPISODES):
-
-    print(f'Episode: {episode + 1}')
-
-    # set SUMO route
-    set_route(episode+1)
-
-    print(f'Running SUMO...')
-
-    # run fixed timer algorithm
+def run() -> float:
     total_reward = 0
     curr_idx = 0
     step = 0
@@ -46,9 +38,24 @@ for episode in range(EPISODES):
         # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
 
     traci.close()
+    return total_reward
 
-    episode_rewards.append(total_reward)
 
-    print(f'Total Reward: {total_reward}\n')
-    # file_dump(RESULTS_FILE, str(episode_rewards))
-    # file_dump(STATS_FILE, str(compute_stats(get_cache())))
+episode_rewards = []
+
+for episode in range(EPISODES):
+
+    print(f'Episode: {episode + 1}')
+
+    # set SUMO route
+    set_route(episode+1)
+
+    # run fixed timer algorithm
+    print(f'Running SUMO...')
+    reward = run()
+    episode_rewards.append(reward)
+
+    print(f'Total Reward: {reward}\n')
+    if STATS_MODE:
+        file_dump(RESULTS_FILE, str(episode_rewards))
+        file_dump(STATS_FILE, str(compute_stats(get_cache())))

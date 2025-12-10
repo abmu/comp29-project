@@ -62,7 +62,7 @@ class ReplayBuffer:
     def __init__(self, capacity: int = 16384):
         self.buffer = deque(maxlen=capacity)
 
-    def push(self, state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: int, done: bool) -> None:
+    def push(self, state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: float, done: bool) -> None:
         self.buffer.append((state, action, reward, next_state, duration, done))
 
     def sample(self, batch_size: int) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:

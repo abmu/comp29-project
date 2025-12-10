@@ -57,7 +57,7 @@ def _steps_to_duration(steps: int) -> float:
     return steps * STEP_LENGTH
 
 
-def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, duration: int, curr_reward: int) -> tuple[int, int]:
+def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, duration: int, curr_reward: int) -> tuple[int, float]:
     # peform action changing phase on the traffic light system, and return updated step number and cumulative reward
     if curr_step >= total_steps:
         return curr_step, curr_reward
@@ -78,7 +78,7 @@ def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, dura
     return curr_step, curr_reward
 
 
-def perform_action(tls_id: str, curr_step: int, total_steps: int, action: int) -> int:
+def perform_action(tls_id: str, curr_step: int, total_steps: int, action: int) -> tuple[int, float, float]:
     # perform specified action, ensuring that the phase switch is also run if action is different to current phase
     start_step = curr_step
     curr_reward = 0
