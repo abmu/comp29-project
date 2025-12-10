@@ -9,10 +9,10 @@ SUMO_CONFIG += [
     '-c', '../simulation/simulation.sumocfg',
     '--step-length', str(STEP_LENGTH),
     '--lateral-resolution', '0',
-    '--statistic-output', '../simulation/statistics.xml',
-    '--tripinfo-output.write-unfinished',
-    '--duration-log.statistics',
-    # '--no-warnings',
+    # '--statistic-output', '../simulation/statistics.xml',
+    # '--tripinfo-output.write-unfinished',
+    # '--duration-log.statistics',
+    '--no-warnings',
     # '--no-step-log',
 ]
 
