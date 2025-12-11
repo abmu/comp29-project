@@ -49,10 +49,6 @@ def remove_outliers_rolling(data: np.ndarray, w: int = 20, thresh: float = 1.0) 
 
 def to_float_array(lst: list[float | None]) -> np.ndarray:
     # convert list to a float array, replacing None with an np.nan value
-    for i, x in enumerate(lst, start=1):
-        if x == None:
-            print(f'First None: {i}')
-            break
     return np.array([np.nan if x is None else x for x in lst], dtype=float)
 
 
@@ -67,9 +63,9 @@ with open(FILE_C, 'r') as f:
     c_list = eval(f.readlines()[0])
 
 epochs = np.arange(1, len(a_list) + 1)
-a_list = ((to_float_array(a_list)))
-b_list = ((to_float_array(b_list)))
-c_list = ((to_float_array(c_list)))
+a_list = moving_average(remove_outliers_rolling(to_float_array(a_list)))
+b_list = moving_average(remove_outliers_rolling(to_float_array(b_list)))
+c_list = moving_average(remove_outliers_rolling(to_float_array(c_list)))
 
 # plot both lists
 plt.figure()
