@@ -5,7 +5,6 @@
 # - Extend network, and think about network communication with the traffic light systems to improve performance
 #
 # Implement evaluation framework
-# - Exit prematurely if SUMO simulation gets teleports/ bikes get stuck -- check what happens if list element is None is results.py file
 # - Evaluate performance in new seeds, with different traffic densities (more/less pedestrians, more/less vehicles)
 # - Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian)
 # - Explore other methods such as other Q-learning techniques (Double DQN, Dueling DQN) and actor-critic
