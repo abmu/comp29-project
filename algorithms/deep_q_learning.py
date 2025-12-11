@@ -71,9 +71,10 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-traci.start(SUMO_CONFIG)
-state_size = len(get_state(tls_id, queue_ids, crossing_ids))
-traci.close()
+traci.start(SUMO_CONFIG, label='deep_q_learning')
+conn = traci.getConnection('deep_q_learning')
+state_size = len(get_state(conn, tls_id, queue_ids, crossing_ids))
+conn.close()
 action_size = len(ACTION_SPACE)
 
 policy_net = DQN(state_size, action_size)
@@ -143,16 +144,17 @@ def run(epoch: int = 1) -> tuple[float, float]:
     total_reward = 0
     step = 0
 
-    traci.start(SUMO_CONFIG)
+    traci.start(SUMO_CONFIG, label='deep_q_learning')
+    conn = traci.getConnection('deep_q_learning')
 
     try:
         while step < TOTAL_STEPS:
-            state = get_state(tls_id, queue_ids, crossing_ids)
+            state = get_state(conn, tls_id, queue_ids, crossing_ids)
             action = choose_action(state)
             
-            step, reward, duration = perform_action(tls_id, step, TOTAL_STEPS, action)
+            step, reward, duration = perform_action(conn, tls_id, step, TOTAL_STEPS, action)
 
-            next_state = get_state(tls_id, queue_ids, crossing_ids)
+            next_state = get_state(conn, tls_id, queue_ids, crossing_ids)
             done = step >= TOTAL_STEPS
             total_reward += reward
 
@@ -167,7 +169,7 @@ def run(epoch: int = 1) -> tuple[float, float]:
     except Exception as e:
         raise
     finally:
-        traci.close()
+        conn.close()
 
         EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
 

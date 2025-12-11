@@ -49,9 +49,9 @@ def remove_outliers_rolling(data: np.ndarray, w: int = 20, thresh: float = 1.0) 
 
 def to_float_array(lst: list[float | None]) -> np.ndarray:
     # convert list to a float array, replacing None with an np.nan value
-    for i, x in enumerate(lst):
+    for i, x in enumerate(lst, start=1):
         if x == None:
-            print(i)
+            print(f'First None: {i}')
             break
     return np.array([np.nan if x is None else x for x in lst], dtype=float)
 

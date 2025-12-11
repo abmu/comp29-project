@@ -1,10 +1,4 @@
-import os
-import sys
 import numpy as np
-
-if not os.environ.get('SUMO_HOME'):
-    raise EnvironmentError('SUMO_HOME is not set.')
-sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 
 
 current_cache = []

@@ -26,14 +26,15 @@ def run(epoch: int = 1) -> float:
     curr_idx = 0
     step = 0
     
-    traci.start(SUMO_CONFIG)
+    traci.start(SUMO_CONFIG, label='fixed_timer')
+    conn = traci.getConnection('fixed_timer')
 
     try:
         while step < TOTAL_STEPS:
-            state = get_state(tls_id, queue_ids, crossing_ids)
+            state = get_state(conn, tls_id, queue_ids, crossing_ids)
             action = ACTION_LOOP[curr_idx]
 
-            step, reward, _ = perform_action(tls_id, step, TOTAL_STEPS, action)
+            step, reward, _ = perform_action(conn, tls_id, step, TOTAL_STEPS, action)
 
             curr_idx = (curr_idx + 1) % len(ACTION_LOOP)
             total_reward += reward
@@ -42,7 +43,7 @@ def run(epoch: int = 1) -> float:
     except Exception as e:
         raise
     finally:
-        traci.close()
+        conn.close()
 
         if STATS_MODE:
             file_dump(STATS_FILE, str(compute_stats(get_cache())))
