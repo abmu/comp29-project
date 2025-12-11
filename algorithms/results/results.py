@@ -49,6 +49,10 @@ def remove_outliers_rolling(data: np.ndarray, w: int = 20, thresh: float = 1.0) 
 
 def to_float_array(lst: list[float | None]) -> np.ndarray:
     # convert list to a float array, replacing None with an np.nan value
+    for i, x in enumerate(lst):
+        if x == None:
+            print(i)
+            break
     return np.array([np.nan if x is None else x for x in lst], dtype=float)
 
 
@@ -62,15 +66,16 @@ with open(FILE_B, 'r') as f:
 with open(FILE_C, 'r') as f:
     c_list = eval(f.readlines()[0])
 
-a_list = moving_average(remove_outliers_rolling(to_float_array(a_list)))
-b_list = moving_average(remove_outliers_rolling(to_float_array(b_list)))
-c_list = moving_average(remove_outliers_rolling(to_float_array(c_list)))
+epochs = np.arange(1, len(a_list) + 1)
+a_list = ((to_float_array(a_list)))
+b_list = ((to_float_array(b_list)))
+c_list = ((to_float_array(c_list)))
 
 # plot both lists
 plt.figure()
-plt.plot(a_list, label=f'{FILE_A}')
-plt.plot(b_list, label=f'{FILE_B}')
-plt.plot(c_list, label=f'{FILE_C}')
+plt.plot(epochs, a_list, label=f'{FILE_A}')
+plt.plot(epochs, b_list, label=f'{FILE_B}')
+plt.plot(epochs, c_list, label=f'{FILE_C}')
 plt.xlabel('Epoch')
 plt.ylabel('Reward')
 plt.title('TLS methods')

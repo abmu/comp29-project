@@ -70,6 +70,8 @@ def _run_action(tls_id: str, curr_step: int, total_steps: int, action: int, dura
     for i in range(steps):
         if curr_step < total_steps:
             traci.simulationStep()
+            if len(traci.simulation.getStartingTeleportIDList()):
+                raise RuntimeError('Teleport detected!')
             curr_reward += get_reward(get_all_waiting_vehicles(queue_ids), get_all_waiting_peds(crossing_ids), get_vehicle_throughput(induction_ids), get_peds_throughput(crossing_ids))
             curr_step += 1
         else:

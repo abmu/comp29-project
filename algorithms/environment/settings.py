@@ -12,7 +12,7 @@ SUMO_CONFIG += [
     # '--statistic-output', '../simulation/statistics.xml',
     # '--tripinfo-output.write-unfinished',
     # '--duration-log.statistics',
-    '--no-warnings',
+    # '--no-warnings',
     # '--no-step-log',
 ]
 
