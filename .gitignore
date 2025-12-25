@@ -1,6 +1,8 @@
 ### Route folders ###
 simulation/routes/demo/*/
 simulation/networks/demo/detector.*.xml
+simulation/routes/crossing/*/
+simulation/networks/crossing/detector.*.xml
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
