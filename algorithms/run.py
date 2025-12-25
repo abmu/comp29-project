@@ -15,9 +15,12 @@ ALGORITHMS = {
     'deep_q_learning': dqn_run
 }
 
-EPISODES = 1000
+MODE = 'train'
+TRAIN = 1000
+EVAL = 5
 
-RESULTS_DIR = 'results/'
+TRAIN_DIR = 'results/train/'
+EVAL_DIR = 'results/eval/'
 
 
 def run_ep(args: tuple[str, int]) -> tuple[str, float]:
@@ -41,7 +44,11 @@ if __name__ == "__main__":
     # create a process pool
     pool = mp.Pool(processes=len(ALGORITHMS))
 
-    for episode in range(1, EPISODES+1):
+    start, end = (1, TRAIN) if MODE == 'train' else (TRAIN+1, TRAIN+EVAL)
+    results_dir = TRAIN_DIR if MODE == 'train' else EVAL_DIR
+    print(f'Running on "{MODE}" routes...')
+
+    for episode in range(start, end+1):
         print(f'\n=== Episode: {episode} ===')
         
         # set SUMO route
@@ -58,7 +65,7 @@ if __name__ == "__main__":
             episode_rewards[algorithm].append(reward)
 
             # save to file
-            fname = RESULTS_DIR + algorithm + '.txt'
+            fname = results_dir + algorithm + '.txt'
             file_dump(fname, str(episode_rewards[algorithm]))
 
     # start shutdown process and wait for finish

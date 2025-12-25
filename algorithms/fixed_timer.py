@@ -12,7 +12,7 @@ from utils import file_dump
 
 STATS_MODE = False
 
-RESULTS_FILE = 'results/fixed_timer.txt'
+RESULTS_FILE = 'results/train/fixed_timer.txt'
 STATS_FILE = 'results/cache_stats.txt'
 
 ACTION_LOOP = [0,0,0,3,3,3,6]

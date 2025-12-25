@@ -1,6 +1,13 @@
 import subprocess
 
 ROUTES = 1000
+EVAL_ROUTES = [
+    {'car_density': 2.0, 'bicycle_density': 2.0, 'pedestrian_density': 0.25},
+    {'car_density': 0.25, 'bicycle_density': 0.25, 'pedestrian_density': 2.0},
+    {'car_density': 0.25, 'bicycle_density': 2.0, 'pedestrian_density': 2.0},
+    {'car_density': 2.0, 'bicycle_density': 2.0, 'pedestrian_density': 2.0},
+    {'car_density': 0.5, 'bicycle_density': 0.5, 'pedestrian_density': 0.5},
+]
 
 
 def _generate_routes(seed: int = 1, car_density: float = 1.0, bicycle_density: float = 1.0, pedestrian_density: float = 1.0, random_factor: float = 1.0) -> None:
@@ -26,3 +33,7 @@ def _generate_routes(seed: int = 1, car_density: float = 1.0, bicycle_density: f
 if __name__ == "__main__":
     for i in range(1, ROUTES+1):
         _generate_routes(seed=i)
+
+    prev = ROUTES
+    for i, params in enumerate(EVAL_ROUTES, start=1):
+        _generate_routes(seed=prev+i, **params)

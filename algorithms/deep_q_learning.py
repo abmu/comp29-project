@@ -18,7 +18,7 @@ from utils import file_dump
 
 TRAIN_MODE = True
 
-RESULTS_FILE = 'results/deep_q_learning.txt'
+RESULTS_FILE = 'results/train/deep_q_learning.txt'
 MODEL_FILE = 'results/dqn_model.pt'
 
 SEED = 29

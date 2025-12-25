@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-FILE_A = 'fixed_timer.txt'
-FILE_B = 'q_learning.txt'
-FILE_C = 'deep_q_learning.txt'
+FILE_A = 'train/fixed_timer.txt'
+FILE_B = 'train/q_learning.txt'
+FILE_C = 'train/deep_q_learning.txt'
 
 
 def moving_average(data: np.ndarray, w: int = 5) -> np.ndarray:

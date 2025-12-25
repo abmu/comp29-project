@@ -1,5 +1,8 @@
 # TODO
 #
+# Report
+# - Write introduction (in LaTeX)
+#
 # Algorithms
 # - Examine using traffic lights vs zebra crossings
 # - Extend network, and think about network communication with the traffic light systems to improve performance

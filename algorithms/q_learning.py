@@ -14,7 +14,7 @@ from utils import file_dump, file_eval
 
 TRAIN_MODE = True
 
-RESULTS_FILE = 'results/q_learning.txt'
+RESULTS_FILE = 'results/train/q_learning.txt'
 Q_TABLE_FILE = 'results/q_table.txt'
 
 Q = {} # {(state, action): value}
