@@ -24,12 +24,13 @@ parser.add_argument('--car-density', type=float, default=1.0)
 parser.add_argument('--bicycle-density', type=float, default=1.0)
 parser.add_argument('--pedestrian-density', type=float, default=1.0)
 parser.add_argument('--random-factor', type=float, default=1.0)
+parser.add_argument('--foldername', type=str, default='.')
 args = parser.parse_args()
 
 random.seed(args.seed)
 
 # Create directory in routes folder
-Path(f'{DIR_PREFIX}routes/{NET_NAME}/{args.seed}/').mkdir(exist_ok=True)
+Path(f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/').mkdir(parents=True, exist_ok=True)
 
 # Configure commands for generating the routes
 NETWORK = f'{DIR_PREFIX}networks/{NET_NAME}/main.net.xml'
@@ -43,8 +44,8 @@ vehicles = [
             '-p', str(10 / args.car_density),
             '--binomial', '100',
             # '--insertion-density', '100',
-            '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.seed}/car.trips.xml',
-            '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.seed}/car.rou.xml',
+            '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/car.trips.xml',
+            '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/car.rou.xml',
             '--fringe-factor', 'max', # ensure the vehicles only spawn from the very edges, rather than the middle of the road
             '--random-factor', f'{random.uniform(1.0, args.random_factor)}', # randomise weight of edges
             '--prefix', 'car',
@@ -58,8 +59,8 @@ vehicles = [
             '-e', str(DURATION),
             '-p', str(10 / args.bicycle_density),
             '--binomial', '100',
-            '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.seed}/bicycle.trips.xml',
-            '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.seed}/bicycle.rou.xml',
+            '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/bicycle.trips.xml',
+            '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/bicycle.rou.xml',
             '--fringe-factor', 'max',
             '--random-factor', f'{random.uniform(1.0, args.random_factor)}',
             '--prefix', 'bicycle',
@@ -74,8 +75,8 @@ vehicles = [
             '-e', str(DURATION),
             '-p', str(5 / args.pedestrian_density),
             '--binomial', '100',
-            '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.seed}/pedestrian.trips.xml',
-            '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.seed}/pedestrian.rou.xml',
+            '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/pedestrian.trips.xml',
+            '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/pedestrian.rou.xml',
             # '--fringe-factor', 'max',
             '--random-factor', f'{random.uniform(1.0, args.random_factor)}',
             '--prefix', 'pedestrian',

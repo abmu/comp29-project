@@ -1,7 +1,7 @@
 import subprocess
 
 
-def set_route(number: int) -> None:
+def set_route(number: int, foldername: str = 'train') -> None:
     # set current route for the SUMO simulation
     print(f'Setting route to {number}...')
     dir_name = '../simulation/routes/demo'
@@ -9,7 +9,7 @@ def set_route(number: int) -> None:
     for f in file_names:
         subprocess.run(
             [
-                'cp', f'{number}/{f}', '.'
+                'cp', f'{foldername}/{number}/{f}', '.'
             ],
             check=True,
             cwd=dir_name
