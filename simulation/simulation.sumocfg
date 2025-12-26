@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-11-24T21:06:13.803536+00:00 by Eclipse SUMO sumo 1.25.0
+<!-- generated on 2025-12-26T11:32:21.518120+00:00 by Eclipse SUMO sumo 1.25.0
 -->
 
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
@@ -9,7 +9,7 @@
         <!-- <net-file value="networks/demo/main.net.xml"/> -->
         <!-- <route-files value="routes/demo/bicycle.rou.xml,routes/demo/car.rou.xml,routes/demo/pedestrian.rou.xml"/> -->
         <!-- <additional-files value="networks/demo/detectors.add.xml"/> -->
-        <net-file value="networks/crossing/main.net.xml"/>
+        <net-file value="networks/crossing/zebra.net.xml"/>
         <!-- <route-files value="routes/crossing/bicycle.rou.xml,routes/demo/car.rou.xml,routes/demo/pedestrian.rou.xml"/> -->
         <additional-files value="networks/crossing/detectors.add.xml"/>
     </input>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-12-25T21:45:20.388173+00:00 by Eclipse SUMO netedit 1.25.0
+<!-- generated on 2025-12-26T11:52:15.023387+00:00 by Eclipse SUMO netedit 1.25.0
 -->
 
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
@@ -9,8 +9,8 @@
     <inductionLoop id="CJ_2_EB_2_2" lane="BynPl_1_1_2" pos="2.44" period="300.00" file="detector.CJ_2_EB_2_2.xml"/>
     <inductionLoop id="CJ_2_SB_1_1" lane="MalSt_1_1_1" pos="2.22" period="300.00" file="detector.CJ_2_SB_1_1.xml"/>
     <inductionLoop id="CJ_2_WB_2_1" lane="TorPl_2_1_1" pos="2.21" period="300.00" file="detector.CJ_2_WB_2_1.xml"/>
-    <laneAreaDetector id="CJ_2_EB_1_1" lane="TorPl_1_4_1" pos="33.31" length="10.00" period="300.00" file="detector.CJ_2_EB_1_1.xml"/>
-    <laneAreaDetector id="CJ_2_EB_1_2" lane="TorPl_1_4_2" pos="33.28" length="10.00" period="300.00" file="detector.CJ_2_EB_1_2.xml"/>
+    <laneAreaDetector id="CJ_2_EB_1_1" lane="TorPl_1_4_1" pos="23.25" length="10.00" friendlyPos="1" period="300.00" file="detector.CJ_2_EB_1_1.xml"/>
+    <laneAreaDetector id="CJ_2_EB_1_2" lane="TorPl_1_4_2" pos="23.25" length="10.00" friendlyPos="1" period="300.00" file="detector.CJ_2_EB_1_2.xml"/>
     <laneAreaDetector id="CJ_2_NB_1_1" lane="MalSt_2_1_1" pos="18.17" length="10.00" period="300.00" file="detector.CJ_2_NB_1_1.xml"/>
     <laneAreaDetector id="CJ_2_WB_1_1" lane="BynPl_2_3_1" pos="26.46" length="10.00" period="300.00" file="detector.CJ_2_WB_1_1.xml"/>
 </additional>
