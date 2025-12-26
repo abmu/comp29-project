@@ -21,7 +21,7 @@ class QLearning:
         self.compress_state = compress_state
         self.table_name = 'q_table.txt'
         if not self.compress_state:
-            self.model_name = 'uncompressed_' + self.model_name
+            self.table_name = 'uncompressed_' + self.table_name
 
         self.q = {} # {(state, action): value}
 
