@@ -13,7 +13,7 @@
 #
 # State
 # - Test Q learning with uncompressed vs current compressed state
-# - Get full in-depth state with distinction between cars and bicycles, and direction of pedestrians on crossings, phase durations, etc.
+# - Mention full in-depth state with distinction between cars and bicycles, and direction of pedestrians on crossings, phase durations, etc.
 #
 # Routes
 # - BUG: fix bug in network where bikes at CJ_1 can sometimes cause congestion, e.g. route 388 -- try widen distance between bike paths
