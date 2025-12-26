@@ -9,7 +9,7 @@ from utils import file_dump
 
 SEED = 29
 
-MODE = 'eval'
+MODE = 'train'
 TRAIN = 1000
 EVAL = 50
 
@@ -17,8 +17,8 @@ RESULTS_DIR = f'results/{NET_NAME}/'
 
 ALGORITHMS = {
     'fixed_timer': FixedTimer(RESULTS_DIR, False),
-    'q_learning': QLearning(RESULTS_DIR, False),
-    'deep_q_learning': DeepQLearning(RESULTS_DIR, False)
+    'q_learning': QLearning(RESULTS_DIR, MODE == 'train'),
+    'deep_q_learning': DeepQLearning(RESULTS_DIR, MODE == 'train')
 }
 
 
