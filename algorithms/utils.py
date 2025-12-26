@@ -1,6 +1,13 @@
+from pathlib import Path
+
+
 def file_dump(file_name: str, *args: str) -> None:
+    # ensure parent directory exists
+    path = Path(file_name)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
     # dump content straight into file
-    with open(file_name, 'w') as f:
+    with open(path, 'w') as f:
         f.write('\n'.join(args))
 
 

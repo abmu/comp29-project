@@ -11,30 +11,30 @@ from utils import file_dump
 SEED = 29  # may not work well with multiple parallel processes -- non-determinism of execution
 
 MODE = 'eval'  # 'train' or 'eval'
-TLS_ID = 'CJ_1'  # traffic light system ID
+TLS_ID = 'CJ_2'  # traffic light system ID
 RESULTS_DIR = f'results/{NET_NAME}/'
 
 ALGORITHMS = {
     'fixed_timer': FixedTimer(
         tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls'),
         save_dir=RESULTS_DIR,
         stats_mode=False
     ),
-    'q_learning': QLearning(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-        save_dir=RESULTS_DIR,
-        train_mode=(MODE == 'train'),
-        compress_state=True
-    ),
-    'deep_q_learning': DeepQLearning(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-        save_dir=RESULTS_DIR,
-        train_mode=(MODE == 'train'),
-        compress_state=True
-    )
+    # 'q_learning': QLearning(
+    #     tls_id=TLS_ID,
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+    #     save_dir=RESULTS_DIR,
+    #     train_mode=(MODE == 'train'),
+    #     compress_state=True
+    # ),
+    # 'deep_q_learning': DeepQLearning(
+    #     tls_id=TLS_ID,
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+    #     save_dir=RESULTS_DIR,
+    #     train_mode=(MODE == 'train'),
+    #     compress_state=True
+    # )
 }
 
 

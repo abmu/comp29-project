@@ -4,14 +4,15 @@ SIMULATION_TIME = 3600
 STEP_LENGTH = 0.10 * 10
 TOTAL_STEPS = int(SIMULATION_TIME / STEP_LENGTH)
 
-NET_NAME = 'demo'
 DIR_PREFIX = '../simulation/'
+NET_NAME = 'crossing'
 
 TLS_IDS = {
     # ID of the traffic light system
     'CJ_1': {
         # IDs of the lane detectors/cameras
         'queues': [
+            # MUST FOLLOW PARTICULAR ORDER -- North Bound, West Bound, South Bound, East Bound
             ['CJ_1_NB_1_1', 'CJ_1_NB_1_2'],
             ['CJ_1_WB_1_1'],
             ['CJ_1_SB_1_1', 'CJ_1_SB_1_2'],
@@ -30,6 +31,24 @@ TLS_IDS = {
             ['CJ_1_WB_2_1', 'CJ_1_WB_2_2'],
             ['CJ_1_SB_2_1', 'CJ_1_SB_2_2'],
             ['CJ_1_EB_2_1', 'CJ_1_EB_2_2'],
+        ]
+    },
+    'CJ_2': {
+        'queues': [
+            ['CJ_2_NB_1_1'],
+            ['CJ_2_WB_1_1'],
+            [],
+            ['CJ_2_EB_1_1', 'CJ_2_EB_1_2'],
+        ],
+        'crossings': [
+            (':CJ_2_c0', ':CJ_2_w0', ':CJ_2_w1'),
+            (':CJ_2_c1', ':CJ_2_w1', ':CJ_2_w2'),
+        ],
+        'inductions': [
+            [],
+            ['CJ_2_WB_2_1'],
+            ['CJ_2_SB_1_1'],
+            ['CJ_2_EB_2_1', 'CJ_2_EB_2_2'],
         ]
     },
 }
