@@ -102,7 +102,7 @@ def get_peds_throughput(conn, tls: str) -> list[int]:
     return throughput
 
 
-def get_state(conn, tls: str) -> tuple[int, ...]:
+def get_state(conn, tls: str, compress: bool = True) -> tuple[int, ...]:
     # get current phase of traffic light system
     tls_phase = get_current_tls_phase(conn, tls)
 
@@ -113,12 +113,13 @@ def get_state(conn, tls: str) -> tuple[int, ...]:
     waiting_peds = [len(peds) for peds in get_all_waiting_peds(conn, tls)]
 
     # compress/simplify state
-    # combine 4 pedestrian areas into one, combine north and south bound, combine west and east bound
-    waiting_peds = [sum(waiting_peds)]
-    waiting_vehicles = [waiting_vehicles[0] + waiting_vehicles[2], waiting_vehicles[1] + waiting_vehicles[3]]
+    if compress:
+        # combine 4 pedestrian areas into one, combine north and south bound, combine west and east bound
+        waiting_vehicles = [waiting_vehicles[0] + waiting_vehicles[2], waiting_vehicles[1] + waiting_vehicles[3]]
+        waiting_peds = [sum(waiting_peds)]
 
-    # discretize to limit number of distinct values/combinations
-    waiting_vehicles = _discretize(waiting_vehicles, thresholds=(0, 6, 12))
-    waiting_peds = _discretize(waiting_peds, thresholds=(0, 12, 24))
+        # discretize to limit number of distinct values/combinations
+        waiting_vehicles = _discretize(waiting_vehicles, thresholds=(0, 6, 12))
+        waiting_peds = _discretize(waiting_peds, thresholds=(0, 12, 24))
 
     return (tls_phase, ) + tuple(waiting_vehicles) + tuple(waiting_peds)

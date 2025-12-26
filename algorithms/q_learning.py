@@ -13,12 +13,15 @@ from utils import file_dump, file_eval
 
 
 class QLearning:
-    def __init__(self, tls_id: str, sumo_cfg: str, save_dir: str, train_mode: bool) -> None:
+    def __init__(self, tls_id: str, sumo_cfg: str, save_dir: str, train_mode: bool, compress_state: bool = True) -> None:
         self.tls_id = tls_id
         self.sumo_cfg = sumo_cfg
         self.save_dir = save_dir
         self.train_mode = train_mode
+        self.compress_state = compress_state
         self.table_name = 'q_table.txt'
+        if not self.compress_state:
+            self.model_name = 'uncompressed_' + self.model_name
 
         self.q = {} # {(state, action): value}
 
@@ -71,12 +74,12 @@ class QLearning:
 
         try:
             while step < TOTAL_STEPS:
-                state = get_state(conn, self.tls_id)
+                state = get_state(conn, self.tls_id, self.compress_state)
                 action = self.choose_action(state)
                 
                 step, reward, duration = perform_action(conn, self.tls_id, step, action)
 
-                next_state = get_state(conn, self.tls_id)
+                next_state = get_state(conn, self.tls_id, self.compress_state)
                 total_reward += reward
 
                 if self.train_mode:

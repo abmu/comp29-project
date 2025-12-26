@@ -34,7 +34,7 @@ class FixedTimer:
                 state = get_state(conn, self.tls_id)
                 action = self.action_loop[curr_idx]
 
-                step, reward, _ = perform_action(conn, self.tls_id, step, action)
+                step, reward, _ = perform_action(conn, self.tls_id, step, action, self.stats_mode)
 
                 curr_idx = (curr_idx + 1) % len(self.action_loop)
                 total_reward += reward

@@ -49,7 +49,7 @@ def _steps_to_duration(steps: int) -> float:
     return steps * STEP_LENGTH
 
 
-def _run_action(conn, tls_id: str, curr_step: int, action: int, duration: int, curr_reward: int) -> tuple[int, float]:
+def _run_action(conn, tls_id: str, curr_step: int, action: int, duration: int, curr_reward: int, stats_mode: bool) -> tuple[int, float]:
     # peform action changing phase on the traffic light system, and return updated step number and cumulative reward
     if curr_step >= TOTAL_STEPS:
         return curr_step, curr_reward
@@ -64,7 +64,7 @@ def _run_action(conn, tls_id: str, curr_step: int, action: int, duration: int, c
             conn.simulationStep()
             if len(conn.simulation.getStartingTeleportIDList()):
                 raise RuntimeError('Teleport detected!')
-            curr_reward += get_reward(get_all_waiting_vehicles(conn, tls_id), get_all_waiting_peds(conn, tls_id), get_vehicle_throughput(conn, tls_id), get_peds_throughput(conn, tls_id))
+            curr_reward += get_reward(get_all_waiting_vehicles(conn, tls_id), get_all_waiting_peds(conn, tls_id), get_vehicle_throughput(conn, tls_id), get_peds_throughput(conn, tls_id), stats_mode=stats_mode)
             curr_step += 1
         else:
             break
@@ -72,7 +72,7 @@ def _run_action(conn, tls_id: str, curr_step: int, action: int, duration: int, c
     return curr_step, curr_reward
 
 
-def perform_action(conn, tls_id: str, curr_step: int, action: int) -> tuple[int, float, float]:
+def perform_action(conn, tls_id: str, curr_step: int, action: int, stats_mode: bool = False) -> tuple[int, float, float]:
     # perform specified action, ensuring that the phase switch is also run if action is different to current phase
     start_step = curr_step
     curr_reward = 0
@@ -80,9 +80,9 @@ def perform_action(conn, tls_id: str, curr_step: int, action: int) -> tuple[int,
     if action != tls_phase:
         phase_switch = ACTION_SPACE[tls_phase]['phase_switch']
         for act, dur in phase_switch:
-            curr_step, curr_reward = _run_action(conn, tls_id, curr_step, act, dur, curr_reward)
+            curr_step, curr_reward = _run_action(conn, tls_id, curr_step, act, dur, curr_reward, stats_mode=stats_mode)
 
     duration = ACTION_SPACE[action]['duration']
-    curr_step, curr_reward = _run_action(conn, tls_id, curr_step, action, duration, curr_reward)
+    curr_step, curr_reward = _run_action(conn, tls_id, curr_step, action, duration, curr_reward, stats_mode=stats_mode)
 
     return curr_step, curr_reward, _steps_to_duration(curr_step - start_step)

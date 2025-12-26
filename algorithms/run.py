@@ -25,13 +25,15 @@ ALGORITHMS = {
         tls_id=TLS_ID,
         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
         save_dir=RESULTS_DIR,
-        train_mode=(MODE == 'train')
+        train_mode=(MODE == 'train'),
+        compress_state=True
     ),
     'deep_q_learning': DeepQLearning(
         tls_id=TLS_ID,
         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
         save_dir=RESULTS_DIR,
-        train_mode=(MODE == 'train')
+        train_mode=(MODE == 'train'),
+        compress_state=True
     )
 }
 
@@ -57,10 +59,10 @@ if __name__ == "__main__":
     # create a process pool
     pool = mp.Pool(processes=len(ALGORITHMS))
 
-    print(f'Running on "{MODE}" routes...')
-    
     routes_dir = Path(f'{DIR_PREFIX}routes/{NET_NAME}/{MODE}/').glob('*')
     count = sum(1 if f.is_dir() else 0 for f in routes_dir)  # count the number of folders in the routes directory
+    print(f'Using {count} "{MODE}/" routes for the network "{NET_NAME}/"...')
+
     for episode in range(1, count+1):
         print(f'\n=== Episode: {episode} ===')
         
