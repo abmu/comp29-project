@@ -4,7 +4,7 @@ from .state import get_current_tls_phase, get_all_waiting_vehicles, get_all_wait
 from .reward import get_reward
 
 
-# for reference, the 8 traffic light phases defined in 'main.net.xml'
+# for reference, the 8 traffic light phases defined in 'demo/main.net.xml'
 tls_logic = """
 <tlLogic id="CJ_1" type="static" programID="0" offset="0">
     <phase duration="30" state="GGgGGgrrrrGGgGGgrrrrrrrr"/>

@@ -1,25 +1,25 @@
 import random
 import multiprocessing as mp
 from environment import set_route
-from fixed_timer import run as ft_run
-from q_learning import run as q_run
-from deep_q_learning import run as dqn_run
+from fixed_timer import FixedTimer
+from q_learning import QLearning
+from deep_q_learning import DeepQLearning
 from utils import file_dump
 
 
 SEED = 29
-
-ALGORITHMS = {
-    'fixed_timer': ft_run,
-    'q_learning': q_run,
-    'deep_q_learning': dqn_run
-}
 
 MODE = 'eval'
 TRAIN = 1000
 EVAL = 50
 
 RESULTS_DIR = 'results/'
+
+ALGORITHMS = {
+    'fixed_timer': FixedTimer(f'{RESULTS_DIR}demo/', False),
+    'q_learning': QLearning(f'{RESULTS_DIR}demo/', False),
+    'deep_q_learning': DeepQLearning(f'{RESULTS_DIR}demo/', False)
+}
 
 
 def run_ep(args: tuple[str, int]) -> tuple[str, float]:
@@ -28,7 +28,7 @@ def run_ep(args: tuple[str, int]) -> tuple[str, float]:
     """
     alg, epoch = args
     try:
-        reward = ALGORITHMS[alg](epoch)
+        reward = ALGORITHMS[alg].run(epoch)
         return alg, reward
     except Exception as e:
         print(f'[{alg}] [{epoch}] exception: {e}')
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             episode_rewards[algorithm].append(reward)
 
             # save to file
-            fname = RESULTS_DIR + f'{MODE}/' + f'{algorithm}.txt'
+            fname = f'{RESULTS_DIR}{MODE}/{algorithm}.txt'
             file_dump(fname, str(episode_rewards[algorithm]))
 
     # start shutdown process and wait for finish

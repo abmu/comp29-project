@@ -9,6 +9,7 @@ SUMO_CONFIG += [
     '-c', '../simulation/simulation.sumocfg',
     '--step-length', str(STEP_LENGTH),
     '--lateral-resolution', '0',
+    '--net-file', '../simulation/networks/demo/main.net.xml',
     # '--statistic-output', '../simulation/statistics.xml',
     # '--tripinfo-output.write-unfinished',
     # '--duration-log.statistics',

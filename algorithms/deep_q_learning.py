@@ -12,26 +12,7 @@ import torch.optim as optim
 import numpy as np
 import random
 from collections import deque
-from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, ACTION_SPACE, get_state, perform_action, set_route
-from utils import file_dump
-
-
-TRAIN_MODE = False
-
-RESULTS_FILE = 'results/train/deep_q_learning.txt'
-MODEL_FILE = 'results/dqn_model.pt'
-
-SEED = 29
-
-LEARNING_RATE = 0.0005
-BATCH_SIZE = 64
-TARGET_UPDATE = 20  # episodes
-GAMMA = 0.9  # discount factor
-EPSILON = 1.0  # exploration rate
-EPSILON_DECAY = 0.995
-EPSILON_MIN = 0.005
-
-EPISODES = 1000
+from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, ACTION_SPACE, get_state, perform_action
 
 
 """
@@ -71,133 +52,122 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-traci.start(SUMO_CONFIG, label='deep_q_learning')
-conn = traci.getConnection('deep_q_learning')
-state_size = len(get_state(conn, tls_id, queue_ids, crossing_ids))
-conn.close()
-action_size = len(ACTION_SPACE)
+class DeepQLearning:
+    def __init__(self, results_dir: str, train_mode: bool = False) -> None:
+        self.results_dir = results_dir
+        self.train_mode = train_mode
+        self.model_name = 'dpn_model.pt'
 
-policy_net = DQN(state_size, action_size)
-if not TRAIN_MODE:
-    policy_net.load_state_dict(torch.load(MODEL_FILE))
-    policy_net.eval()
-    EPSILON = 0
-    EPSILON_MIN = 0
+        self.learning_rate = 0.0005
+        self.batch_size = 64
+        self.target_update = 20  # episodes
+        self.gamma = 0.9  # discount factor
+        self.epsilon = 1.0  # exploration rate
+        self.epsilon_decay = 0.995
+        self.epsilon_min = 0.005
 
-target_net = DQN(state_size, action_size)
-target_net.load_state_dict(policy_net.state_dict())
-
-optimiser = optim.Adam(policy_net.parameters(), lr=LEARNING_RATE)
-memory = ReplayBuffer()
-
-ACTION_IDS = sorted(ACTION_SPACE.keys())
-ACTION_ID_TO_IDX = {aid: i for i, aid in enumerate(ACTION_IDS)}
-
-
-def choose_action(state: tuple[int, ...]) -> int:
-    # choose action using an epsilon-greedy policy
-    if random.random() < EPSILON:
-        # exploration - choose random action
-        return random.choice(ACTION_IDS)
-    else:
-        # exploitation - using DQN
-        state_tensor = torch.FloatTensor(state).unsqueeze(0)
-        with torch.no_grad():
-            q_values = policy_net(state_tensor)
-        nn_index = torch.argmax(q_values).item()
-        return ACTION_IDS[nn_index]
-
-
-def train_step() -> None:
-    # perform a train step of the policy network
-    if len(memory) < BATCH_SIZE:
-        return
-
-    states, actions, rewards, next_states, durations, dones = memory.sample(BATCH_SIZE)
-
-    states = torch.FloatTensor(states)
-    actions = torch.LongTensor(actions).unsqueeze(1)
-    rewards = torch.FloatTensor(rewards).unsqueeze(1)
-    next_states = torch.FloatTensor(next_states)
-    durations = torch.FloatTensor(durations).unsqueeze(1)
-    dones = torch.FloatTensor(dones.astype(np.float32)).unsqueeze(1)
-
-    # Q(s,a)
-    q_values = policy_net(states).gather(1, actions)
-
-    # Target Q(s',a')
-    with torch.no_grad():
-        next_q_values = target_net(next_states).max(dim=1)[0].unsqueeze(1)
-        # Use duration for SMDP effect
-        target = rewards + (1 - dones) * (GAMMA ** durations) * next_q_values
-
-    loss = nn.MSELoss()(q_values, target)
-    optimiser.zero_grad()
-    loss.backward()
-    optimiser.step()
-
-
-def run(epoch: int = 1) -> tuple[float, float]:
-    # run a single episode and return the reward
-    global EPSILON
-
-    total_reward = 0
-    step = 0
-
-    traci.start(SUMO_CONFIG, label='deep_q_learning')
-    conn = traci.getConnection('deep_q_learning')
-
-    try:
-        while step < TOTAL_STEPS:
-            state = get_state(conn, tls_id, queue_ids, crossing_ids)
-            action = choose_action(state)
-            
-            step, reward, duration = perform_action(conn, tls_id, step, TOTAL_STEPS, action)
-
-            next_state = get_state(conn, tls_id, queue_ids, crossing_ids)
-            done = step >= TOTAL_STEPS
-            total_reward += reward
-
-            # save transition
-            action_idx = ACTION_ID_TO_IDX[action]
-            memory.push(state, action_idx, reward, next_state, duration, done)
-
-            if TRAIN_MODE:
-                train_step()
-
-            # print(f'Step: {step}, State: {state}, Action: {action}, Reward: {reward}')
-    except Exception as e:
-        raise
-    finally:
+        traci.start(SUMO_CONFIG, label='deep_q_learning')
+        conn = traci.getConnection('deep_q_learning')
+        state_size = len(get_state(conn, tls_id, queue_ids, crossing_ids))
         conn.close()
+        action_size = len(ACTION_SPACE)
 
-        EPSILON = max(EPSILON_MIN, EPSILON * EPSILON_DECAY)
+        self.policy_net = DQN(state_size, action_size)
+        if not self.train_mode:
+            self.policy_net.load_state_dict(torch.load(self.results_dir + self.model_name))
+            self.policy_net.eval()
+            self.epsilon = 0
+            self.epsilon_min = 0
 
-        if TRAIN_MODE:
-            torch.save(policy_net.state_dict(), MODEL_FILE)
-            if (epoch) % TARGET_UPDATE == 0:
-                target_net.load_state_dict(policy_net.state_dict())
-                print("Target network updated")
+        self.target_net = DQN(state_size, action_size)
+        self.target_net.load_state_dict(self.policy_net.state_dict())
 
-    return total_reward
+        self.optimiser = optim.Adam(self.policy_net.parameters(), lr=self.learning_rate)
+        self.memory = ReplayBuffer()
+    
+
+    def choose_action(self, state: tuple[int, ...]) -> int:
+        # choose action using an epsilon-greedy policy
+        actions = list(ACTION_SPACE.keys())
+        if random.random() < self.epislon:
+            # exploration - choose random action
+            return random.choice(actions)
+        else:
+            # exploitation - using DQN
+            state_tensor = torch.FloatTensor(state).unsqueeze(0)
+            with torch.no_grad():
+                q_values = self.policy_net(state_tensor)
+            nn_index = torch.argmax(q_values).item()
+            return actions[nn_index]
 
 
-if __name__ == "__main__":
-    episode_rewards = []
+    def train_step(self) -> None:
+        # perform a train step of the policy network
+        if len(self.memory) < self.batch_size:
+            return
 
-    random.seed(SEED)
+        states, actions, rewards, next_states, durations, dones = self.memory.sample(self.batch_size)
 
-    for episode in range(1, EPISODES+1):
-        print(f'Episode: {episode}')
-        
-        # set SUMO route
-        set_route(episode)
+        states = torch.FloatTensor(states)
+        actions = torch.LongTensor(actions).unsqueeze(1)
+        rewards = torch.FloatTensor(rewards).unsqueeze(1)
+        next_states = torch.FloatTensor(next_states)
+        durations = torch.FloatTensor(durations).unsqueeze(1)
+        dones = torch.FloatTensor(dones.astype(np.float32)).unsqueeze(1)
 
-        # run episode training
-        print(f'Running SUMO...')
-        reward = run(episode)
-        episode_rewards.append(reward)
+        # Q(s,a)
+        q_values = self.policy_net(states).gather(1, actions)
 
-        print(f'Total Reward: {reward}, Epsilon: {EPSILON}\n')
-        if TRAIN_MODE:
-            file_dump(RESULTS_FILE, str(episode_rewards))
+        # Target Q(s',a')
+        with torch.no_grad():
+            next_q_values = self.target_net(next_states).max(dim=1)[0].unsqueeze(1)
+            # Use duration for SMDP effect
+            target = rewards + (1 - dones) * (self.gamma ** durations) * next_q_values
+
+        loss = nn.MSELoss()(q_values, target)
+        self.optimiser.zero_grad()
+        loss.backward()
+        self.optimiser.step()
+
+
+    def run(self, epoch: int = 1) -> tuple[float, float]:
+        # run a single episode and return the reward
+        total_reward = 0
+        step = 0
+
+        traci.start(SUMO_CONFIG, label='deep_q_learning')
+        conn = traci.getConnection('deep_q_learning')
+
+        try:
+            while step < TOTAL_STEPS:
+                state = get_state(conn, tls_id, queue_ids, crossing_ids)
+                action = self.choose_action(state)
+                
+                step, reward, duration = perform_action(conn, tls_id, step, TOTAL_STEPS, action)
+
+                next_state = get_state(conn, tls_id, queue_ids, crossing_ids)
+                done = step >= TOTAL_STEPS
+                total_reward += reward
+
+                # save transition
+                action_id_to_idx = {aid: i for i, aid in enumerate(ACTION_SPACE.keys())}
+                action_idx = action_id_to_idx[action]
+                self.memory.push(state, action_idx, reward, next_state, duration, done)
+
+                if self.train_mode:
+                    self.train_step()
+
+        except Exception as e:
+            raise
+        finally:
+            conn.close()
+
+            self.epislon = max(self.epsilon_min, self.epislon * self.epsilon_decay)
+
+            if self.train_mode:
+                torch.save(self.policy_net.state_dict(), self.results_dir + self.model_name)
+                if (epoch) % self.target_update == 0:
+                    self.target_net.load_state_dict(self.policy_net.state_dict())
+                    print("Target network updated")
+
+        return total_reward
