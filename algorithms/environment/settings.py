@@ -4,12 +4,17 @@ SIMULATION_TIME = 3600
 STEP_LENGTH = 0.10 * 10
 TOTAL_STEPS = int(SIMULATION_TIME / STEP_LENGTH)
 
+DIR_PREFIX = '../simulation/'
+NET_NAME = 'demo'
+
 SUMO_CONFIG = ['sumo-gui'] if GUI else ['sumo']
 SUMO_CONFIG += [
-    '-c', '../simulation/simulation.sumocfg',
+    '-c', f'{DIR_PREFIX}simulation.sumocfg',
     '--step-length', str(STEP_LENGTH),
     '--lateral-resolution', '0',
-    '--net-file', '../simulation/networks/demo/main.net.xml',
+    '--net-file', f'{DIR_PREFIX}networks/{NET_NAME}/main.net.xml',
+    '--route-files', f'{DIR_PREFIX}routes/{NET_NAME}/bicycle.rou.xml,{DIR_PREFIX}routes/{NET_NAME}/car.rou.xml,{DIR_PREFIX}routes/{NET_NAME}/pedestrian.rou.xml',
+    '--additional-files', f'{DIR_PREFIX}networks/{NET_NAME}/detectors.add.xml'
     # '--statistic-output', '../simulation/statistics.xml',
     # '--tripinfo-output.write-unfinished',
     # '--duration-log.statistics',

@@ -29,7 +29,7 @@ class QLearning:
 
         if not self.train_mode:
             self.q = file_eval(self.results_dir + self.table_name)[0]
-            self.epislon = 0
+            self.epsilon = 0
             self.epsilon_min = 0
 
 
@@ -41,7 +41,7 @@ class QLearning:
     def choose_action(self, state: tuple[int, ...]) -> int:
         # choose action using an epsilon-greedy policy
         actions = list(ACTION_SPACE.keys())
-        if random.random() < self.epislon:
+        if random.random() < self.epsilon:
             # exploration - choose random action
             return random.choice(actions)
         else:

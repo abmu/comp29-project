@@ -1,6 +1,6 @@
 import random
 import multiprocessing as mp
-from environment import set_route
+from environment import NET_NAME, set_route
 from fixed_timer import FixedTimer
 from q_learning import QLearning
 from deep_q_learning import DeepQLearning
@@ -13,12 +13,12 @@ MODE = 'eval'
 TRAIN = 1000
 EVAL = 50
 
-RESULTS_DIR = 'results/'
+RESULTS_DIR = f'results/{NET_NAME}/'
 
 ALGORITHMS = {
-    'fixed_timer': FixedTimer(f'{RESULTS_DIR}demo/', False),
-    'q_learning': QLearning(f'{RESULTS_DIR}demo/', False),
-    'deep_q_learning': DeepQLearning(f'{RESULTS_DIR}demo/', False)
+    'fixed_timer': FixedTimer(RESULTS_DIR, False),
+    'q_learning': QLearning(RESULTS_DIR, False),
+    'deep_q_learning': DeepQLearning(RESULTS_DIR, False)
 }
 
 

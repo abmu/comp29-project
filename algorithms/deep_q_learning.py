@@ -56,7 +56,7 @@ class DeepQLearning:
     def __init__(self, results_dir: str, train_mode: bool = False) -> None:
         self.results_dir = results_dir
         self.train_mode = train_mode
-        self.model_name = 'dpn_model.pt'
+        self.model_name = 'dqn_model.pt'
 
         self.learning_rate = 0.0005
         self.batch_size = 64
@@ -89,7 +89,7 @@ class DeepQLearning:
     def choose_action(self, state: tuple[int, ...]) -> int:
         # choose action using an epsilon-greedy policy
         actions = list(ACTION_SPACE.keys())
-        if random.random() < self.epislon:
+        if random.random() < self.epsilon:
             # exploration - choose random action
             return random.choice(actions)
         else:
@@ -162,7 +162,7 @@ class DeepQLearning:
         finally:
             conn.close()
 
-            self.epislon = max(self.epsilon_min, self.epislon * self.epsilon_decay)
+            self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
             if self.train_mode:
                 torch.save(self.policy_net.state_dict(), self.results_dir + self.model_name)
