@@ -8,13 +8,15 @@ import traci
 
 import numpy as np
 import random
-from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, ACTION_SPACE, get_state, perform_action
+from environment import TOTAL_STEPS, ACTION_SPACE, get_state, perform_action
 from utils import file_dump, file_eval
 
 
 class QLearning:
-    def __init__(self, results_dir: str, train_mode: bool) -> None:
-        self.results_dir = results_dir
+    def __init__(self, tls_id: str, sumo_cfg: str, save_dir: str, train_mode: bool) -> None:
+        self.tls_id = tls_id
+        self.sumo_cfg = sumo_cfg
+        self.save_dir = save_dir
         self.train_mode = train_mode
         self.table_name = 'q_table.txt'
 
@@ -28,7 +30,7 @@ class QLearning:
         self.epsilon_min = 0.005
 
         if not self.train_mode:
-            self.q = file_eval(self.results_dir + self.table_name)[0]
+            self.q = file_eval(self.save_dir + self.table_name)[0]
             self.epsilon = 0
             self.epsilon_min = 0
 
@@ -64,17 +66,17 @@ class QLearning:
         total_reward = 0
         step = 0
         
-        traci.start(SUMO_CONFIG, label='q_learning')
+        traci.start(self.sumo_cfg, label='q_learning')
         conn = traci.getConnection('q_learning')
 
         try:
             while step < TOTAL_STEPS:
-                state = get_state(conn, tls_id, queue_ids, crossing_ids)
+                state = get_state(conn, self.tls_id)
                 action = self.choose_action(state)
                 
-                step, reward, duration = perform_action(conn, tls_id, step, TOTAL_STEPS, action)
+                step, reward, duration = perform_action(conn, self.tls_id, step, action)
 
-                next_state = get_state(conn, tls_id, queue_ids, crossing_ids)
+                next_state = get_state(conn, self.tls_id)
                 total_reward += reward
 
                 if self.train_mode:
@@ -88,6 +90,6 @@ class QLearning:
             self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
             if self.train_mode:
-                file_dump(self.results_dir + self.table_name, str(self.q))
+                file_dump(self.save_dir + self.table_name, str(self.q))
 
         return total_reward

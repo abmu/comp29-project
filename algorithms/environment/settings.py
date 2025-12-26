@@ -4,47 +4,50 @@ SIMULATION_TIME = 3600
 STEP_LENGTH = 0.10 * 10
 TOTAL_STEPS = int(SIMULATION_TIME / STEP_LENGTH)
 
-DIR_PREFIX = '../simulation/'
 NET_NAME = 'demo'
+DIR_PREFIX = '../simulation/'
 
-SUMO_CONFIG = ['sumo-gui'] if GUI else ['sumo']
-SUMO_CONFIG += [
-    '-c', f'{DIR_PREFIX}simulation.sumocfg',
-    '--step-length', str(STEP_LENGTH),
-    '--lateral-resolution', '0',
-    '--net-file', f'{DIR_PREFIX}networks/{NET_NAME}/main.net.xml',
-    '--route-files', f'{DIR_PREFIX}routes/{NET_NAME}/bicycle.rou.xml,{DIR_PREFIX}routes/{NET_NAME}/car.rou.xml,{DIR_PREFIX}routes/{NET_NAME}/pedestrian.rou.xml',
-    '--additional-files', f'{DIR_PREFIX}networks/{NET_NAME}/detectors.add.xml'
-    # '--statistic-output', '../simulation/statistics.xml',
-    # '--tripinfo-output.write-unfinished',
-    # '--duration-log.statistics',
-    # '--no-warnings',
-    # '--no-step-log',
-]
+TLS_IDS = {
+    # ID of the traffic light system
+    'CJ_1': {
+        # IDs of the lane detectors/cameras
+        'queues': [
+            ['CJ_1_NB_1_1', 'CJ_1_NB_1_2'],
+            ['CJ_1_WB_1_1'],
+            ['CJ_1_SB_1_1', 'CJ_1_SB_1_2'],
+            ['CJ_1_EB_1_1'],
+        ],
+        # IDs of crossings and the corresponding walking areas
+        'crossings': [
+            (':CJ_1_c0', ':CJ_1_w0', ':CJ_1_w1'),
+            (':CJ_1_c1', ':CJ_1_w1', ':CJ_1_w2'),
+            (':CJ_1_c2', ':CJ_1_w2', ':CJ_1_w3'),
+            (':CJ_1_c3', ':CJ_1_w3', ':CJ_1_w0'),
+        ],
+        # IDs of induction loops used to detect throughput
+        'inductions': [
+            ['CJ_1_NB_2_1', 'CJ_1_NB_2_2'],
+            ['CJ_1_WB_2_1', 'CJ_1_WB_2_2'],
+            ['CJ_1_SB_2_1', 'CJ_1_SB_2_2'],
+            ['CJ_1_EB_2_1', 'CJ_1_EB_2_2'],
+        ]
+    },
+}
 
-# ID of the traffic light system
-tls_id = 'CJ_1'
 
-# IDs of the lane detectors/cameras
-queue_ids = [
-    [f'{tls_id}_NB_1_1', f'{tls_id}_NB_1_2'],
-    [f'{tls_id}_WB_1_1'],
-    [f'{tls_id}_SB_1_1', f'{tls_id}_SB_1_2'],
-    [f'{tls_id}_EB_1_1'],
-]
-
-# IDs of crossings and the corresponding walking areas
-crossing_ids = [
-    (f':{tls_id}_c0', f':{tls_id}_w0', f':{tls_id}_w1'),
-    (f':{tls_id}_c1', f':{tls_id}_w1', f':{tls_id}_w2'),
-    (f':{tls_id}_c2', f':{tls_id}_w2', f':{tls_id}_w3'),
-    (f':{tls_id}_c3', f':{tls_id}_w3', f':{tls_id}_w0'),
-]
-
-# IDs of induction loops used to detect throughput
-induction_ids = [
-    [f'{tls_id}_NB_2_1', f'{tls_id}_NB_2_2'],
-    [f'{tls_id}_WB_2_1', f'{tls_id}_WB_2_2'],
-    [f'{tls_id}_SB_2_1', f'{tls_id}_SB_2_2'],
-    [f'{tls_id}_EB_2_1', f'{tls_id}_EB_2_2'],
-]
+def get_sumo_cfg(dirprefix: str, netname: str, netfile: str = 'main') -> list[str]:
+    sumo_cfg = ['sumo-gui'] if GUI else ['sumo']
+    sumo_cfg += [
+        '-c', f'{dirprefix}simulation.sumocfg',
+        '--step-length', str(STEP_LENGTH),
+        '--lateral-resolution', '0',
+        '--net-file', f'{dirprefix}networks/{netname}/{netfile}.net.xml',
+        '--route-files', f'{dirprefix}routes/{netname}/bicycle.rou.xml,{dirprefix}routes/{netname}/car.rou.xml,{dirprefix}routes/{netname}/pedestrian.rou.xml',
+        '--additional-files', f'{dirprefix}networks/{netname}/detectors.add.xml'
+        # '--no-warnings',
+        # '--no-step-log',
+        # '--statistic-output', '../simulation/statistics.xml',
+        # '--tripinfo-output.write-unfinished',
+        # '--duration-log.statistics',
+    ]
+    return sumo_cfg

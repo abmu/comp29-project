@@ -1,24 +1,38 @@
 import random
 import multiprocessing as mp
-from environment import NET_NAME, set_route
+from pathlib import Path
+from environment import DIR_PREFIX, NET_NAME, get_sumo_cfg, set_route
 from fixed_timer import FixedTimer
 from q_learning import QLearning
 from deep_q_learning import DeepQLearning
 from utils import file_dump
 
 
-SEED = 29
+SEED = 29  # may not work well with multiple parallel processes -- non-determinism of execution
 
-MODE = 'train'
-TRAIN = 1000
-EVAL = 50
-
+MODE = 'eval'  # 'train' or 'eval'
+TLS_ID = 'CJ_1'  # traffic light system ID
 RESULTS_DIR = f'results/{NET_NAME}/'
 
 ALGORITHMS = {
-    'fixed_timer': FixedTimer(RESULTS_DIR, False),
-    'q_learning': QLearning(RESULTS_DIR, MODE == 'train'),
-    'deep_q_learning': DeepQLearning(RESULTS_DIR, MODE == 'train')
+    'fixed_timer': FixedTimer(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        stats_mode=False
+    ),
+    'q_learning': QLearning(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train')
+    ),
+    'deep_q_learning': DeepQLearning(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train')
+    )
 }
 
 
@@ -43,14 +57,15 @@ if __name__ == "__main__":
     # create a process pool
     pool = mp.Pool(processes=len(ALGORITHMS))
 
-    end = TRAIN if MODE == 'train' else EVAL
     print(f'Running on "{MODE}" routes...')
-
-    for episode in range(1, end+1):
+    
+    routes_dir = Path(f'{DIR_PREFIX}routes/{NET_NAME}/{MODE}/').glob('*')
+    count = sum(1 if f.is_dir() else 0 for f in routes_dir)  # count the number of folders in the routes directory
+    for episode in range(1, count+1):
         print(f'\n=== Episode: {episode} ===')
         
         # set SUMO route
-        set_route(episode, foldername=MODE)
+        set_route(episode, dirprefix=DIR_PREFIX, netname=NET_NAME, mode=MODE)
 
         # run algorithms in parallel
         print(f'Running {len(ALGORITHMS)} instances of SUMO...')

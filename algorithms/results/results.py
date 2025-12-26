@@ -2,9 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 PREFIX = 'eval/'
-FILE_A = f'{PREFIX}fixed_timer.txt'
-FILE_B = f'{PREFIX}q_learning.txt'
-FILE_C = f'{PREFIX}deep_q_learning.txt'
+files = [
+    f'{PREFIX}fixed_timer.txt',
+    f'{PREFIX}q_learning.txt',
+    f'{PREFIX}deep_q_learning.txt'
+]
 
 
 def moving_average(data: np.ndarray, w: int = 5) -> np.ndarray:
@@ -48,31 +50,33 @@ def remove_outliers_rolling(data: np.ndarray, w: int = 20, thresh: float = 1.0) 
 
     return cleaned
 
+
 def to_float_array(lst: list[float | None]) -> np.ndarray:
     # convert list to a float array, replacing None with an np.nan value
     return np.array([np.nan if x is None else x for x in lst], dtype=float)
 
 
+def pretty_list(lst: list[float | None]) -> np.ndarray:
+    # clean up list data
+    lst = to_float_array(lst)
+    lst = remove_outliers_rolling(lst)
+    lst = moving_average(lst)
+    return lst
+
+
+lists = []
 # read python-style lists from text files
-with open(FILE_A, 'r') as f:
-    a_list = eval(f.readlines()[0])
+for file in files:    
+    with open(file, 'r') as f:
+        lst = eval(f.readlines()[0])
+        lists.append(pretty_list(lst))
 
-with open(FILE_B, 'r') as f:
-    b_list = eval(f.readlines()[0])
-
-with open(FILE_C, 'r') as f:
-    c_list = eval(f.readlines()[0])
-
-epochs = np.arange(1, len(a_list) + 1)
-a_list = moving_average(remove_outliers_rolling(to_float_array(a_list)))
-b_list = moving_average(remove_outliers_rolling(to_float_array(b_list)))
-c_list = moving_average(remove_outliers_rolling(to_float_array(c_list)))
+epochs = np.arange(1, len(lists[0]) + 1)
 
 # plot both lists
 plt.figure()
-plt.plot(epochs, a_list, label=f'{FILE_A}')
-plt.plot(epochs, b_list, label=f'{FILE_B}')
-plt.plot(epochs, c_list, label=f'{FILE_C}')
+for i, file in enumerate(files):
+    plt.plot(epochs, lists[i], label=f'{file}')
 plt.xlabel('Epoch')
 plt.ylabel('Reward')
 plt.title('TLS methods')

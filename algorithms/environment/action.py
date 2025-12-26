@@ -1,4 +1,4 @@
-from .settings import STEP_LENGTH, queue_ids, crossing_ids, induction_ids
+from .settings import STEP_LENGTH, TOTAL_STEPS
 from .utils import ceil
 from .state import get_current_tls_phase, get_all_waiting_vehicles, get_all_waiting_peds, get_vehicle_throughput, get_peds_throughput
 from .reward import get_reward
@@ -49,9 +49,9 @@ def _steps_to_duration(steps: int) -> float:
     return steps * STEP_LENGTH
 
 
-def _run_action(conn, tls_id: str, curr_step: int, total_steps: int, action: int, duration: int, curr_reward: int) -> tuple[int, float]:
+def _run_action(conn, tls_id: str, curr_step: int, action: int, duration: int, curr_reward: int) -> tuple[int, float]:
     # peform action changing phase on the traffic light system, and return updated step number and cumulative reward
-    if curr_step >= total_steps:
+    if curr_step >= TOTAL_STEPS:
         return curr_step, curr_reward
 
     conn.trafficlight.setPhase(tls_id, action)
@@ -60,11 +60,11 @@ def _run_action(conn, tls_id: str, curr_step: int, total_steps: int, action: int
     # execute simulation steps, ensuring total permitted steps is not exceeded
     steps = _duration_to_steps(duration)
     for i in range(steps):
-        if curr_step < total_steps:
+        if curr_step < TOTAL_STEPS:
             conn.simulationStep()
             if len(conn.simulation.getStartingTeleportIDList()):
                 raise RuntimeError('Teleport detected!')
-            curr_reward += get_reward(get_all_waiting_vehicles(conn, queue_ids), get_all_waiting_peds(conn, crossing_ids), get_vehicle_throughput(conn, induction_ids), get_peds_throughput(conn, crossing_ids))
+            curr_reward += get_reward(get_all_waiting_vehicles(conn, tls_id), get_all_waiting_peds(conn, tls_id), get_vehicle_throughput(conn, tls_id), get_peds_throughput(conn, tls_id))
             curr_step += 1
         else:
             break
@@ -72,7 +72,7 @@ def _run_action(conn, tls_id: str, curr_step: int, total_steps: int, action: int
     return curr_step, curr_reward
 
 
-def perform_action(conn, tls_id: str, curr_step: int, total_steps: int, action: int) -> tuple[int, float, float]:
+def perform_action(conn, tls_id: str, curr_step: int, action: int) -> tuple[int, float, float]:
     # perform specified action, ensuring that the phase switch is also run if action is different to current phase
     start_step = curr_step
     curr_reward = 0
@@ -80,9 +80,9 @@ def perform_action(conn, tls_id: str, curr_step: int, total_steps: int, action: 
     if action != tls_phase:
         phase_switch = ACTION_SPACE[tls_phase]['phase_switch']
         for act, dur in phase_switch:
-            curr_step, curr_reward = _run_action(conn, tls_id, curr_step, total_steps, act, dur, curr_reward)
+            curr_step, curr_reward = _run_action(conn, tls_id, curr_step, act, dur, curr_reward)
 
     duration = ACTION_SPACE[action]['duration']
-    curr_step, curr_reward = _run_action(conn, tls_id, curr_step, total_steps, action, duration, curr_reward)
+    curr_step, curr_reward = _run_action(conn, tls_id, curr_step, action, duration, curr_reward)
 
     return curr_step, curr_reward, _steps_to_duration(curr_step - start_step)

@@ -12,7 +12,7 @@ import torch.optim as optim
 import numpy as np
 import random
 from collections import deque
-from environment import SUMO_CONFIG, TOTAL_STEPS, tls_id, queue_ids, crossing_ids, ACTION_SPACE, get_state, perform_action
+from environment import TOTAL_STEPS, ACTION_SPACE, get_state, perform_action
 
 
 """
@@ -53,8 +53,10 @@ class ReplayBuffer:
 
 
 class DeepQLearning:
-    def __init__(self, results_dir: str, train_mode: bool = False) -> None:
-        self.results_dir = results_dir
+    def __init__(self, tls_id: str, sumo_cfg: str, save_dir: str, train_mode: bool = False) -> None:
+        self.tls_id = tls_id
+        self.sumo_cfg = sumo_cfg
+        self.save_dir = save_dir
         self.train_mode = train_mode
         self.model_name = 'dqn_model.pt'
 
@@ -66,15 +68,15 @@ class DeepQLearning:
         self.epsilon_decay = 0.995
         self.epsilon_min = 0.005
 
-        traci.start(SUMO_CONFIG, label='deep_q_learning')
+        traci.start(self.sumo_cfg, label='deep_q_learning')
         conn = traci.getConnection('deep_q_learning')
-        state_size = len(get_state(conn, tls_id, queue_ids, crossing_ids))
+        state_size = len(get_state(conn, self.tls_id))
         conn.close()
         action_size = len(ACTION_SPACE)
 
         self.policy_net = DQN(state_size, action_size)
         if not self.train_mode:
-            self.policy_net.load_state_dict(torch.load(self.results_dir + self.model_name))
+            self.policy_net.load_state_dict(torch.load(self.save_dir + self.model_name))
             self.policy_net.eval()
             self.epsilon = 0
             self.epsilon_min = 0
@@ -135,17 +137,17 @@ class DeepQLearning:
         total_reward = 0
         step = 0
 
-        traci.start(SUMO_CONFIG, label='deep_q_learning')
+        traci.start(self.sumo_cfg, label='deep_q_learning')
         conn = traci.getConnection('deep_q_learning')
 
         try:
             while step < TOTAL_STEPS:
-                state = get_state(conn, tls_id, queue_ids, crossing_ids)
+                state = get_state(conn, self.tls_id)
                 action = self.choose_action(state)
                 
-                step, reward, duration = perform_action(conn, tls_id, step, TOTAL_STEPS, action)
+                step, reward, duration = perform_action(conn, self.tls_id, step, action)
 
-                next_state = get_state(conn, tls_id, queue_ids, crossing_ids)
+                next_state = get_state(conn, self.tls_id)
                 done = step >= TOTAL_STEPS
                 total_reward += reward
 
@@ -165,7 +167,7 @@ class DeepQLearning:
             self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
             if self.train_mode:
-                torch.save(self.policy_net.state_dict(), self.results_dir + self.model_name)
+                torch.save(self.policy_net.state_dict(), self.save_dir + self.model_name)
                 if (epoch) % self.target_update == 0:
                     self.target_net.load_state_dict(self.policy_net.state_dict())
                     print("Target network updated")

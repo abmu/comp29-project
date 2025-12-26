@@ -1,3 +1,6 @@
+from .settings import TLS_IDS
+
+
 def _discretize(xs: list[int], thresholds: tuple[int] = (0, 6, 12)) -> list[int]:
     # discretize value to a value between 0-3
     ys = [-1] * len(xs)
@@ -28,8 +31,9 @@ def _get_vehicle_count(conn, detector_id: str) -> int:
     return conn.inductionloop.getLastStepVehicleNumber(detector_id)
 
 
-def get_all_waiting_vehicles(conn, detectors: list[list[str]]) -> list[list[float]]:
+def get_all_waiting_vehicles(conn, tls: str) -> list[list[float]]:
     # return the waiting vehicles in the specified detectors
+    detectors = TLS_IDS[tls]['queues']
     waiting_vehicles = []
     for detector_group in detectors:
         group = []
@@ -39,8 +43,9 @@ def get_all_waiting_vehicles(conn, detectors: list[list[str]]) -> list[list[floa
     return waiting_vehicles
 
 
-def get_vehicle_throughput(conn, detectors: list[list[str]]) -> list[int]:
+def get_vehicle_throughput(conn, tls: str) -> list[int]:
     # return the vehicle count that have crossed the specified detectors
+    detectors = TLS_IDS[tls]['inductions']
     throughput = []
     for detector_group in detectors:
         count = 0
@@ -77,8 +82,9 @@ def _get_peds_exiting(conn, crossing_id: str, exit_edge_ids: tuple[str, str], th
     return count
 
 
-def get_all_waiting_peds(conn, crossings: list[tuple[str, str, str]]) -> list[list[float]]:
+def get_all_waiting_peds(conn, tls: str) -> list[list[float]]:
     # return the waiting pedestrians at the specified crossings
+    crossings = TLS_IDS[tls]['crossings']
     waiting_peds = []
     for crossing in crossings:
         group = _get_waiting_peds(conn, crossing[0], crossing[1:])
@@ -86,8 +92,9 @@ def get_all_waiting_peds(conn, crossings: list[tuple[str, str, str]]) -> list[li
     return waiting_peds
 
 
-def get_peds_throughput(conn, crossings: list[tuple[str, str, str]]) -> list[int]:
+def get_peds_throughput(conn, tls: str) -> list[int]:
     # return the number of pedestrians that have just finished crossing
+    crossings = TLS_IDS[tls]['crossings']
     throughput = []
     for crossing in crossings:
         count = _get_peds_exiting(conn, crossing[0], crossing[1:])
@@ -95,17 +102,17 @@ def get_peds_throughput(conn, crossings: list[tuple[str, str, str]]) -> list[int
     return throughput
 
 
-def get_state(conn, tls: str, detectors: list[list[str]], crossings: list[tuple[str, str, str]]) -> tuple[int, ...]:
+def get_state(conn, tls: str) -> tuple[int, ...]:
     # get current phase of traffic light system
     tls_phase = get_current_tls_phase(conn, tls)
 
     # get number of vehicles waiting in each queue
-    waiting_vehicles = [len(vehicles) for vehicles in get_all_waiting_vehicles(conn, detectors)]
+    waiting_vehicles = [len(vehicles) for vehicles in get_all_waiting_vehicles(conn, tls)]
 
     # get number of pedestrians waiting to use each crossing
-    waiting_peds = [len(peds) for peds in get_all_waiting_peds(conn, crossings)]
+    waiting_peds = [len(peds) for peds in get_all_waiting_peds(conn, tls)]
 
-    # simplify state
+    # compress/simplify state
     # combine 4 pedestrian areas into one, combine north and south bound, combine west and east bound
     waiting_peds = [sum(waiting_peds)]
     waiting_vehicles = [waiting_vehicles[0] + waiting_vehicles[2], waiting_vehicles[1] + waiting_vehicles[3]]
