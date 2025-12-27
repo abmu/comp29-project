@@ -37,9 +37,11 @@ def _generate_routes(netname: str, seed: int = 1, car_density: float = 1.0, bicy
 
 
 if __name__ == "__main__":
+    print(f'Generating {ROUTES} "train" routes for the network "{NET_NAME}"...')
     for i in range(1, ROUTES+1):
         _generate_routes(NET_NAME, seed=i, foldername='train')
 
+    print(f'\nGenerating {EVAL_ROUTES_PER * len(EVAL_ROUTES)} "eval" routes for the network "{NET_NAME}"...')
     for i, params in enumerate(EVAL_ROUTES, start=1):
         for j in range(1, EVAL_ROUTES_PER+1):
             seed = EVAL_ROUTES_PER * (i-1) + j

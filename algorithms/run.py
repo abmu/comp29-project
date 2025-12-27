@@ -25,6 +25,9 @@ ALGORITHMS = {
         save_dir=RESULTS_DIR,
         stats_mode=True
     ),
+
+
+
     # 'fixed_timer': FixedTimer(
     #     tls_id=TLS_ID,
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
@@ -59,6 +62,9 @@ ALGORITHMS = {
     #     train_mode=(MODE == 'train'),
     #     compress_state=False
     # ),
+
+
+
     # 'zebra': Runner(
     #     tls_id=TLS_ID,
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='main'),
@@ -104,7 +110,7 @@ if __name__ == "__main__":
 
     routes_dir = Path(f'{DIR_PREFIX}routes/{NET_NAME}/{MODE}/').glob('*')
     count = sum(1 if f.is_dir() else 0 for f in routes_dir)  # count the number of folders in the routes directory
-    print(f'Using {count} "{MODE}/" routes for the network "{NET_NAME}/"...')
+    print(f'Using {count} "{MODE}" routes for the network "{NET_NAME}"...')
 
     for episode in range(1, count+1):
         print(f'\n=== Episode: {episode} ===')
