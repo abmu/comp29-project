@@ -5,7 +5,7 @@ STEP_LENGTH = 0.10 * 10
 TOTAL_STEPS = int(SIMULATION_TIME / STEP_LENGTH)
 
 DIR_PREFIX = '../simulation/'
-NET_NAME = 'crossing'
+NET_NAME = 'demo'
 
 TLS_IDS = {
     # ID of the traffic light system

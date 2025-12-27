@@ -6,11 +6,12 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
+from runner import Runner
 from environment import TOTAL_STEPS, get_state, perform_action, compute_stats, get_cache
 from utils import file_dump
 
 
-class FixedTimer:
+class FixedTimer(Runner):
     def __init__(self, tls_id: str, sumo_cfg: str, save_dir: str, stats_mode: bool) -> None:
         self.tls_id = tls_id
         self.sumo_cfg = sumo_cfg

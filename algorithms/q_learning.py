@@ -8,11 +8,12 @@ import traci
 
 import numpy as np
 import random
+from runner import Runner
 from environment import TOTAL_STEPS, ACTION_SPACE, get_state, perform_action
 from utils import file_dump, file_eval
 
 
-class QLearning:
+class QLearning(Runner):
     def __init__(self, tls_id: str, sumo_cfg: str, save_dir: str, train_mode: bool, compress_state: bool = True) -> None:
         self.tls_id = tls_id
         self.sumo_cfg = sumo_cfg

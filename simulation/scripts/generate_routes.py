@@ -40,9 +40,9 @@ vehicles = [
         'args': [
             '-n', NETWORK,
             '-e', str(DURATION),
-            '-p', str(10 / args.car_density),
+            # '-p', str(10 / args.car_density),
+            '--insertion-density', str(1.0 * 100 * args.car_density),
             '--binomial', '100',
-            # '--insertion-density', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/car.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/car.rou.xml',
             '--fringe-factor', 'max', # ensure the vehicles only spawn from the very edges, rather than the middle of the road
@@ -56,7 +56,7 @@ vehicles = [
         'args': [
             '-n', NETWORK,
             '-e', str(DURATION),
-            '-p', str(10 / args.bicycle_density),
+            '--insertion-density', str(1.0 * 100 * args.bicycle_density),
             '--binomial', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/bicycle.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/bicycle.rou.xml',
@@ -72,7 +72,7 @@ vehicles = [
         'args': [
             '-n', NETWORK,
             '-e', str(DURATION),
-            '-p', str(5 / args.pedestrian_density),
+            '--insertion-density', str(2.0 * 100 * args.pedestrian_density),
             '--binomial', '100',
             '-o', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/pedestrian.trips.xml',
             '-r', f'{DIR_PREFIX}routes/{NET_NAME}/{args.foldername}/{args.seed}/pedestrian.rou.xml',
