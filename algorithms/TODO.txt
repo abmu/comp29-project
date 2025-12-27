@@ -2,6 +2,7 @@ TODO
 
 Report
 - Write introduction (in LaTeX)
+- Mention how not completely accurate -- cars and pedestrians seem more risk prone in the simulation, results do not show emergancy brake and other warnings, in real life people might get annoyed, non-determinism etc.
 
 Algorithms
 - Examine using traffic lights vs zebra crossings
@@ -16,6 +17,6 @@ State
 - Mention fully uncompressed in-depth state with distinction between cars and bicycles, and direction of pedestrians on crossings, phase durations, etc.
 
 Routes
-- BUG: fix bug in network where bikes at CJ_1 can sometimes cause congestion, e.g. route 388 -- try widen distance between bike paths
+- BUG: fix bug in network where bikes at CJ_1 can sometimes cause congestion -- try widen distance between bike paths
 - Improve pedestrians accuracy by varying fringe-factor -- simulates pedestrians going into/out of buildings
 - Manually adjust weight of edges to make certain edges more likely to spawn, rather than random choice -- simulates commonly used/ main roads

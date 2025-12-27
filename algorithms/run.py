@@ -19,6 +19,7 @@ MODE = 'train'  # 'train' or 'eval'
 RESULTS_DIR = f'results/{NET_NAME}/'
 
 ALGORITHMS = {
+    # Get cache stats used to calculate reward weights
     'fixed_timer': FixedTimer(
         tls_id=TLS_ID,
         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
