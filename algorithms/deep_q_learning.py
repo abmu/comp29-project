@@ -1,5 +1,6 @@
 import os
 import sys
+import uuid
 
 if not os.environ.get('SUMO_HOME'):
     raise EnvironmentError('SUMO_HOME is not set.')
@@ -72,8 +73,9 @@ class DeepQLearning(Runner):
         self.epsilon_decay = 0.995
         self.epsilon_min = 0.005
 
-        traci.start(self.sumo_cfg, label='deep_q_learning')
-        conn = traci.getConnection('deep_q_learning')
+        tid = str(uuid.uuid4())
+        traci.start(self.sumo_cfg, label=tid)
+        conn = traci.getConnection(tid)
         state_size = len(get_state(conn, self.tls_id, self.compress_state))
         conn.close()
         action_size = len(ACTION_SPACE)
@@ -141,8 +143,9 @@ class DeepQLearning(Runner):
         total_reward = 0
         step = 0
 
-        traci.start(self.sumo_cfg, label='deep_q_learning')
-        conn = traci.getConnection('deep_q_learning')
+        tid = str(uuid.uuid4())
+        traci.start(self.sumo_cfg, label=tid)
+        conn = traci.getConnection(tid)
 
         try:
             while step < TOTAL_STEPS:

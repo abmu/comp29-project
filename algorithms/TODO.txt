@@ -18,5 +18,6 @@ State
 
 Routes
 - BUG: fix bug in network where bikes at CJ_1 can sometimes cause congestion -- try widen distance between bike paths
+- Weights is negatively affected by this bug since the cache stats keeps part of the corrupted data, and then these weights is used when calculating the rewards for each episode which terminate and return None when there is corruption detected
 - Improve pedestrians accuracy by varying fringe-factor -- simulates pedestrians going into/out of buildings
 - Manually adjust weight of edges to make certain edges more likely to spawn, rather than random choice -- simulates commonly used/ main roads

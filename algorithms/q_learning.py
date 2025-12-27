@@ -1,5 +1,6 @@
 import os
 import sys
+import uuid
 
 if not os.environ.get('SUMO_HOME'):
     raise EnvironmentError('SUMO_HOME is not set.')
@@ -70,8 +71,9 @@ class QLearning(Runner):
         total_reward = 0
         step = 0
         
-        traci.start(self.sumo_cfg, label='q_learning')
-        conn = traci.getConnection('q_learning')
+        tid = str(uuid.uuid4())
+        traci.start(self.sumo_cfg, label=tid)
+        conn = traci.getConnection(tid)
 
         try:
             while step < TOTAL_STEPS:

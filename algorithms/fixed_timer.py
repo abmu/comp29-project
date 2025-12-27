@@ -1,5 +1,6 @@
 import os
 import sys
+import uuid
 
 if not os.environ.get('SUMO_HOME'):
     raise EnvironmentError('SUMO_HOME is not set.')
@@ -27,8 +28,9 @@ class FixedTimer(Runner):
         curr_idx = 0
         step = 0
         
-        traci.start(self.sumo_cfg, label='fixed_timer')
-        conn = traci.getConnection('fixed_timer')
+        tid = str(uuid.uuid4())
+        traci.start(self.sumo_cfg, label=tid)
+        conn = traci.getConnection(tid)
 
         try:
             while step < TOTAL_STEPS:

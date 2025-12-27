@@ -4,8 +4,8 @@ from pathlib import Path
 from environment import get_sumo_cfg, set_route
 from runner import Runner
 from fixed_timer import FixedTimer
-# from q_learning import QLearning
-# from deep_q_learning import DeepQLearning
+from q_learning import QLearning
+from deep_q_learning import DeepQLearning
 from utils import file_dump
 
 
@@ -20,51 +20,48 @@ RESULTS_DIR = f'results/{NET_NAME}/'
 
 ALGORITHMS = {
     # Get cache stats used to calculate reward weights
-    'fixed_timer': FixedTimer(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-        save_dir=RESULTS_DIR,
-        stats_mode=True
-    ),
-
-
-
     # 'fixed_timer': FixedTimer(
     #     tls_id=TLS_ID,
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
     #     save_dir=RESULTS_DIR,
-    #     stats_mode=False
-    # ),
-    # 'q_learning': QLearning(
-    #     tls_id=TLS_ID,
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-    #     save_dir=RESULTS_DIR,
-    #     train_mode=(MODE == 'train'),
-    #     compress_state=True
-    # ),
-    # 'deep_q_learning': DeepQLearning(
-    #     tls_id=TLS_ID,
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-    #     save_dir=RESULTS_DIR,
-    #     train_mode=(MODE == 'train'),
-    #     compress_state=True
-    # ),
-    # 'q_learning': QLearning(
-    #     tls_id=TLS_ID,
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-    #     save_dir=RESULTS_DIR,
-    #     train_mode=(MODE == 'train'),
-    #     compress_state=False
-    # ),
-    # 'deep_q_learning': DeepQLearning(
-    #     tls_id=TLS_ID,
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-    #     save_dir=RESULTS_DIR,
-    #     train_mode=(MODE == 'train'),
-    #     compress_state=False
+    #     stats_mode=True
     # ),
 
-
+    'fixed_timer': FixedTimer(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        # stats_mode=False
+        stats_mode=True
+    ),
+    'q_learning': QLearning(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train'),
+        compress_state=True
+    ),
+    'deep_q_learning': DeepQLearning(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train'),
+        compress_state=True
+    ),
+    'q_learning_uncompressed': QLearning(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train'),
+        compress_state=False
+    ),
+    'deep_q_learning_uncompressed': DeepQLearning(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train'),
+        compress_state=False
+    ),
 
     # 'zebra': Runner(
     #     tls_id=TLS_ID,
