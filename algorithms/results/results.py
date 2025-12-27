@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-PREFIX = 'eval/'
+DIR_PREFIX = 'demo/train/'
 files = [
-    f'{PREFIX}fixed_timer.txt',
-    f'{PREFIX}q_learning.txt',
-    f'{PREFIX}deep_q_learning.txt'
+    'fixed_timer.txt',
+    'q_learning.txt',
+    'deep_q_learning.txt'
 ]
 
 
@@ -67,7 +67,7 @@ def pretty_list(lst: list[float | None]) -> np.ndarray:
 lists = []
 # read python-style lists from text files
 for file in files:    
-    with open(file, 'r') as f:
+    with open(DIR_PREFIX + file, 'r') as f:
         lst = eval(f.readlines()[0])
         lists.append(pretty_list(lst))
 

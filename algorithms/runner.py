@@ -6,7 +6,7 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
-from environment import TOTAL_STEPS, get_state, perform_action, compute_stats, get_cache
+from environment import TOTAL_STEPS, perform_action, compute_stats, get_cache
 from utils import file_dump
 
 
@@ -29,8 +29,6 @@ class Runner:
 
         try:
             while step < TOTAL_STEPS:
-                state = get_state(conn, self.tls_id)
-
                 step, reward, _ = perform_action(conn, self.tls_id, step, None, self.stats_mode)
 
                 total_reward += reward

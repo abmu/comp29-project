@@ -7,10 +7,10 @@ ROUTES = 1000
 EVAL_ROUTES_PER = 10
 EVAL_ROUTES = [
     {'car_density': 1.0, 'bicycle_density': 1.0, 'pedestrian_density': 1.0},
-    {'car_density': 1.5, 'bicycle_density': 1.5, 'pedestrian_density': 1.5},
-    {'car_density': 2/3, 'bicycle_density': 2/3, 'pedestrian_density': 2/3},
-    {'car_density': 1.5, 'bicycle_density': 1.5, 'pedestrian_density': 2/3},
-    {'car_density': 2/3, 'bicycle_density': 2/3, 'pedestrian_density': 1.5},
+    {'car_density': 2.0, 'bicycle_density': 2.0, 'pedestrian_density': 2.0},
+    {'car_density': 0.5, 'bicycle_density': 0.5, 'pedestrian_density': 0.5},
+    {'car_density': 2.0, 'bicycle_density': 2.0, 'pedestrian_density': 0.5},
+    {'car_density': 0.5, 'bicycle_density': 0.5, 'pedestrian_density': 2.0},
 ]
 
 
