@@ -1,7 +1,10 @@
 import subprocess
 
+NET_NAME = 'demo'
+
 ROUTES = 1000
 
+EVAL_ROUTES_PER = 10
 EVAL_ROUTES = [
     {'car_density': 1.0, 'bicycle_density': 1.0, 'pedestrian_density': 1.0},
     {'car_density': 1.5, 'bicycle_density': 1.5, 'pedestrian_density': 1.5},
@@ -9,10 +12,9 @@ EVAL_ROUTES = [
     {'car_density': 1.5, 'bicycle_density': 1.5, 'pedestrian_density': 2/3},
     {'car_density': 2/3, 'bicycle_density': 2/3, 'pedestrian_density': 1.5},
 ]
-EVAL_ROUTES_PER = 10
 
 
-def _generate_routes(seed: int = 1, car_density: float = 1.0, bicycle_density: float = 1.0, pedestrian_density: float = 1.0, random_factor: float = 1.0, foldername: str = '.') -> None:
+def _generate_routes(netname: str, seed: int = 1, car_density: float = 1.0, bicycle_density: float = 1.0, pedestrian_density: float = 1.0, random_factor: float = 1.0, foldername: str = '.') -> None:
     # generate a new set of routes in the SUMO simulation
     print(f'Generating new routes... (seed: {seed}, car_density: {car_density}, bicycle_density: {bicycle_density}, pedestrian_density: {pedestrian_density}, random_factor: {random_factor})')
     dir_name = '.'
@@ -20,6 +22,7 @@ def _generate_routes(seed: int = 1, car_density: float = 1.0, bicycle_density: f
     subprocess.run(
         [
             'python', script_name,
+            '--netname', netname,
             '--seed', str(seed),
             '--car-density', str(car_density),
             '--bicycle-density', str(bicycle_density),
@@ -35,9 +38,9 @@ def _generate_routes(seed: int = 1, car_density: float = 1.0, bicycle_density: f
 
 if __name__ == "__main__":
     for i in range(1, ROUTES+1):
-        _generate_routes(seed=i, foldername='train')
+        _generate_routes(NET_NAME, seed=i, foldername='train')
 
     for i, params in enumerate(EVAL_ROUTES, start=1):
         for j in range(1, EVAL_ROUTES_PER+1):
             seed = EVAL_ROUTES_PER * (i-1) + j
-            _generate_routes(seed=seed, **params, foldername='eval')
+            _generate_routes(NET_NAME, seed=seed, **params, foldername='eval')

@@ -1,7 +1,7 @@
 import random
 import multiprocessing as mp
 from pathlib import Path
-from environment import DIR_PREFIX, NET_NAME, get_sumo_cfg, set_route
+from environment import get_sumo_cfg, set_route
 from runner import Runner
 from fixed_timer import FixedTimer
 from q_learning import QLearning
@@ -11,8 +11,11 @@ from utils import file_dump
 
 SEED = 29  # may not work well with multiple parallel processes -- non-determinism of execution
 
+DIR_PREFIX = '../simulation/'
+NET_NAME = 'demo'
 MODE = 'train'  # 'train' or 'eval'
 TLS_ID = 'CJ_1'  # traffic light system ID
+
 RESULTS_DIR = f'results/{NET_NAME}/'
 
 ALGORITHMS = {
