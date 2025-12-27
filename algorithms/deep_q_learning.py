@@ -74,7 +74,7 @@ class DeepQLearning(Runner):
 
         traci.start(self.sumo_cfg, label='deep_q_learning')
         conn = traci.getConnection('deep_q_learning')
-        state_size = len(get_state(conn, self.tls_id))
+        state_size = len(get_state(conn, self.tls_id, self.compress_state))
         conn.close()
         action_size = len(ACTION_SPACE)
 
