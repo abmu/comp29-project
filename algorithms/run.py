@@ -14,7 +14,7 @@ SEED = 29  # may not work well with multiple parallel processes -- non-determini
 DIR_PREFIX = '../simulation/'
 NET_NAME = 'crossing'
 TLS_ID = 'CJ_2'  # traffic light system ID
-MODE = 'train'  # 'train' or 'eval'
+MODE = 'eval'  # 'train' or 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
 
@@ -31,8 +31,7 @@ ALGORITHMS = {
     #     tls_id=TLS_ID,
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
     #     save_dir=RESULTS_DIR,
-    #     # stats_mode=False
-    #     stats_mode=True
+    #     stats_mode=False
     # ),
     # 'q_learning': QLearning(
     #     tls_id=TLS_ID,
