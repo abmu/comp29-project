@@ -1,6 +1,7 @@
 import os
 import sys
 import uuid
+import math
 
 if not os.environ.get('SUMO_HOME'):
     raise EnvironmentError('SUMO_HOME is not set.')
@@ -64,14 +65,15 @@ class DeepQLearning(Runner):
         self.model_name = 'dqn_model.pt'
         if not self.compress_state:
             self.model_name = 'uncompressed_' + self.model_name
+        self.t = 0
 
         self.learning_rate = 0.0005
         self.batch_size = 64
         self.target_update = 20  # episodes
         self.gamma = 0.9  # discount factor
-        self.epsilon = 1.0  # exploration rate
-        self.epsilon_decay = 0.995
-        self.epsilon_min = 0.005
+        self.epsilon_decay = 8.3e-7
+        self.epsilon_max = 1.0
+        self.epsilon_min = 0.01
 
         tid = str(uuid.uuid4())
         traci.start(self.sumo_cfg, label=tid)
@@ -84,7 +86,7 @@ class DeepQLearning(Runner):
         if not self.train_mode:
             self.policy_net.load_state_dict(torch.load(self.save_dir + self.model_name))
             self.policy_net.eval()
-            self.epsilon = 0
+            self.t = float('inf')
             self.epsilon_min = 0
 
         self.target_net = DQN(state_size, action_size)
@@ -94,10 +96,21 @@ class DeepQLearning(Runner):
         self.memory = ReplayBuffer()
     
 
+    @property
+    def epsilon(self) -> float:
+        """
+        Get the exponential decay epsilon value (exploration rate)
+
+        Returns:
+            The epsilon value
+        """
+        return self.epsilon_min + (self.epsilon_max - self.epsilon_min) * math.exp(-self.epsilon_decay * self.t)
+    
+
     def choose_action(self, state: tuple[int, ...]) -> int:
         # choose action using an epsilon-greedy policy
         actions = list(ACTION_SPACE.keys())
-        if random.random() < self.epsilon:
+        if self.train_mode and random.random() < self.epsilon:
             # exploration - choose random action
             return random.choice(actions)
         else:
@@ -152,7 +165,9 @@ class DeepQLearning(Runner):
                 state = get_state(conn, self.tls_id, self.compress_state)
                 action = self.choose_action(state)
                 
-                step, reward, duration = perform_action(conn, self.tls_id, step, action)
+                new_step, reward, duration = perform_action(conn, self.tls_id, step, action)
+                self.t += new_step - step
+                step = new_step
 
                 next_state = get_state(conn, self.tls_id, self.compress_state)
                 done = step >= TOTAL_STEPS
@@ -170,8 +185,6 @@ class DeepQLearning(Runner):
             raise
         finally:
             conn.close()
-
-            self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
             if self.train_mode:
                 torch.save(self.policy_net.state_dict(), self.save_dir + self.model_name)

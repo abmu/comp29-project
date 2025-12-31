@@ -1,6 +1,7 @@
 import os
 import sys
 import uuid
+import math
 
 if not os.environ.get('SUMO_HOME'):
     raise EnvironmentError('SUMO_HOME is not set.')
@@ -26,17 +27,18 @@ class QLearning(Runner):
             self.table_name = 'uncompressed_' + self.table_name
 
         self.q = {} # {(state, action): value}
+        self.t = 0
 
         # Q-learning hyperparameters
         self.alpha = 0.1 # learning rate
         self.gamma = 0.9 # discount factor
-        self.epsilon = 1.0 # exploration rate
-        self.epsilon_decay = 0.995
-        self.epsilon_min = 0.005
+        self.epsilon_decay = 8.3e-7
+        self.epsilon_max = 1.0
+        self.epsilon_min = 0.01
 
         if not self.train_mode:
             self.q = file_eval(self.save_dir + self.table_name)[0]
-            self.epsilon = 0
+            self.t = float('inf')
             self.epsilon_min = 0
 
 
@@ -45,10 +47,21 @@ class QLearning(Runner):
         return self.q.get((state, action), 0.0)
 
 
+    @property
+    def epsilon(self) -> float:
+        """
+        Get the exponential decay epsilon value (exploration rate)
+
+        Returns:
+            The epsilon value
+        """
+        return self.epsilon_min + (self.epsilon_max - self.epsilon_min) * math.exp(-self.epsilon_decay * self.t)
+
+
     def choose_action(self, state: tuple[int, ...]) -> int:
         # choose action using an epsilon-greedy policy
         actions = list(ACTION_SPACE.keys())
-        if random.random() < self.epsilon:
+        if self.train_mode and random.random() < self.epsilon:
             # exploration - choose random action
             return random.choice(actions)
         else:
@@ -80,7 +93,9 @@ class QLearning(Runner):
                 state = get_state(conn, self.tls_id, self.compress_state)
                 action = self.choose_action(state)
                 
-                step, reward, duration = perform_action(conn, self.tls_id, step, action)
+                new_step, reward, duration = perform_action(conn, self.tls_id, step, action)
+                self.t += new_step - step
+                step = new_step
 
                 next_state = get_state(conn, self.tls_id, self.compress_state)
                 total_reward += reward
@@ -92,8 +107,6 @@ class QLearning(Runner):
             raise
         finally:
             conn.close()
-
-            self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
             if self.train_mode:
                 file_dump(self.save_dir + self.table_name, str(self.q))

@@ -54,7 +54,8 @@ def _step(conn, tls_id: str, stats_mode: bool) -> float:
     # perform a single step and return the reward
     conn.simulationStep()
     if len(conn.simulation.getStartingTeleportIDList()):
-        raise RuntimeError('Teleport detected!')
+        # raise RuntimeError('Teleport detected!')
+        return -1000.0
     
     return get_reward(get_all_waiting_vehicles(conn, tls_id), get_all_waiting_peds(conn, tls_id), get_vehicle_throughput(conn, tls_id), get_peds_throughput(conn, tls_id), stats_mode=stats_mode)
 
