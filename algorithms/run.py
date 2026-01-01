@@ -14,7 +14,7 @@ SEED = 29  # may not work well with multiple parallel processes -- non-determini
 DIR_PREFIX = '../simulation/'
 NET_NAME = 'crossing'
 TLS_ID = 'CJ_2'  # traffic light system ID
-MODE = 'train'  # 'train' or 'eval'
+MODE = 'eval'  # 'train' or 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
 
