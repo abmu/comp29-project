@@ -17,7 +17,6 @@ State
 - Mention fully uncompressed in-depth state with distinction between cars and bicycles, and direction of pedestrians on crossings, phase durations, etc.
 
 Routes
-- BUG: fix bug in network where bikes at CJ_1 can sometimes cause congestion -- try widen distance between bike paths
-- Weights is negatively affected by this bug since the cache stats keeps part of the corrupted data, and then these weights is used when calculating the rewards for each episode which terminate and return None when there is corruption detected
+- BUG: episode 36, pedestrian652, Disconnected walk for person -- need to investigate
 - Improve pedestrians accuracy by varying fringe-factor -- simulates pedestrians going into/out of buildings
 - Manually adjust weight of edges to make certain edges more likely to spawn, rather than random choice -- simulates commonly used/ main roads

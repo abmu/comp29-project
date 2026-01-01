@@ -5,8 +5,8 @@ DIR_PREFIX = 'demo/train/'
 files = [
     # 'zebra.txt',
     'fixed_timer.txt',
-    # 'q_learning.txt',
-    # 'deep_q_learning.txt',
+    'q_learning.txt',
+    'deep_q_learning.txt',
     # 'q_learning_uncompressed.txt',
     'deep_q_learning_uncompressed.txt',
 ]
@@ -62,8 +62,8 @@ def to_float_array(lst: list[float | None]) -> np.ndarray:
 def pretty_list(lst: list[float | None]) -> np.ndarray:
     # clean up list data
     lst = to_float_array(lst)
-    # lst = remove_outliers_rolling(lst)
-    # lst = moving_average(lst)
+    lst = remove_outliers_rolling(lst)
+    lst = moving_average(lst)
     return lst
 
 
