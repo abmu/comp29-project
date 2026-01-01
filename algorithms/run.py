@@ -27,60 +27,60 @@ ALGORITHMS = {
     #     stats_mode=True
     # ),
 
-    'fixed_timer': FixedTimer(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-        save_dir=RESULTS_DIR,
-        stats_mode=False
-    ),
-    'q_learning': QLearning(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-        save_dir=RESULTS_DIR,
-        train_mode=(MODE == 'train'),
-        compress_state=True
-    ),
-    'deep_q_learning': DeepQLearning(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-        save_dir=RESULTS_DIR,
-        train_mode=(MODE == 'train'),
-        compress_state=True
-    ),
-    'q_learning_uncompressed': QLearning(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-        save_dir=RESULTS_DIR,
-        train_mode=(MODE == 'train'),
-        compress_state=False
-    ),
-    'deep_q_learning_uncompressed': DeepQLearning(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-        save_dir=RESULTS_DIR,
-        train_mode=(MODE == 'train'),
-        compress_state=False
-    ),
-
-    # 'zebra': Runner(
-    #     tls_id=TLS_ID,
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='main'),
-    #     save_dir=RESULTS_DIR,
-    #     stats_mode=False
-    # ),
     # 'fixed_timer': FixedTimer(
     #     tls_id=TLS_ID,
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls'),
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
     #     save_dir=RESULTS_DIR,
     #     stats_mode=False
     # ),
-    # 'deep_q_learning_uncompressed': DeepQLearning(
+    # 'q_learning': QLearning(
     #     tls_id=TLS_ID,
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls'),
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+    #     save_dir=RESULTS_DIR,
+    #     train_mode=(MODE == 'train'),
+    #     compress_state=True
+    # ),
+    # 'deep_q_learning': DeepQLearning(
+    #     tls_id=TLS_ID,
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+    #     save_dir=RESULTS_DIR,
+    #     train_mode=(MODE == 'train'),
+    #     compress_state=True
+    # ),
+    # 'q_learning_uncompressed': QLearning(
+    #     tls_id=TLS_ID,
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
     #     save_dir=RESULTS_DIR,
     #     train_mode=(MODE == 'train'),
     #     compress_state=False
     # ),
+    # 'deep_q_learning_uncompressed': DeepQLearning(
+    #     tls_id=TLS_ID,
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+    #     save_dir=RESULTS_DIR,
+    #     train_mode=(MODE == 'train'),
+    #     compress_state=False
+    # ),
+
+    'zebra': Runner(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='main'),
+        save_dir=RESULTS_DIR,
+        stats_mode=False
+    ),
+    'fixed_timer': FixedTimer(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls'),
+        save_dir=RESULTS_DIR,
+        stats_mode=False
+    ),
+    'deep_q_learning': DeepQLearning(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls'),
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train'),
+        compress_state=True
+    ),
 }
 
 
