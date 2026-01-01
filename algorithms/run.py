@@ -12,8 +12,8 @@ from utils import file_dump
 SEED = 29  # may not work well with multiple parallel processes -- non-determinism of execution
 
 DIR_PREFIX = '../simulation/'
-NET_NAME = 'demo'
-TLS_ID = 'CJ_1'  # traffic light system ID
+NET_NAME = 'crossing'
+TLS_ID = 'CJ_2'  # traffic light system ID
 MODE = 'train'  # 'train' or 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
