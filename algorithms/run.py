@@ -6,15 +6,16 @@ from runner import Runner
 from fixed_timer import FixedTimer
 from q_learning import QLearning
 from deep_q_learning import DeepQLearning
+from network import Network
 from utils import file_dump
 
 
 SEED = 29  # may not work well with multiple parallel processes -- non-determinism of execution
 
 DIR_PREFIX = '../simulation/'
-NET_NAME = 'crossing'
-TLS_ID = 'CJ_2'  # traffic light system ID
-MODE = 'eval'  # 'train' or 'eval'
+NET_NAME = 'demo'
+TLS_ID = 'CJ_1'  # traffic light system ID
+MODE = 'train'  # 'train' or 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
 
@@ -62,24 +63,29 @@ ALGORITHMS = {
     #     compress_state=False
     # ),
 
-    'zebra': Runner(
+    # 'zebra': Runner(
+    #     tls_id=TLS_ID,
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='main'),
+    #     save_dir=RESULTS_DIR,
+    #     stats_mode=False
+    # ),
+    # 'fixed_timer': FixedTimer(
+    #     tls_id=TLS_ID,
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls'),
+    #     save_dir=RESULTS_DIR,
+    #     stats_mode=False
+    # ),
+    # 'deep_q_learning': DeepQLearning(
+    #     tls_id=TLS_ID,
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls'),
+    #     save_dir=RESULTS_DIR,
+    #     train_mode=(MODE == 'train'),
+    #     compress_state=True
+    # ),
+
+    'network': Network(
         tls_id=TLS_ID,
         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='main'),
-        save_dir=RESULTS_DIR,
-        stats_mode=False
-    ),
-    'fixed_timer': FixedTimer(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls'),
-        save_dir=RESULTS_DIR,
-        stats_mode=False
-    ),
-    'deep_q_learning': DeepQLearning(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls'),
-        save_dir=RESULTS_DIR,
-        train_mode=(MODE == 'train'),
-        compress_state=True
     ),
 }
 
