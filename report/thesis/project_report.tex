@@ -38,7 +38,7 @@ $\Box$ \end{quotation}}
 
 
 \title{{\vspace{-14em} \includegraphics[scale=0.4]{ucl_logo.png}}\\
-{{\Huge Investigating the use of Reinforcement Learning Algorithms in Traffic Evnrionments}}\\
+{{\Huge Investigating the use of Reinforcement Learning Algorithms in Traffic Environments}}\\
 % {\large Optional Subtitle}\\
 }
 \date{Submission date: Day Month Year}
@@ -67,27 +67,30 @@ Summarise your report concisely.
 
 
 \chapter{Introduction}
-This is just a bare minimum to get started.  There is unlimited guidance on using latex, e.g., {\tt https://en.wikibooks.org/wiki/LaTeX}.   You are still responsible to check the detailed requirements of a project, including formatting instructions, see \\
-{\tt https://moodle.ucl.ac.uk/pluginfile.php/3591429/mod\_resource/content/7/UGProjects2017.pdf}.
-Leave at least a line of white space when you want to start a new paragraph.
 
-\section{Section 1}
-Chapters should contain numbered sections and sub-sections.
+\section{The Problem}
+Traffic lights are ubiquitous signalling devices used to control the flow of vehicle and pedestrian traffic, primarily for safety and better regulation of traffic. First introduced in 1868 on Parliament Square in London, there have been a wide range of designs created with the most common being a three-colour design -- that is green, amber, and red.
 
-\subsection{Sub-Section 1}
-Remember that this is a structured technical/academic report, not an essay.
+The three-colour de jure standard typically uses an internal clock to cycle through and control the duration of each signal phase in a pre-programmed pattern. Whilst this is an obvious approach, the fixed timer takes for granted that traffic demand will remain relatively constant over time, disregarding finer granularity and variations in conditions.
 
-\section{Mathematical Notation}
-Mathematical expressions are placed inline between dollar signs, e.g. $\sqrt 2, \sum_{i=0}^nf(i)$, or in display mode
-\[ e^{i\pi}=-1\] and another way, this time with labels,
-\begin{align}
-\label{line1} A=B\wedge B=C&\rightarrow A=C\\
-&\rightarrow C=A\\
-\intertext{note that}
-n!&=\prod_{1\leq i\leq n}i \\
-\int_{x=1}^y \frac 1 x \mathrm{d}x&=\log y
-\end{align}
-We can refer to labels like this \eqref{line1}.   
+In an endeavour to improve upon this, advanced traffic light systems equipped with sensors are progressively being introduced. These systems dynamically adapt signal timings in response to observed traffic conditions by using rule-based logic and manually designed heuristics. This approach offers improvements in waiting times and vehicle throughput, however it relies on predefined rules defined by domain experts that may fail to generalise and perform optimally in all conditions.
+
+The objective of this dissertation will be to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. Rather than explicitly defining behaviour in different traffic scenarios as before, we will observe how optimal decision-making policies may be learnt independently through the use of reinforcement learning algorithms.
+
+Time is a currency that once spent cannot be regained. Traffic lights govern our lives to the extent that saving mere fractions of a second at the individual level can compound to an indescribable amount saved when considering the aggregate. By leveraging intelligent agents, this research hopes to take traffic lights a step further -- regardless of how big that step may be.
+
+\section{Report Overview}
+We will begin with defining the environment in which we will be conducting our traffic experiments, and then building out this environment using available open source tools and libraries. Whilst accuracy and scope of the environment are important, they will not take precedence over the implementation and analysis of the intelligent agents themselves.
+
+Following this, the context and theory behind reinforcement learning itself will be explored, as well as definitions and terminology that will be used throughout the dissertation. These foundations will be necessary when explaining the motivation behind decisions made later on.
+
+Next we will discuss the creation of an application programming interface that will enable us to connect to our environment for the purposes of observation and control. Based on the default environment and traffic light systems, we will also define a reward which will be used to evaluate performance.
+
+Upon making our environment, we will implement and explore different reinforcement learning algorithms our intelligent agent may use -- namely Q-learning and Deep Q-learning. These discussions will be supplemented with the theory regarding how each works, as well as the improvements and limitations proposed by each. Further derivatives of these algorithms and the advantages they bring will also be briefly touched upon, however they will not be implemented.
+
+Continuing from this, a novel approach in which multiple intelligent agents interface together through the use of a network layer will be detailed and implemented. The limitations imposed by such an approach will be considered, as well as how it may be implemented in practice outside of the simulated environment setting.
+
+Finally, after testing and evaluating the different approaches in unforeseen traffic scenarios, we will draw our overall conclusions. Feasibility of such a project will be discussed, as well as interesting technical challenges that were encountered. Future work and limitations to consider will then be commented on.
 
 \chapter{Title of second chapter}
 
@@ -97,7 +100,6 @@ The main chapters should start with a brief summary -- this chapter is about, or
 Often lots of citations here (and elsewhere), e.g. \cite{Rey:D} or \cite[Theorem 2.3]{PriorNOP70}.   Bibtex can help with this, but is not essential. If you want pictures, try
 
 \begin{center}
-\includegraphics[scale=.5]{aristotle.jpg}
 \end{center}
 You can use 
 \begin{itemize}

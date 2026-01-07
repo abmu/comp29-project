@@ -2,11 +2,11 @@ TODO
 
 Report
 - Write introduction (in LaTeX)
-- Mention how not completely accurate -- cars and pedestrians seem more risk prone in the simulation, results do not show emergancy brake and other warnings, in real life people might get annoyed, non-determinism etc.
+- Mention how not completely accurate -- cars and pedestrians seem more risk prone in the simulation, results do not show emergency brake and other warnings, in real life people might get annoyed, non-determinism etc.
 
 Algorithms
-- Examine using traffic lights vs zebra crossings
-- Extend network, and think about network communication with the traffic light systems to improve performance
+- Extend network, and think about network communication with the traffic light systems to improve performance.
+- Distributed data being sent -- rather than centralised -- compared to real life systems like SCOOT + MOVA + VA
 
 Implement evaluation framework
 - Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian)
