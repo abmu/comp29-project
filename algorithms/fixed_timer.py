@@ -13,46 +13,17 @@ from utils import file_dump
 
 
 class FixedTimer(Runner):
-    def __init__(self, tls_id: str, sumo_cfg: str, save_dir: str, stats_mode: bool) -> None:
+    def __init__(self, tls_id: str, save_dir: str, stats_mode: bool) -> None:
         self.tls_id = tls_id
-        self.sumo_cfg = sumo_cfg
         self.save_dir = save_dir
         self.stats_mode = stats_mode
         self.stats_name = 'cache_stats.txt'
         self.action_loop = [0,0,0,3,3,3,6]
+        self.controller = None
 
-
-    def run(self, epoch: int = 1) -> float:
-        # run a single episode and return the reward
-        total_reward = 0
-        curr_idx = 0
-        step = 0
-        
-        tid = str(uuid.uuid4())
-        traci.start(self.sumo_cfg, label=tid)
-        conn = traci.getConnection(tid)
-
-        controller = Controller(conn, self.tls_id)
-
-        try:
-            while step < TOTAL_STEPS:
-                if controller.finished():
-                    state = get_state(conn, self.tls_id)
-                    action = self.action_loop[curr_idx]
-                    controller.set_action(action)
-                    curr_idx = (curr_idx + 1) % len(self.action_loop)
-
-                simulation_step(conn)
-                reward = controller.run()
-                total_reward += reward
-                step += 1
-
-        except Exception as e:
-            raise
-        finally:
-            conn.close()
-
-            if self.stats_mode:
-                file_dump(self.save_dir + self.stats_name, str(compute_stats(get_cache())))
-
-        return total_reward
+    def start_step(self, conn, t: int) -> None:
+        if self.controller.finished():
+            state = get_state(conn, self.tls_id)
+            action = self.action_loop[curr_idx]
+            self.controller.set_action(action)
+            curr_idx = (curr_idx + 1) % len(self.action_loop)

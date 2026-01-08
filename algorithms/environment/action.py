@@ -60,12 +60,12 @@ class Controller:
         self.conn = conn
         self.tls_id = tls_id
         self.stats_mode = stats_mode
-        self._controlled_lanes = set(self.conn.trafficlight.getControlledLanes(self.tls_id))
         self.initialised = False
         self.curr_action = None
         self.curr_dur = None
         self.next = []
         self.total_steps = 0
+        self._controlled_lanes = set(self.conn.trafficlight.getControlledLanes(self.tls_id))
     
 
     def __str__(self) -> str:
