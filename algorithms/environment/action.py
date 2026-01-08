@@ -56,12 +56,16 @@ def simulation_step(conn) -> float:
 
 
 class Controller:
-    def __init__(self, conn, tls_id: str, action: int = 0, stats_mode: bool = False) -> None:
+    def __init__(self, conn, tls_id: str, stats_mode: bool = False) -> None:
         self.conn = conn
         self.tls_id = tls_id
         self.stats_mode = stats_mode
         self._controlled_lanes = set(self.conn.trafficlight.getControlledLanes(self.tls_id))
-        self.set_action(action)
+        self.initialised = False
+        self.curr_action = None
+        self.curr_dur = None
+        self.next = []
+        self.total_steps = 0
     
 
     def __str__(self) -> str:
@@ -100,7 +104,7 @@ class Controller:
 
         self.total_steps = 0
         self._update_tls()
-    
+        self.initialised = True    
     
     def _tls_teleport_penalty(self) -> float:
         # calculate the penalty for any teleports of entities going towards the TLS
@@ -117,14 +121,12 @@ class Controller:
 
     def run(self) -> float:
         # run the controller and return the reward
-        if self.finished():
-            return 0.0
+        if self.initialised and not self.finished():
+            self.curr_dur -= 1
+            self.total_steps += 1
 
-        self.curr_dur -= 1
-        self.total_steps += 1
-
-        if not self.curr_dur and self.next:
-            self._update_tls()
+            if not self.curr_dur and self.next:
+                self._update_tls()
         
         return get_reward(
             get_all_waiting_vehicles(self.conn, self.tls_id),

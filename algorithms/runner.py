@@ -7,7 +7,7 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
-from environment import TOTAL_STEPS, perform_action, compute_stats, get_cache
+from environment import TOTAL_STEPS, Controller, simulation_step, compute_stats, get_cache
 from utils import file_dump
 
 
@@ -29,11 +29,14 @@ class Runner:
         traci.start(self.sumo_cfg, label=tid)
         conn = traci.getConnection(tid)
 
+        controller = Controller(conn, self.tls_id)
+
         try:
             while step < TOTAL_STEPS:
-                step, reward, _ = perform_action(conn, self.tls_id, step, None, self.stats_mode)
-
+                simulation_step(conn)
+                reward = controller.run()
                 total_reward += reward
+                step += 1
 
         except Exception as e:
             raise

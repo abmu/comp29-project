@@ -32,16 +32,16 @@ class FixedTimer(Runner):
         traci.start(self.sumo_cfg, label=tid)
         conn = traci.getConnection(tid)
 
-        controller = Controller(conn, self.tls_id, action=curr_idx)
+        controller = Controller(conn, self.tls_id)
 
         try:
             while step < TOTAL_STEPS:
                 state = get_state(conn, self.tls_id)
 
                 if controller.finished():
-                    curr_idx = (curr_idx + 1) % len(self.action_loop)
                     action = self.action_loop[curr_idx]
                     controller.set_action(action)
+                    curr_idx = (curr_idx + 1) % len(self.action_loop)
 
                 simulation_step(conn)
                 reward = controller.run()
