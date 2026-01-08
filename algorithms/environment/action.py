@@ -60,6 +60,7 @@ class Controller:
         self.conn = conn
         self.tls_id = tls_id
         self.stats_mode = stats_mode
+        self._controlled_lanes = set(self.conn.trafficlight.getControlledLanes(self.tls_id))
         self.set_action(action)
     
 
@@ -105,14 +106,13 @@ class Controller:
         # calculate the penalty for any teleports of entities going towards the TLS
         penalty = 0.0
         
-        controlled_lanes = set(self.conn.trafficlight.getControlledLanes(self.tls_id))
         teleported = self.conn.simulation.getStartingTeleportIDList()
         for entity_id in teleported:
             lane_id = self.conn.person.getRoadID(entity_id) if entity_id in self.conn.person.getIDList() else self.conn.vehicle.getLaneID(entity_id)
-            if lane_id in controlled_lanes:
+            if lane_id in self._controlled_lanes:
                 penalty += PENALTY
         
-        return PENALTY
+        return penalty
     
 
     def run(self) -> float:

@@ -26,24 +26,21 @@ class Network:
         tid = str(uuid.uuid4())
         traci.start(self.sumo_cfg, label=tid)
         conn = traci.getConnection(tid)
-        controller = Controller(conn, self.tls_id)
+
+        controller = Controller(conn, self.tls_id, action=curr_idx)
 
         try:
             while step < TOTAL_STEPS:
                 state = get_state(conn, self.tls_id)
-                action = self.action_loop[curr_idx]
 
                 if controller.finished():
                     curr_idx = (curr_idx + 1) % len(self.action_loop)
+                    action = self.action_loop[curr_idx]
                     controller.set_action(action)
 
-                reward = controller.run()
-                print(controller)
                 simulation_step(conn)
-                print('done')
-
-                # total_reward += reward
-
+                reward = controller.run()
+                total_reward += reward
                 step += 1
 
         except Exception as e:

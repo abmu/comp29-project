@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
 from runner import Runner
-from environment import TOTAL_STEPS, get_state, perform_action, compute_stats, get_cache
+from environment import TOTAL_STEPS, Controller, get_state, simulation_step, compute_stats, get_cache
 from utils import file_dump
 
 
@@ -32,15 +32,21 @@ class FixedTimer(Runner):
         traci.start(self.sumo_cfg, label=tid)
         conn = traci.getConnection(tid)
 
+        controller = Controller(conn, self.tls_id, action=curr_idx)
+
         try:
             while step < TOTAL_STEPS:
                 state = get_state(conn, self.tls_id)
-                action = self.action_loop[curr_idx]
 
-                step, reward, _ = perform_action(conn, self.tls_id, step, action, self.stats_mode)
+                if controller.finished():
+                    curr_idx = (curr_idx + 1) % len(self.action_loop)
+                    action = self.action_loop[curr_idx]
+                    controller.set_action(action)
 
-                curr_idx = (curr_idx + 1) % len(self.action_loop)
+                simulation_step(conn)
+                reward = controller.run()
                 total_reward += reward
+                step += 1
 
         except Exception as e:
             raise
