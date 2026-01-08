@@ -11,7 +11,7 @@ import traci
 import numpy as np
 import random
 from runner import Runner
-from environment import TOTAL_STEPS, ACTION_SPACE, get_state, perform_action
+from environment import TOTAL_STEPS, ACTION_SPACE, Controller, simulation_step, get_state
 from utils import file_dump, file_eval
 
 
@@ -71,7 +71,7 @@ class QLearning(Runner):
 
 
     def update_q(self, state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: float) -> None:
-        # update Q-value of state and action combinatoin based on reward and next state
+        # update Q-value of state and action combination based on reward and next state
         actions = list(ACTION_SPACE.keys())
         old_q = self.get_q(state, action)
         best_next = max(self.get_q(next_state, a) for a in actions)
@@ -88,21 +88,28 @@ class QLearning(Runner):
         traci.start(self.sumo_cfg, label=tid)
         conn = traci.getConnection(tid)
 
+        controller = Controller(conn, self.tls_id)
+
         try:
             while step < TOTAL_STEPS:
                 state = get_state(conn, self.tls_id, self.compress_state)
-                action = self.choose_action(state)
                 
-                new_step, reward, duration = perform_action(conn, self.tls_id, step, action)
-                self.t += new_step - step
-                step = new_step
-
-                next_state = get_state(conn, self.tls_id, self.compress_state)
+                finished = controller.finished()
+                if finished:
+                    action = self.choose_action(state)
+                    controller.set_action(action)
+                
+                simulation_step(conn)
+                reward = controller.run()
                 total_reward += reward
-
-                if self.train_mode:
+                step += 1
+                self.t += 1
+    
+                if finished and self.train_mode:
+                    next_state = get_state(conn, self.tls_id, self.compress_state)
+                    duration = controller.get_total_duration()
                     self.update_q(state, action, reward, next_state, duration)
-
+                
         except Exception as e:
             raise
         finally:

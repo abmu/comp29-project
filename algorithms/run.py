@@ -4,7 +4,7 @@ from pathlib import Path
 from environment import get_sumo_cfg, set_route
 from runner import Runner
 from fixed_timer import FixedTimer
-# from q_learning import QLearning
+from q_learning import QLearning
 # from deep_q_learning import DeepQLearning
 from network import Network
 from utils import file_dump
@@ -15,7 +15,7 @@ SEED = 29  # may not work well with multiple parallel processes -- non-determini
 DIR_PREFIX = '../simulation/'
 NET_NAME = 'demo'
 TLS_ID = 'CJ_1'  # traffic light system ID
-MODE = 'train'  # 'train' or 'eval'
+MODE = 'eval'  # 'train' or 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
 
@@ -28,19 +28,19 @@ ALGORITHMS = {
     #     stats_mode=True
     # ),
 
-    # 'fixed_timer': FixedTimer(
-    #     tls_id=TLS_ID,
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-    #     save_dir=RESULTS_DIR,
-    #     stats_mode=False
-    # ),
-    # 'q_learning': QLearning(
-    #     tls_id=TLS_ID,
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
-    #     save_dir=RESULTS_DIR,
-    #     train_mode=(MODE == 'train'),
-    #     compress_state=True
-    # ),
+    'fixed_timer': FixedTimer(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        stats_mode=False
+    ),
+    'q_learning': QLearning(
+        tls_id=TLS_ID,
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train'),
+        compress_state=True
+    ),
     # 'deep_q_learning': DeepQLearning(
     #     tls_id=TLS_ID,
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME),
@@ -82,19 +82,6 @@ ALGORITHMS = {
     #     train_mode=(MODE == 'train'),
     #     compress_state=True
     # ),
-
-    'runner': Runner(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='main'),
-        save_dir=RESULTS_DIR,
-        stats_mode=False
-    ),
-    'fixed_timer': FixedTimer(
-        tls_id=TLS_ID,
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='main'),
-        save_dir=RESULTS_DIR,
-        stats_mode=False
-    ),
 }
 
 
