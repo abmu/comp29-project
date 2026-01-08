@@ -25,7 +25,6 @@ class QLearning(Runner):
         self.epsilon_min = 0.01
 
         self.q = {} # {(state, action): value}
-
         if not self.train_mode:
             self.q = file_eval(self.save_dir + self.table_name)[0]
             self.t = float('inf')

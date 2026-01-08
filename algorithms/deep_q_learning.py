@@ -6,7 +6,7 @@ import numpy as np
 import random
 from collections import deque
 from agent import Runner
-from environment import ACTION_SPACE, Controller, get_state
+from environment import ACTION_SPACE, get_state
 
 
 """
@@ -145,8 +145,7 @@ class DeepQLearning(Runner):
 
 
     def start_episode(self, conn) -> None:
-        self.conn = conn
-        self.controller = Controller(conn, self.tls_id)
+        super().start_episode(conn)
         if not self.initialised:
             self.initialise(conn)
 

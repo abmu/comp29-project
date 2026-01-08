@@ -61,7 +61,7 @@ def get_sumo_cfg(dirprefix: str, netname: str, netfile: str = 'main') -> list[st
         '--route-files', f'{dirprefix}routes/{netname}/bicycle.rou.xml,{dirprefix}routes/{netname}/car.rou.xml,{dirprefix}routes/{netname}/pedestrian.rou.xml',
         '--additional-files', f'{dirprefix}networks/{netname}/detectors.add.xml',
         '--no-warnings',
-        '--no-step-log',
+        # '--no-step-log',
         # '--statistic-output', '../simulation/statistics.xml',
         # '--tripinfo-output.write-unfinished',
         # '--duration-log.statistics',

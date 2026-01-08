@@ -145,7 +145,7 @@ def run_ep(args: tuple[str, int]) -> tuple[str, float]:
         reward = NETWORKS[net].run(epoch)
         return net, reward
     except Exception as e:
-        print(f'[{alg}] [{epoch}] exception: {e}')
+        print(f'[{net}] [{epoch}] exception: {e}')
         return net, None
 
 

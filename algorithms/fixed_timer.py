@@ -9,14 +9,20 @@ class FixedTimer(Runner):
         self.controller = None
         self.stats_mode = stats_mode
         self.stats_name = 'cache_stats.txt'
+
         self.action_loop = [0,0,0,3,3,3,6]
 
 
+    def start_episode(self, conn):
+        super().start_episode(conn)
+        self.curr_idx = 0
+        
+
     def start_step(self) -> None:
         if self.controller.finished():
-            action = self.action_loop[curr_idx]
+            action = self.action_loop[self.curr_idx]
             self.controller.set_action(action)
-            curr_idx = (curr_idx + 1) % len(self.action_loop)
+            self.curr_idx = (self.curr_idx + 1) % len(self.action_loop)
 
 
     def finish_step(self, done: bool):
