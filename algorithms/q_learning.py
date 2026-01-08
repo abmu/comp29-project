@@ -92,10 +92,8 @@ class QLearning(Runner):
 
         try:
             while step < TOTAL_STEPS:
-                state = get_state(conn, self.tls_id, self.compress_state)
-                
-                finished = controller.finished()
-                if finished:
+                if controller.finished():
+                    state = get_state(conn, self.tls_id, self.compress_state)
                     action = self.choose_action(state)
                     controller.set_action(action)
                 
@@ -105,7 +103,7 @@ class QLearning(Runner):
                 step += 1
                 self.t += 1
     
-                if finished and self.train_mode:
+                if controller.finished() and self.train_mode:
                     next_state = get_state(conn, self.tls_id, self.compress_state)
                     duration = controller.get_total_duration()
                     self.update_q(state, action, reward, next_state, duration)

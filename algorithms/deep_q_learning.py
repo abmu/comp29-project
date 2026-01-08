@@ -15,7 +15,7 @@ import numpy as np
 import random
 from collections import deque
 from runner import Runner
-from environment import TOTAL_STEPS, ACTION_SPACE, get_state, perform_action
+from environment import TOTAL_STEPS, ACTION_SPACE, Controller, simulation_step, get_state
 
 
 """
@@ -160,25 +160,31 @@ class DeepQLearning(Runner):
         traci.start(self.sumo_cfg, label=tid)
         conn = traci.getConnection(tid)
 
+        controller = Controller(conn, self.tls_id)
+
         try:
             while step < TOTAL_STEPS:
-                state = get_state(conn, self.tls_id, self.compress_state)
-                action = self.choose_action(state)
-                
-                new_step, reward, duration = perform_action(conn, self.tls_id, step, action)
-                self.t += new_step - step
-                step = new_step
+                if controller.finished():
+                    state = get_state(conn, self.tls_id, self.compress_state)
+                    action = self.choose_action(state)
+                    controller.set_action(action)
 
-                next_state = get_state(conn, self.tls_id, self.compress_state)
-                done = step >= TOTAL_STEPS
+                simulation_step(conn)
+                reward = controller.run()
                 total_reward += reward
+                step += 1
+                self.t += 1
+                
+                if controller.finished() and self.train_mode:
+                    next_state = get_state(conn, self.tls_id, self.compress_state)
+                    duration = controller.finished()
+                    done = step >= TOTAL_STEPS
 
-                # save transition
-                action_id_to_idx = {aid: i for i, aid in enumerate(ACTION_SPACE.keys())}
-                action_idx = action_id_to_idx[action]
-                self.memory.push(state, action_idx, reward, next_state, duration, done)
+                    # save transition
+                    action_id_to_idx = {aid: i for i, aid in enumerate(ACTION_SPACE.keys())}
+                    action_idx = action_id_to_idx[action]
+                    self.memory.push(state, action_idx, reward, next_state, duration, done)
 
-                if self.train_mode:
                     self.train_step()
 
         except Exception as e:

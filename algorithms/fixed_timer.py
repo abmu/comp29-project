@@ -36,9 +36,8 @@ class FixedTimer(Runner):
 
         try:
             while step < TOTAL_STEPS:
-                state = get_state(conn, self.tls_id)
-
                 if controller.finished():
+                    state = get_state(conn, self.tls_id)
                     action = self.action_loop[curr_idx]
                     controller.set_action(action)
                     curr_idx = (curr_idx + 1) % len(self.action_loop)
