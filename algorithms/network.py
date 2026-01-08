@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
 from environment import TOTAL_STEPS, simulation_step
-from runner import Runner
+from agent import Runner
 
 
 class Network:

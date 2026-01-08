@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import random
-from runner import Runner
+from agent import Runner
 from environment import ACTION_SPACE, get_state
 from utils import file_dump, file_eval
 
@@ -85,7 +85,7 @@ class QLearning(Runner):
 
 
     def finish_step(self, done: bool):
-        if self.controller.finished() and self.train_mode:
+        if self.train_mode and self.controller.finished():
             next_state = get_state(self.conn, self.tls_id, self.compress_state)
             duration = self.controller.get_total_duration()
             self.update_q(self.state, self.action, self.reward, next_state, duration)

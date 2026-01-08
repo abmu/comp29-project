@@ -5,7 +5,7 @@ import torch.optim as optim
 import numpy as np
 import random
 from collections import deque
-from runner import Runner
+from agent import Runner
 from environment import ACTION_SPACE, Controller, get_state
 
 
@@ -145,7 +145,6 @@ class DeepQLearning(Runner):
 
 
     def start_episode(self, conn) -> None:
-        # run at the start of every episode
         self.conn = conn
         self.controller = Controller(conn, self.tls_id)
         if not self.initialised:
@@ -162,7 +161,7 @@ class DeepQLearning(Runner):
 
     def run(self) -> float:
         self.t += 1
-        if self.t % self.target_update == 0:
+        if self.train_mode and self.t % self.target_update == 0:
             self.target_net.load_state_dict(self.policy_net.state_dict())
             # print("Target network updated")
         reward = self.controller.run()
@@ -171,7 +170,7 @@ class DeepQLearning(Runner):
 
 
     def finish_step(self, done: bool):
-        if self.controller.finished() and self.train_mode:
+        if self.train_mode and self.controller.finished():
             next_state = get_state(self.conn, self.tls_id, self.compress_state)
             duration = self.controller.get_total_duration()
 

@@ -1,4 +1,4 @@
-from runner import Runner
+from agent import Runner
 from environment import compute_stats, get_cache
 from utils import file_dump
 
