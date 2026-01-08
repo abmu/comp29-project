@@ -1,31 +1,24 @@
-import os
-import sys
-import uuid
-
-if not os.environ.get('SUMO_HOME'):
-    raise EnvironmentError('SUMO_HOME is not set.')
-sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
-import traci
-
+from abc import ABC, abstractmethod
 from environment import Controller, compute_stats, get_cache
 from utils import file_dump
 
 
-class Runner:
-    def __init__(self, tls_id: str, save_dir: str, stats_mode: bool) -> None:
+class Runner(ABC):
+    def __init__(self, tls_id: str, save_dir: str) -> None:
         self.tls_id = tls_id  # technically this could just be a connected junction with no traffic light -- not a tls!
         self.save_dir = save_dir
-        self.stats_mode = stats_mode
-        self.stats_name = 'cache_stats.txt'
+        self.conn = None
         self.controller = None
 
 
     def start_episode(self, conn) -> None:
         # run at the start of every episode
+        self.conn = conn
         self.controller = Controller(conn, self.tls_id)
 
 
-    def start_step(self, conn, t: int) -> None:
+    @abstractmethod
+    def start_step(self) -> None:
         # run at the start of every step
         pass
 
@@ -35,12 +28,33 @@ class Runner:
         return self.controller.run()
     
 
-    def finish_step(self, t: int) -> None:
+    @abstractmethod
+    def finish_step(self, done: bool) -> None:
         # run at the end of every step
         pass
 
     
+    @abstractmethod
     def finish_episode(self) -> None:
         # run at the end of every episode
+        pass
+
+
+class DefaultRunner(Runner):
+    def __init__(self, tls_id: str, save_dir: str, stats_mode: bool) -> None:
+        super().__init__(tls_id, save_dir)
+        self.stats_mode = stats_mode
+        self.stats_name = 'cache_stats.txt'
+
+
+    def start_step(self):
+        pass
+
+
+    def finish_step(self, done: bool):
+        pass
+
+    
+    def finish_episode(self):
         if self.stats_mode:
             file_dump(self.save_dir + self.stats_name, str(compute_stats(get_cache())))

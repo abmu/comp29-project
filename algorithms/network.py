@@ -15,7 +15,6 @@ class Network:
     def __init__(self, agents: list[Runner], sumo_cfg: str) -> None:
         self.agents = agents
         self.sumo_cfg = sumo_cfg
-        self.t = 0
 
 
     def run(self, epoch: int = 1) -> float:
@@ -33,17 +32,17 @@ class Network:
         try:
             while step < TOTAL_STEPS:
                 for agent in self.agents:
-                    agent.start_step(self.t)
+                    agent.start_step()
 
                 simulation_step(conn)
                 for agent in self.agents:
                     reward = agent.run()
                     total_reward += reward
                 step += 1
-                self.t += 1
 
+                done = step >= TOTAL_STEPS
                 for agent in self.agents:
-                    agent.finish_step(self.t)
+                    agent.finish_step(done=done)
 
         except Exception as e:
             raise

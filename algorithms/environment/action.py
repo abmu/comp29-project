@@ -1,4 +1,4 @@
-from .settings import STEP_LENGTH, TOTAL_STEPS
+from .settings import STEP_LENGTH
 from .utils import ceil
 from .state import get_current_tls_phase, get_all_waiting_vehicles, get_all_waiting_peds, get_vehicle_throughput, get_peds_throughput
 from .reward import PENALTY, get_reward
@@ -106,6 +106,7 @@ class Controller:
         self._update_tls()
         self.initialised = True    
     
+
     def _tls_teleport_penalty(self) -> float:
         # calculate the penalty for any teleports of entities going towards the TLS
         penalty = 0.0

@@ -1,13 +1,4 @@
-import os
-import sys
-import uuid
 import math
-
-if not os.environ.get('SUMO_HOME'):
-    raise EnvironmentError('SUMO_HOME is not set.')
-sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
-import traci
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -15,7 +6,7 @@ import numpy as np
 import random
 from collections import deque
 from runner import Runner
-from environment import TOTAL_STEPS, ACTION_SPACE, Controller, simulation_step, get_state
+from environment import ACTION_SPACE, Controller, get_state
 
 
 """
@@ -56,10 +47,9 @@ class ReplayBuffer:
 
 
 class DeepQLearning(Runner):
-    def __init__(self, tls_id: str, sumo_cfg: str, save_dir: str, train_mode: bool, compress_state: bool = True) -> None:
-        self.tls_id = tls_id
-        self.sumo_cfg = sumo_cfg
-        self.save_dir = save_dir
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compress_state: bool = True) -> None:
+        super().__init__(tls_id, save_dir)
+        self.controller = None
         self.train_mode = train_mode
         self.compress_state = compress_state
         self.model_name = 'dqn_model.pt'
@@ -69,17 +59,18 @@ class DeepQLearning(Runner):
 
         self.learning_rate = 0.0005
         self.batch_size = 64
-        self.target_update = 20  # episodes
+        self.target_update = 72000  # steps
         self.gamma = 0.9  # discount factor
         self.epsilon_decay = 1.5e-6
         self.epsilon_max = 1.0
         self.epsilon_min = 0.01
 
-        tid = str(uuid.uuid4())
-        traci.start(self.sumo_cfg, label=tid)
-        conn = traci.getConnection(tid)
+        self.initialised = False
+
+
+    def initialise(self, conn) -> None:
+        # initialise neural networks
         state_size = len(get_state(conn, self.tls_id, self.compress_state))
-        conn.close()
         action_size = len(ACTION_SPACE)
 
         self.policy_net = DQN(state_size, action_size)
@@ -94,6 +85,8 @@ class DeepQLearning(Runner):
 
         self.optimiser = optim.Adam(self.policy_net.parameters(), lr=self.learning_rate)
         self.memory = ReplayBuffer()
+
+        self.initialised = True
     
 
     @property
@@ -122,7 +115,7 @@ class DeepQLearning(Runner):
             return actions[nn_index]
 
 
-    def train_step(self) -> None:
+    def train_policy_net(self) -> None:
         # perform a train step of the policy network
         if len(self.memory) < self.batch_size:
             return
@@ -151,51 +144,45 @@ class DeepQLearning(Runner):
         self.optimiser.step()
 
 
-    def run(self, epoch: int = 1) -> tuple[float, float]:
-        # run a single episode and return the reward
-        total_reward = 0
-        step = 0
+    def start_episode(self, conn) -> None:
+        # run at the start of every episode
+        self.conn = conn
+        self.controller = Controller(conn, self.tls_id)
+        if not self.initialised:
+            self.initialise(conn)
 
-        tid = str(uuid.uuid4())
-        traci.start(self.sumo_cfg, label=tid)
-        conn = traci.getConnection(tid)
 
-        controller = Controller(conn, self.tls_id)
+    def start_step(self):
+        if self.controller.finished():
+            self.state = get_state(self.conn, self.tls_id, self.compress_state)
+            self.action = self.choose_action(self.state)
+            self.reward = 0
+            self.controller.set_action(self.action)
 
-        try:
-            while step < TOTAL_STEPS:
-                if controller.finished():
-                    state = get_state(conn, self.tls_id, self.compress_state)
-                    action = self.choose_action(state)
-                    controller.set_action(action)
 
-                simulation_step(conn)
-                reward = controller.run()
-                total_reward += reward
-                step += 1
-                self.t += 1
-                
-                if controller.finished() and self.train_mode:
-                    next_state = get_state(conn, self.tls_id, self.compress_state)
-                    duration = controller.finished()
-                    done = step >= TOTAL_STEPS
+    def run(self) -> float:
+        self.t += 1
+        if self.t % self.target_update == 0:
+            self.target_net.load_state_dict(self.policy_net.state_dict())
+            # print("Target network updated")
+        reward = self.controller.run()
+        self.reward += reward
+        return reward
 
-                    # save transition
-                    action_id_to_idx = {aid: i for i, aid in enumerate(ACTION_SPACE.keys())}
-                    action_idx = action_id_to_idx[action]
-                    self.memory.push(state, action_idx, reward, next_state, duration, done)
 
-                    self.train_step()
+    def finish_step(self, done: bool):
+        if self.controller.finished() and self.train_mode:
+            next_state = get_state(self.conn, self.tls_id, self.compress_state)
+            duration = self.controller.get_total_duration()
 
-        except Exception as e:
-            raise
-        finally:
-            conn.close()
+            # save transition
+            action_id_to_idx = {aid: i for i, aid in enumerate(ACTION_SPACE.keys())}
+            action_idx = action_id_to_idx[self.action]
+            self.memory.push(self.state, action_idx, self.reward, next_state, duration, done)
 
-            if self.train_mode:
-                torch.save(self.policy_net.state_dict(), self.save_dir + self.model_name)
-                if (epoch) % self.target_update == 0:
-                    self.target_net.load_state_dict(self.policy_net.state_dict())
-                    print("Target network updated")
+            self.train_policy_net()
 
-        return total_reward
+    
+    def finish_episode(self):
+        if self.train_mode:
+            torch.save(self.policy_net.state_dict(), self.save_dir + self.model_name)
