@@ -1,6 +1,8 @@
 import numpy as np
 
 
+PENALTY = -1000.0
+
 current_cache = []
 
 

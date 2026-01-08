@@ -1,7 +1,7 @@
 from .settings import STEP_LENGTH, TOTAL_STEPS
 from .utils import ceil
 from .state import get_current_tls_phase, get_all_waiting_vehicles, get_all_waiting_peds, get_vehicle_throughput, get_peds_throughput
-from .reward import get_reward
+from .reward import PENALTY, get_reward
 
 
 # for reference, the 8 traffic light phases defined in 'demo/main.net.xml'
@@ -50,52 +50,86 @@ def _steps_to_duration(steps: int) -> float:
     return steps * STEP_LENGTH
 
 
-def _step(conn, tls_id: str, stats_mode: bool) -> float:
-    # perform a single step and return the reward
+def simulation_step(conn) -> float:
+    # perform a single step
     conn.simulationStep()
-    if len(conn.simulation.getStartingTeleportIDList()):
-        # raise RuntimeError('Teleport detected!')
-        return -1000.0
+
+
+class Controller:
+    def __init__(self, conn, tls_id: str, action: int = 0, stats_mode: bool = False) -> None:
+        self.conn = conn
+        self.tls_id = tls_id
+        self.stats_mode = stats_mode
+        self.set_action(action)
     
-    return get_reward(get_all_waiting_vehicles(conn, tls_id), get_all_waiting_peds(conn, tls_id), get_vehicle_throughput(conn, tls_id), get_peds_throughput(conn, tls_id), stats_mode=stats_mode)
+
+    def __str__(self) -> str:
+        return f'Current action: {self.curr_action}\nDuration left (in steps): {self.curr_dur}\nNext actions: {self.next}\nSteps since last action set: {self.total_steps}\n'
 
 
-def _run_action(conn, tls_id: str, curr_step: int, action: int, duration: int, curr_reward: int, stats_mode: bool) -> tuple[int, float]:
-    # peform action changing phase on the traffic light system, and return updated step number and cumulative reward
-    if curr_step >= TOTAL_STEPS:
-        return curr_step, curr_reward
+    def finished(self) -> bool:
+        # check if the current action (including phase switch) has completed
+        return not self.curr_dur and not self.next
 
-    conn.trafficlight.setPhase(tls_id, action)
-    conn.trafficlight.setPhaseDuration(tls_id, duration)
+
+    def get_total_duration(self) -> int:
+        # return the total duration of current action (including phase switch)
+        return _steps_to_duration(self.total_steps)
     
-    # execute simulation steps, ensuring total permitted steps is not exceeded
-    steps = _duration_to_steps(duration)
-    for i in range(steps):
-        if curr_step < TOTAL_STEPS:
-            curr_reward += _step(conn, tls_id, stats_mode)
-            curr_step += 1
-        else:
-            break
+
+    def _update_tls(self) -> None:
+        # update the tls
+        action, duration = self.next.pop(0)
+        self.conn.trafficlight.setPhase(self.tls_id, action)
+        self.conn.trafficlight.setPhaseDuration(self.tls_id, duration)
+
+        self.curr_action = action
+        self.curr_dur = _duration_to_steps(duration)
+
+
+    def set_action(self, new_action: int) -> None:
+        # set new action
+        self.next = []
+        tls_phase = get_current_tls_phase(self.conn, self.tls_id)
+        if new_action != tls_phase:
+            self.next += ACTION_SPACE[tls_phase]['phase_switch']
+        
+        new_duration = ACTION_SPACE[new_action]['duration']
+        self.next.append((new_action, new_duration))
+
+        self.total_steps = 0
+        self._update_tls()
     
-    return curr_step, curr_reward
+    
+    def _tls_teleport_penalty(self) -> float:
+        # calculate the penalty for any teleports of entities going towards the TLS
+        penalty = 0.0
+        
+        controlled_lanes = set(self.conn.trafficlight.getControlledLanes(self.tls_id))
+        teleported = self.conn.simulation.getStartingTeleportIDList()
+        for entity_id in teleported:
+            lane_id = self.conn.person.getRoadID(entity_id) if entity_id in self.conn.person.getIDList() else self.conn.vehicle.getLaneID(entity_id)
+            if lane_id in controlled_lanes:
+                penalty += PENALTY
+        
+        return PENALTY
+    
 
+    def run(self) -> float:
+        # run the controller and return the reward
+        if self.finished():
+            return 0.0
 
-def perform_action(conn, tls_id: str, curr_step: int, action: int | None, stats_mode: bool = False) -> tuple[int, float, float]:
-    # perform specified action, ensuring that the phase switch is also run if action is different to current phase
-    start_step = curr_step
-    curr_reward = 0
-    if action is None:
-        if curr_step < TOTAL_STEPS:
-            curr_reward += _step(conn, tls_id, stats_mode)
-            curr_step += 1
-    else:
-        tls_phase = get_current_tls_phase(conn, tls_id)
-        if action != tls_phase:
-            phase_switch = ACTION_SPACE[tls_phase]['phase_switch']
-            for act, dur in phase_switch:
-                curr_step, curr_reward = _run_action(conn, tls_id, curr_step, act, dur, curr_reward, stats_mode=stats_mode)
+        self.curr_dur -= 1
+        self.total_steps += 1
 
-        duration = ACTION_SPACE[action]['duration']
-        curr_step, curr_reward = _run_action(conn, tls_id, curr_step, action, duration, curr_reward, stats_mode=stats_mode)
-
-    return curr_step, curr_reward, _steps_to_duration(curr_step - start_step)
+        if not self.curr_dur and self.next:
+            self._update_tls()
+        
+        return get_reward(
+            get_all_waiting_vehicles(self.conn, self.tls_id),
+            get_all_waiting_peds(self.conn, self.tls_id),
+            get_vehicle_throughput(self.conn, self.tls_id),
+            get_peds_throughput(self.conn, self.tls_id),
+            stats_mode=self.stats_mode
+        ) + self._tls_teleport_penalty()
