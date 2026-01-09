@@ -120,7 +120,7 @@ class Controller:
         return penalty
     
 
-    def run(self) -> float:
+    def run(self, skip_reward=False) -> float:
         # run the controller and return the reward
         if self.initialised and not self.finished():
             self.curr_dur -= 1
@@ -129,6 +129,9 @@ class Controller:
             if not self.curr_dur and self.next:
                 self._update_tls()
         
+        if skip_reward:
+            return 0.0
+
         return get_reward(
             get_all_waiting_vehicles(self.conn, self.tls_id),
             get_all_waiting_peds(self.conn, self.tls_id),

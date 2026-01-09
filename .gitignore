@@ -3,6 +3,8 @@ simulation/routes/demo/*/
 simulation/networks/demo/detector.*.xml
 simulation/routes/crossing/*/
 simulation/networks/crossing/detector.*.xml
+simulation/routes/extended/*/
+simulation/networks/extended/detector.*.xml
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

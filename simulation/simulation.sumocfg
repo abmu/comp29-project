@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-12-31T10:47:27.366386+00:00 by Eclipse SUMO sumo 1.25.0
+<!-- generated on 2026-01-09T15:51:28.582614+00:00 by Eclipse SUMO sumo 1.25.0
 -->
 
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="networks/demo/main.net.xml"/>
-        <route-files value="routes/demo/bicycle.rou.xml,routes/demo/car.rou.xml,routes/demo/pedestrian.rou.xml"/>
-        <additional-files value="networks/demo/detectors.add.xml"/>
+        <net-file value="networks/extended/main.net.xml"/>
+        <!-- <route-files value="routes/demo/bicycle.rou.xml,routes/demo/car.rou.xml,routes/demo/pedestrian.rou.xml"/> -->
+        <additional-files value="networks/extended/detectors.add.xml"/>
     </input>
 
     <gui_only>
