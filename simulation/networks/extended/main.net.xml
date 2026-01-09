@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-01-09T19:31:42.445073+00:00 by Eclipse SUMO netedit 1.25.0
+<!-- generated on 2026-01-09T20:42:33.138070+00:00 by Eclipse SUMO netedit 1.25.0
 <neteditConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
@@ -435,20 +435,36 @@
         <lane id=":CJ_9_2_1" index="1" disallow="pedestrian" speed="13.89" length="14.43" width="4.00" shape="-78.67,-50.82 -70.64,-62.84"/>
     </edge>
     <edge id=":CJ_9_4" function="internal">
-        <lane id=":CJ_9_4_0" index="0" allow="bicycle" speed="6.07" length="7.82" width="1.00" shape="-85.24,-61.09 -83.69,-59.75 -82.98,-58.18 -83.11,-56.38 -84.09,-54.36"/>
-        <lane id=":CJ_9_4_1" index="1" disallow="pedestrian" speed="7.00" length="10.77" width="4.00" shape="-84.65,-62.03 -82.21,-60.03 -80.95,-57.86 -80.88,-55.52 -81.99,-52.99"/>
+        <lane id=":CJ_9_4_0" index="0" allow="bicycle" speed="6.07" length="3.41" width="1.00" shape="-85.24,-61.09 -83.69,-59.75 -83.13,-58.51"/>
+        <lane id=":CJ_9_4_1" index="1" disallow="pedestrian" speed="7.00" length="6.46" width="4.00" shape="-84.65,-62.03 -82.21,-60.03 -80.95,-57.86 -80.93,-57.07"/>
     </edge>
     <edge id=":CJ_9_6" function="internal">
-        <lane id=":CJ_9_6_0" index="0" disallow="pedestrian" speed="8.51" length="15.78" width="4.00" shape="-84.65,-62.03 -80.23,-59.85 -76.42,-59.26 -73.22,-60.26 -70.64,-62.84"/>
+        <lane id=":CJ_9_6_0" index="0" disallow="pedestrian" speed="8.51" length="11.59" width="4.00" shape="-84.65,-62.03 -80.23,-59.85 -76.42,-59.26 -73.74,-60.10"/>
+    </edge>
+    <edge id=":CJ_9_7" function="internal">
+        <lane id=":CJ_9_7_0" index="0" allow="bicycle" speed="6.07" length="4.41" width="1.00" shape="-83.13,-58.51 -82.98,-58.18 -83.11,-56.38 -84.09,-54.36"/>
+        <lane id=":CJ_9_7_1" index="0" disallow="pedestrian" speed="7.00" length="4.32" width="4.00" shape="-80.93,-57.07 -80.88,-55.52 -81.99,-52.99"/>
+    </edge>
+    <edge id=":CJ_9_8" function="internal">
+        <lane id=":CJ_9_8_0" index="0" disallow="pedestrian" speed="8.51" length="4.19" width="4.00" shape="-73.74,-60.10 -73.22,-60.26 -70.64,-62.84"/>
+    </edge>
+    <edge id=":CJ_9_c0" function="crossing" crossingEdges="GowSt_1_3 GowSt_2_2">
+        <lane id=":CJ_9_c0_0" index="0" allow="pedestrian" speed="2.78" length="10.04" width="4.00" shape="-69.27,-59.50 -77.60,-65.11" outlineShape="-68.16,61.16 -76.48,66.77 -76.57,66.83 -76.48,66.77 -77.74,65.12 -78.98,63.90 -79.19,63.77 -70.39,57.84"/>
+    </edge>
+    <edge id=":CJ_9_c1" function="crossing" crossingEdges="GowSt_2_3 GowSt_1_2">
+        <lane id=":CJ_9_c1_0" index="0" allow="pedestrian" speed="2.78" length="9.96" width="4.00" shape="-83.41,-56.30 -75.07,-50.86" outlineShape="-84.51,54.63 -76.16,49.18 -76.08,49.13 -76.16,49.18 -73.98,52.53 -83.81,58.95 -84.51,54.63 -86.18,55.72 -86.56,58.97 -85.50,60.67 -84.50,59.89 -83.83,59.02"/>
+    </edge>
+    <edge id=":CJ_9_c2" function="crossing" crossingEdges="UniSt_1_1">
+        <lane id=":CJ_9_c2_0" index="0" allow="pedestrian" speed="2.78" length="3.20" width="4.00" shape="-82.11,-62.32 -83.81,-59.61" outlineShape="-83.80,63.38 -85.50,60.67 -84.50,59.89 -83.83,59.02 -83.50,58.06 -83.50,57.01 -83.84,55.87 -84.13,55.33 -78.41,64.46 -78.98,63.90 -80.20,63.12 -81.42,62.77 -82.62,62.86"/>
     </edge>
     <edge id=":CJ_9_w0" function="walkingarea">
-        <lane id=":CJ_9_w0_0" index="0" allow="pedestrian" speed="2.78" length="6.70" width="2.00" shape="-83.79,-63.40 -82.73,-65.10 -78.14,-67.89 -76.48,-66.77 -77.74,-65.12 -78.98,-63.90 -80.20,-63.12 -81.42,-62.77 -82.62,-62.86"/>
+        <lane id=":CJ_9_w0_0" index="0" allow="pedestrian" speed="2.78" length="4.86" width="4.00" shape="-83.79,-63.40 -82.73,-65.10 -78.14,-67.89 -76.48,-66.77 -77.74,-65.12 -78.98,-63.90 -80.20,-63.12 -81.42,-62.77 -82.62,-62.86"/>
     </edge>
     <edge id=":CJ_9_w1" function="walkingarea">
-        <lane id=":CJ_9_w1_0" index="0" allow="pedestrian" speed="2.78" length="14.40" width="2.00" shape="-68.16,-61.16 -66.50,-60.04 -74.49,-48.09 -76.16,-49.18"/>
+        <lane id=":CJ_9_w1_0" index="0" allow="pedestrian" speed="2.78" length="9.03" width="4.00" shape="-70.39,-57.84 -68.16,-61.16 -66.50,-60.04 -74.49,-48.09 -76.16,-49.18 -73.98,-52.53"/>
     </edge>
     <edge id=":CJ_9_w2" function="walkingarea">
-        <lane id=":CJ_9_w2_0" index="0" allow="pedestrian" speed="2.78" length="4.70" width="2.00" shape="-84.51,-54.63 -86.18,-55.72 -86.56,-58.97 -85.50,-60.67 -84.50,-59.89 -83.83,-59.02 -83.50,-58.06 -83.50,-57.01 -83.84,-55.87"/>
+        <lane id=":CJ_9_w2_0" index="0" allow="pedestrian" speed="2.78" length="3.60" width="4.00" shape="-84.51,-54.63 -86.18,-55.72 -86.56,-58.97 -85.50,-60.67 -84.50,-59.89 -83.83,-59.02 -83.50,-58.06 -83.50,-57.01 -83.84,-55.87"/>
     </edge>
 
     <edge id="BynPl_1_1" from="CJ_2" to="CJ_3" priority="-1" spreadType="center" shape="99.29,-180.84 134.12,-158.30 136.54,-155.79">
@@ -652,6 +668,16 @@
         <phase duration="10" state="rrrrrrrrGG"/>
         <phase duration="10" state="rrrrrrrrrr"/>
     </tlLogic>
+    <tlLogic id="CJ_9" type="static" programID="0" offset="0">
+        <phase duration="30" state="GGGGrrrrrr"/>
+        <phase duration="3"  state="yyyyrrrrrr"/>
+        <phase duration="2"  state="rrrrrrrrrr"/>
+        <phase duration="30" state="rrrrGGGrrr"/>
+        <phase duration="3"  state="rrrryyyrrr"/>
+        <phase duration="2"  state="rrrrrrrrrr"/>
+        <phase duration="10" state="rrrrrrrGGG"/>
+        <phase duration="10" state="rrrrrrrrrr"/>
+    </tlLogic>
 
     <junction id="CJ_1" type="traffic_light" x="34.82" y="-222.57" incLanes="GowSt_2_1_0 GowSt_2_1_1 GowSt_2_1_2 TorPl_2_1_0 TorPl_2_1_1 GowSt_1_3_0 GowSt_1_3_1 GowSt_1_3_2 TorPl_1_3_0 TorPl_1_3_1 :CJ_1_w1_0 :CJ_1_w2_0 :CJ_1_w3_0 :CJ_1_w0_0" intLanes=":CJ_1_20_0 :CJ_1_1_0 :CJ_1_21_0 :CJ_1_22_0 :CJ_1_4_0 :CJ_1_23_0 :CJ_1_24_0 :CJ_1_7_0 :CJ_1_25_0 :CJ_1_26_0 :CJ_1_27_0 :CJ_1_11_0 :CJ_1_28_0 :CJ_1_29_0 :CJ_1_14_0 :CJ_1_30_0 :CJ_1_31_0 :CJ_1_17_0 :CJ_1_32_0 :CJ_1_33_0 :CJ_1_c0_0 :CJ_1_c1_0 :CJ_1_c2_0 :CJ_1_c3_0" shape="34.98,-235.16 46.47,-227.34 45.96,-226.06 46.01,-225.47 46.26,-224.92 46.71,-224.40 47.36,-223.91 40.02,-212.06 38.26,-212.84 37.51,-212.92 36.85,-212.79 36.27,-212.45 35.79,-211.90 24.23,-219.70 24.69,-220.83 24.66,-221.35 24.46,-221.84 24.09,-222.30 23.54,-222.72 31.11,-234.41 32.58,-233.82 33.24,-233.84 33.86,-234.07 34.44,-234.51">
         <request index="0"  response="100100000000000000000000" foes="100100000001000010000000" cont="1"/>
@@ -756,14 +782,17 @@
         <request index="13" response="000000111000000" foes="000000111000000" cont="0"/>
         <request index="14" response="000000000000000" foes="000011100101001" cont="0"/>
     </junction>
-    <junction id="CJ_9" type="priority" x="-78.74" y="-59.47" incLanes="GowSt_2_2_0 GowSt_2_2_1 GowSt_2_2_2 GowSt_1_2_0 GowSt_1_2_1 GowSt_1_2_2 UniSt_1_1_0 UniSt_1_1_1" intLanes=":CJ_9_0_0 :CJ_9_0_1 :CJ_9_2_0 :CJ_9_2_1 :CJ_9_4_0 :CJ_9_4_1 :CJ_9_6_0" shape="-78.14,-67.89 -66.50,-60.04 -74.49,-48.09 -86.18,-55.72 -85.60,-57.03 -85.58,-57.60 -85.73,-58.12 -86.06,-58.57 -86.56,-58.97 -82.73,-65.10 -81.37,-64.88 -80.63,-65.20 -79.85,-65.81 -79.02,-66.70">
-        <request index="0" response="0000000" foes="1110000" cont="0"/>
-        <request index="1" response="0000000" foes="1100000" cont="0"/>
-        <request index="2" response="0000000" foes="0000000" cont="0"/>
-        <request index="3" response="0000000" foes="1000000" cont="0"/>
-        <request index="4" response="0000001" foes="0000001" cont="0"/>
-        <request index="5" response="0000011" foes="0000011" cont="0"/>
-        <request index="6" response="0001011" foes="0001011" cont="0"/>
+    <junction id="CJ_9" type="traffic_light" x="-78.74" y="-59.47" incLanes="GowSt_2_2_0 GowSt_2_2_1 GowSt_2_2_2 GowSt_1_2_0 GowSt_1_2_1 GowSt_1_2_2 UniSt_1_1_0 UniSt_1_1_1 :CJ_9_w1_0 :CJ_9_w2_0 :CJ_9_w0_0" intLanes=":CJ_9_0_0 :CJ_9_0_1 :CJ_9_2_0 :CJ_9_2_1 :CJ_9_7_0 :CJ_9_7_1 :CJ_9_8_0 :CJ_9_c0_0 :CJ_9_c1_0 :CJ_9_c2_0" shape="-78.14,-67.89 -66.50,-60.04 -74.49,-48.09 -86.18,-55.72 -85.60,-57.03 -85.58,-57.60 -85.73,-58.12 -86.06,-58.57 -86.56,-58.97 -82.73,-65.10 -81.37,-64.88 -80.63,-65.20 -79.85,-65.81 -79.02,-66.70">
+        <request index="0" response="0111110000" foes="0111110000" cont="0"/>
+        <request index="1" response="0111100000" foes="0111100000" cont="0"/>
+        <request index="2" response="0110000000" foes="0110000000" cont="0"/>
+        <request index="3" response="0111000000" foes="0111000000" cont="0"/>
+        <request index="4" response="1100000001" foes="1100000001" cont="1"/>
+        <request index="5" response="1100000011" foes="1100000011" cont="1"/>
+        <request index="6" response="1010001011" foes="1010001011" cont="1"/>
+        <request index="7" response="0000000000" foes="0001001111" cont="0"/>
+        <request index="8" response="0000000000" foes="0000111111" cont="0"/>
+        <request index="9" response="0000000000" foes="0001110000" cont="0"/>
     </junction>
     <junction id="EJ_1" type="dead_end" x="-113.76" y="5.63" incLanes="" intLanes="" shape="-116.69,3.72 -110.83,7.54"/>
     <junction id="EJ_10" type="dead_end" x="230.37" y="-63.11" incLanes="GorSq_1_3_0 GorSq_1_3_1 GorSq_1_3_2" intLanes="" shape="227.74,-59.16 233.00,-67.06"/>
@@ -814,6 +843,9 @@
     <junction id=":CJ_5_12_0" type="internal" x="161.06" y="-111.66" incLanes=":CJ_5_8_0 BynPl_1_3_1" intLanes=":CJ_5_1_0 :CJ_5_6_0 :CJ_5_7_0 :CJ_5_c0_0"/>
     <junction id=":CJ_8_11_0" type="internal" x="-32.69" y="-273.00" incLanes=":CJ_8_2_0" intLanes=":CJ_8_4_0 :CJ_8_7_0 :CJ_8_10_0 :CJ_8_c0_0 :CJ_8_c1_0"/>
     <junction id=":CJ_8_12_0" type="internal" x="-33.79" y="-268.73" incLanes=":CJ_8_4_0 TorPl_2_3_1" intLanes=":CJ_8_2_0 :CJ_8_3_0 :CJ_8_7_0 :CJ_8_10_0 :CJ_8_c0_0 :CJ_8_c1_0"/>
+    <junction id=":CJ_9_7_0" type="internal" x="-83.13" y="-58.51" incLanes=":CJ_9_4_0" intLanes=":CJ_9_0_0 :CJ_9_0_1 :CJ_9_c1_0 :CJ_9_c2_0"/>
+    <junction id=":CJ_9_7_1" type="internal" x="-80.93" y="-57.07" incLanes=":CJ_9_4_1" intLanes=":CJ_9_0_0 :CJ_9_0_1 :CJ_9_c1_0 :CJ_9_c2_0"/>
+    <junction id=":CJ_9_8_0" type="internal" x="-73.74" y="-60.10" incLanes=":CJ_9_6_0" intLanes=":CJ_9_0_0 :CJ_9_0_1 :CJ_9_2_0 :CJ_9_2_1 :CJ_9_c0_0 :CJ_9_c2_0"/>
 
     <connection from="BynPl_1_1" to="BynPl_1_2" fromLane="1" toLane="1" via=":CJ_3_1_0" dir="s" state="M"/>
     <connection from="BynPl_1_1" to="BynPl_1_2" fromLane="2" toLane="2" via=":CJ_3_1_1" dir="s" state="M"/>
@@ -842,8 +874,8 @@
     <connection from="GorSq_2_2" to="GorSq_1_2" fromLane="1" toLane="2" via=":CJ_5_2_0" dir="T" state="m"/>
     <connection from="GowSt_1_1" to="GowSt_1_2" fromLane="1" toLane="1" via=":CJ_10_0_0" dir="s" state="M"/>
     <connection from="GowSt_1_1" to="GowSt_1_2" fromLane="2" toLane="2" via=":CJ_10_0_1" dir="s" state="M"/>
-    <connection from="GowSt_1_2" to="GowSt_1_3" fromLane="1" toLane="1" via=":CJ_9_2_0" dir="s" state="M"/>
-    <connection from="GowSt_1_2" to="GowSt_1_3" fromLane="2" toLane="2" via=":CJ_9_2_1" dir="s" state="M"/>
+    <connection from="GowSt_1_2" to="GowSt_1_3" fromLane="1" toLane="1" via=":CJ_9_2_0" tl="CJ_9" linkIndex="2" dir="s" state="o"/>
+    <connection from="GowSt_1_2" to="GowSt_1_3" fromLane="2" toLane="2" via=":CJ_9_2_1" tl="CJ_9" linkIndex="3" dir="s" state="o"/>
     <connection from="GowSt_1_3" to="TorPl_1_4" fromLane="1" toLane="1" via=":CJ_1_10_0" tl="CJ_1" linkIndex="10" dir="l" state="o"/>
     <connection from="GowSt_1_3" to="GowSt_1_4" fromLane="1" toLane="1" via=":CJ_1_11_0" tl="CJ_1" linkIndex="11" dir="s" state="o"/>
     <connection from="GowSt_1_3" to="TorPl_2_2" fromLane="1" toLane="1" shape="34.00,-213.19 35.04,-217.66 34.80,-220.96 33.91,-224.47 32.17,-228.08 29.35,-231.68" via=":CJ_1_12_0" tl="CJ_1" linkIndex="12" dir="r" state="o"/>
@@ -856,8 +888,8 @@
     <connection from="GowSt_2_1" to="TorPl_2_2" fromLane="2" toLane="2" shape="38.94,-232.42 36.19,-229.20 34.07,-227.31 31.48,-227.20 27.31,-228.53" via=":CJ_1_3_0" tl="CJ_1" linkIndex="3" dir="l" state="o"/>
     <connection from="GowSt_2_1" to="GowSt_2_2" fromLane="2" toLane="2" via=":CJ_1_4_0" tl="CJ_1" linkIndex="4" dir="s" state="o"/>
     <connection from="GowSt_2_1" to="TorPl_1_4" fromLane="2" toLane="2" shape="38.94,-232.42 37.65,-228.45 37.56,-225.60 38.34,-222.70 40.09,-220.29 43.70,-218.01" via=":CJ_1_5_0" tl="CJ_1" linkIndex="5" dir="r" state="o"/>
-    <connection from="GowSt_2_2" to="GowSt_2_3" fromLane="1" toLane="1" via=":CJ_9_0_0" dir="s" state="M"/>
-    <connection from="GowSt_2_2" to="GowSt_2_3" fromLane="2" toLane="2" via=":CJ_9_0_1" dir="s" state="M"/>
+    <connection from="GowSt_2_2" to="GowSt_2_3" fromLane="1" toLane="1" via=":CJ_9_0_0" tl="CJ_9" linkIndex="0" dir="s" state="o"/>
+    <connection from="GowSt_2_2" to="GowSt_2_3" fromLane="2" toLane="2" via=":CJ_9_0_1" tl="CJ_9" linkIndex="1" dir="s" state="o"/>
     <connection from="HunSt_1_1" to="TorPl_1_2" fromLane="1" toLane="1" via=":CJ_8_6_0" dir="l" state="m"/>
     <connection from="HunSt_1_1" to="HunSt_1_2" fromLane="1" toLane="1" via=":CJ_8_7_0" dir="s" state="m"/>
     <connection from="HunSt_1_1" to="TorPl_2_4" fromLane="1" toLane="2" via=":CJ_8_8_0" dir="r" state="m"/>
@@ -888,9 +920,9 @@
     <connection from="TorPl_2_3" to="TorPl_2_4" fromLane="1" toLane="1" via=":CJ_8_3_0" dir="s" state="m"/>
     <connection from="TorPl_2_3" to="HunSt_1_2" fromLane="2" toLane="1" via=":CJ_8_4_0" dir="l" state="m"/>
     <connection from="TorPl_2_3" to="TorPl_2_4" fromLane="2" toLane="2" via=":CJ_8_5_0" dir="s" state="m"/>
-    <connection from="UniSt_1_1" to="GowSt_2_3" fromLane="1" toLane="1" via=":CJ_9_4_0" dir="l" state="m"/>
-    <connection from="UniSt_1_1" to="GowSt_2_3" fromLane="1" toLane="2" via=":CJ_9_4_1" dir="l" state="m"/>
-    <connection from="UniSt_1_1" to="GowSt_1_3" fromLane="1" toLane="2" via=":CJ_9_6_0" dir="r" state="m"/>
+    <connection from="UniSt_1_1" to="GowSt_2_3" fromLane="1" toLane="1" via=":CJ_9_4_0" tl="CJ_9" linkIndex="4" dir="l" state="o"/>
+    <connection from="UniSt_1_1" to="GowSt_2_3" fromLane="1" toLane="2" via=":CJ_9_4_1" tl="CJ_9" linkIndex="5" dir="l" state="o"/>
+    <connection from="UniSt_1_1" to="GowSt_1_3" fromLane="1" toLane="2" via=":CJ_9_6_0" tl="CJ_9" linkIndex="6" dir="r" state="o"/>
 
     <connection from=":CJ_1_0" to="TorPl_2_2" fromLane="0" toLane="1" via=":CJ_1_20_0" dir="l" state="m"/>
     <connection from=":CJ_1_20" to="TorPl_2_2" fromLane="0" toLane="1" dir="l" state="m"/>
@@ -987,9 +1019,12 @@
     <connection from=":CJ_9_0" to="GowSt_2_3" fromLane="1" toLane="2" dir="s" state="M"/>
     <connection from=":CJ_9_2" to="GowSt_1_3" fromLane="0" toLane="1" dir="s" state="M"/>
     <connection from=":CJ_9_2" to="GowSt_1_3" fromLane="1" toLane="2" dir="s" state="M"/>
-    <connection from=":CJ_9_4" to="GowSt_2_3" fromLane="0" toLane="1" dir="l" state="M"/>
-    <connection from=":CJ_9_4" to="GowSt_2_3" fromLane="1" toLane="2" dir="l" state="M"/>
-    <connection from=":CJ_9_6" to="GowSt_1_3" fromLane="0" toLane="2" dir="r" state="M"/>
+    <connection from=":CJ_9_4" to="GowSt_2_3" fromLane="0" toLane="1" via=":CJ_9_7_0" dir="l" state="m"/>
+    <connection from=":CJ_9_7" to="GowSt_2_3" fromLane="0" toLane="1" dir="l" state="m"/>
+    <connection from=":CJ_9_4" to="GowSt_2_3" fromLane="1" toLane="2" via=":CJ_9_7_1" dir="l" state="m"/>
+    <connection from=":CJ_9_7" to="GowSt_2_3" fromLane="1" toLane="2" dir="l" state="m"/>
+    <connection from=":CJ_9_6" to="GowSt_1_3" fromLane="0" toLane="2" via=":CJ_9_8_0" dir="r" state="m"/>
+    <connection from=":CJ_9_8" to="GowSt_1_3" fromLane="0" toLane="2" dir="r" state="m"/>
 
     <connection from=":CJ_1_c0" to=":CJ_1_w0" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from=":CJ_1_c1" to=":CJ_1_w1" fromLane="0" toLane="0" dir="s" state="M"/>
@@ -1077,10 +1112,16 @@
     <connection from=":CJ_8_w3" to=":CJ_8_c2" fromLane="0" toLane="0" dir="s" state="m"/>
     <connection from=":CJ_8_w3" to="HunSt_2_2" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from="TorPl_1_1" to=":CJ_8_w3" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":CJ_9_c0" to=":CJ_9_w0" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":CJ_9_c1" to=":CJ_9_w1" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":CJ_9_c2" to=":CJ_9_w2" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":CJ_9_w0" to=":CJ_9_c2" fromLane="0" toLane="0" tl="CJ_9" linkIndex="9" dir="s" state="M"/>
     <connection from=":CJ_9_w0" to="UniSt_2_1" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from="GowSt_2_2" to=":CJ_9_w0" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":CJ_9_w1" to=":CJ_9_c0" fromLane="0" toLane="0" tl="CJ_9" linkIndex="7" dir="s" state="M"/>
     <connection from=":CJ_9_w1" to="GowSt_1_3" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from="GowSt_1_2" to=":CJ_9_w1" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":CJ_9_w2" to=":CJ_9_c1" fromLane="0" toLane="0" tl="CJ_9" linkIndex="8" dir="s" state="M"/>
     <connection from=":CJ_9_w2" to="GowSt_2_3" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from="UniSt_1_1" to=":CJ_9_w2" fromLane="0" toLane="0" dir="s" state="M"/>
 </net>
