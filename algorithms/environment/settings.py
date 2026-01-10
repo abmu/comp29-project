@@ -28,6 +28,11 @@ TLS_IDS = {
             ['CJ_1_WB_2_1', 'CJ_1_WB_2_2'],
             ['CJ_1_SB_2_1', 'CJ_1_SB_2_2'],
             ['CJ_1_EB_2_1', 'CJ_1_EB_2_2'],
+        ],
+        # IDs of adjacent traffic lights
+        'adjacent': [
+            'CJ_9',
+            'CJ_2'
         ]
     },
     'CJ_2': {
@@ -46,6 +51,31 @@ TLS_IDS = {
             ['CJ_2_WB_2_1'],
             ['CJ_2_SB_1_1'],
             ['CJ_2_EB_2_1', 'CJ_2_EB_2_2'],
+        ],
+        'adjacent': [
+            'CJ_1'
+        ]
+    },
+    'CJ_9': {
+        'queues': [
+            ['CJ_9_NB_1_1', 'CJ_9_NB_1_2'],
+            [],
+            ['CJ_9_SB_1_1', 'CJ_9_SB_1_2'],
+            ['CJ_9_EB_1_1']
+        ],
+        'crossings': [
+            (':CJ_9_c0', ':CJ_9_w0', ':CJ_9_w1'),
+            (':CJ_9_c1', ':CJ_9_w1', ':CJ_9_w2'),
+            (':CJ_9_c2', ':CJ_9_w2', ':CJ_9_w3'),
+        ],
+        'inductions': [
+            ['CJ_9_NB_2_1', 'CJ_9_NB_2_2'],
+            [],
+            ['CJ_9_SB_2_1', 'CJ_9_SB_2_2'],
+            []
+        ],
+        'adjacent': [
+            'CJ_1'
         ]
     },
 }

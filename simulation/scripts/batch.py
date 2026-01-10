@@ -2,7 +2,8 @@ import subprocess
 
 NET_NAMES = [
     'demo',
-    'crossing'
+    'crossing',
+    'extended'
 ]
 
 ROUTES = 1000
