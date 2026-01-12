@@ -102,6 +102,17 @@ def get_peds_throughput(conn, tls: str) -> list[int]:
     return throughput
 
 
+def get_blank_state(tls: str, compress: bool = True) -> tuple[int, ...]:
+    # return the state for a TLS with placeholder values
+    tls_phase = [-1]
+    waiting_vehicles = [-1] * len(TLS_IDS[tls]['queues'])
+    waiting_peds = [-1] * len(TLS_IDS[tls]['crossings'])
+    if compress:
+        waiting_vehicles = [-1] * 2
+        waiting_peds = [-1]
+    return tuple(tls_phase + waiting_vehicles + waiting_peds)
+
+
 def get_state(conn, tls: str, compress: bool = True) -> tuple[int, ...]:
     # get current phase of traffic light system
     tls_phase = get_current_tls_phase(conn, tls)

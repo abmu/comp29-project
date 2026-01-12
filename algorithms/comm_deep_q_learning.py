@@ -1,4 +1,4 @@
-from environment import StateBus, ACTION_SPACE, get_state
+from environment import StateBus, ACTION_SPACE, get_state, get_blank_state
 from deep_q_learning import DeepQLearning
 
 
@@ -6,7 +6,19 @@ class CommDeepQLearning(DeepQLearning):
     def __init__(self, tls_id: str, save_dir: str, train_mode: bool, state_bus: StateBus, compress_state: bool = False) -> None:
         super().__init__(tls_id, save_dir, train_mode, compress_state)
         self.state_bus = state_bus
+        self.state_bus.publish(self.tls_id, get_blank_state(self.tls_id, self.compress_state))
         self.model_name = 'communicative_' + self.model_name
+
+
+    def get_state_size(self) -> int:
+        # return the input state size for the policy net
+        n = len(get_blank_state(self.tls_id, self.compress_state))
+
+        others = self.state_bus.read(self.tls_id)
+        for _, s in others.items():
+            n += len(s)
+
+        return n
 
 
     def get_comm_state(self) -> tuple[int, ...]:

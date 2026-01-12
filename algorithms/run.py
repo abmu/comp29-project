@@ -21,8 +21,21 @@ MODE = 'train'  # 'train' or 'eval'
 RESULTS_DIR = f'results/{NET_NAME}/'
 
 
-state_bus_one = StateBus()
-state_bus_two = StateBus()
+def _make_comm_network(tls_ids: list[str], save_dir: str, train_mode: bool, compress_state: bool, sumo_cfg: list[str]) -> Network:
+    state_bus = StateBus()
+
+    agents = [
+        CommDeepQLearning(
+            tls_id=tls_id,
+            save_dir=save_dir,
+            train_mode=train_mode,
+            state_bus=state_bus,
+            compress_state=compress_state
+        )
+        for tls_id in tls_ids
+    ]
+
+    return Network(agents=agents, sumo_cfg=sumo_cfg)    
 
 
 NETWORKS = {
@@ -208,56 +221,26 @@ NETWORKS = {
         ],
         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
     ),
-    'deep_q_learning_communicative': Network(
-        agents=[
-            CommDeepQLearning(
-                tls_id='CJ_1',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                state_bus=state_bus_one,
-                compress_state=True
-            ),
-            CommDeepQLearning(
-                tls_id='CJ_2',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                state_bus=state_bus_one,
-                compress_state=True
-            ),
-            CommDeepQLearning(
-                tls_id='CJ_9',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                state_bus=state_bus_one,
-                compress_state=True
-            )
+    'deep_q_learning_communicative': _make_comm_network(
+        tls_ids=[
+            'CJ_1',
+            'CJ_2',
+            'CJ_9'
         ],
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train'),
+        compress_state=True,
         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
     ),
-    'deep_q_learning_communicative_uncompressed': Network(
-        agents=[
-            CommDeepQLearning(
-                tls_id='CJ_1',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                state_bus=state_bus_two,
-                compress_state=False
-            ),
-            CommDeepQLearning(
-                tls_id='CJ_2',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                state_bus=state_bus_two,
-                compress_state=False
-            ),
-            CommDeepQLearning(
-                tls_id='CJ_9',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                state_bus=state_bus_two,
-                compress_state=False
-            )
+    'deep_q_learning_communicative_uncompressed': _make_comm_network(
+        tls_ids=[
+            'CJ_1',
+            'CJ_2',
+            'CJ_9'
         ],
+        save_dir=RESULTS_DIR,
+        train_mode=(MODE == 'train'),
+        compress_state=False,
         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
     ),
 }

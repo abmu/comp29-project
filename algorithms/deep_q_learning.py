@@ -6,7 +6,7 @@ import numpy as np
 import random
 from collections import deque
 from agent import Runner
-from environment import ACTION_SPACE, get_state
+from environment import ACTION_SPACE, get_state, get_blank_state
 
 
 """
@@ -68,9 +68,14 @@ class DeepQLearning(Runner):
         self.initialised = False
 
 
-    def initialise(self, conn) -> None:
+    def get_state_size(self) -> int:
+        # return the input state size for the policy net
+        return len(get_blank_state(self.tls_id, self.compress_state))
+
+
+    def initialise(self) -> None:
         # initialise neural networks
-        state_size = len(get_state(conn, self.tls_id, self.compress_state))
+        state_size = self.get_state_size()
         action_size = len(ACTION_SPACE)
 
         self.policy_net = DQN(state_size, action_size)
@@ -147,7 +152,7 @@ class DeepQLearning(Runner):
     def start_episode(self, conn) -> None:
         super().start_episode(conn)
         if not self.initialised:
-            self.initialise(conn)
+            self.initialise()
 
 
     def start_step(self):
