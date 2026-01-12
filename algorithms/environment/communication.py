@@ -14,5 +14,5 @@ class StateBus:
     def read(self, agent_id: str) -> dict[str, tuple[int, ...]]:
         # return the states of the adjacent agents
         return {
-            a: self.states[a] for a in TLS_IDS[agent_id]['adjacent']
+            a: self.states.get(a, ()) for a in TLS_IDS[agent_id]['adjacent']
         }

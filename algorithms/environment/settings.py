@@ -66,7 +66,7 @@ TLS_IDS = {
         'crossings': [
             (':CJ_9_c0', ':CJ_9_w0', ':CJ_9_w1'),
             (':CJ_9_c1', ':CJ_9_w1', ':CJ_9_w2'),
-            (':CJ_9_c2', ':CJ_9_w2', ':CJ_9_w3'),
+            (':CJ_9_c2', ':CJ_9_w2', ':CJ_9_w0'),
         ],
         'inductions': [
             ['CJ_9_NB_2_1', 'CJ_9_NB_2_2'],

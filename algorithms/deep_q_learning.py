@@ -47,7 +47,7 @@ class ReplayBuffer:
 
 
 class DeepQLearning(Runner):
-    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compress_state: bool = True) -> None:
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compress_state: bool = False) -> None:
         super().__init__(tls_id, save_dir)
         self.controller = None
         self.train_mode = train_mode
