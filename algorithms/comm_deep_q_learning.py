@@ -24,8 +24,6 @@ class CommDeepQLearning(DeepQLearning):
     def get_comm_state(self) -> tuple[int, ...]:
         # Get the joint state from the communication state bus
         state = get_state(self.conn, self.tls_id, self.compress_state)
-        self.state_bus.publish(self.tls_id, state)
-
         others = self.state_bus.read(self.tls_id)
         comm_state = list(state)
         for _, s in others.items():
@@ -40,6 +38,20 @@ class CommDeepQLearning(DeepQLearning):
             self.action = self.choose_action(self.state)
             self.reward = 0
             self.controller.set_action(self.action)
+
+
+    def run(self) -> float:
+        self.t += 1
+        if self.train_mode and self.t % self.target_update == 0:
+            self.target_net.load_state_dict(self.policy_net.state_dict())
+            # print("Target network updated")
+
+        state = get_state(self.conn, self.tls_id, self.compress_state)
+        self.state_bus.publish(self.tls_id, state)
+
+        reward = self.controller.run()
+        self.reward += reward
+        return reward
 
 
     def finish_step(self, done: bool):
