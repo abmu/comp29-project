@@ -12,7 +12,7 @@ class QLearning(Runner):
         self.controller = None
         self.train_mode = train_mode
         self.compress_state = compress_state
-        self.table_name = f'{tls_id}_q_table.txt'
+        self.table_name = f'q_table_{tls_id}.txt'
         if not self.compress_state:
             self.table_name = 'uncompressed_' + self.table_name
         self.t = 0

@@ -8,7 +8,7 @@ class FixedTimer(Runner):
         super().__init__(tls_id, save_dir)
         self.controller = None
         self.stats_mode = stats_mode
-        self.stats_name = f'{tls_id}_cache_stats.txt'
+        self.stats_name = f'cache_stats_{tls_id}.txt'
 
         self.action_loop = [0,0,0,3,3,3,6]
 

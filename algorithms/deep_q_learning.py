@@ -52,7 +52,7 @@ class DeepQLearning(Runner):
         self.controller = None
         self.train_mode = train_mode
         self.compress_state = compress_state
-        self.model_name = f'{tls_id}_dqn_model.pt'
+        self.model_name = f'dqn_model_{tls_id}.pt'
         if not self.compress_state:
             self.model_name = 'uncompressed_' + self.model_name
         self.t = 0
