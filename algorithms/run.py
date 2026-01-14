@@ -16,7 +16,7 @@ SEED = 29  # may not work well with multiple parallel processes -- non-determini
 DIR_PREFIX = '../simulation/'
 
 NET_NAME = 'demo'  # this 'NET' refers to the SUMO definition!
-MODE = 'train'  # 'train' or 'eval'
+MODE = 'eval'  # 'train' or 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
 

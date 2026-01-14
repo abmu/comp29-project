@@ -6,7 +6,7 @@ files = [
     # 'zebra.txt',
     'fixed_timer.txt',
     'q_learning.txt',
-    'q_learning_uncompressed.txt',
+    # 'q_learning_uncompressed.txt',
     'deep_q_learning.txt',
     'deep_q_learning_uncompressed.txt',
     # 'deep_q_learning_communicative.txt',
