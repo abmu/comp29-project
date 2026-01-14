@@ -2,17 +2,17 @@ from environment import StateBus, ACTION_SPACE, get_state, get_blank_state
 from deep_q_learning import DeepQLearning
 
 
-class CommDeepQLearning(DeepQLearning):
-    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, state_bus: StateBus, compress_state: bool = False) -> None:
-        super().__init__(tls_id, save_dir, train_mode, compress_state)
+class CommunicativeDeepQLearning(DeepQLearning):
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, state_bus: StateBus, compression_level: int = 0) -> None:
+        super().__init__(tls_id, save_dir, train_mode, compression_level)
         self.state_bus = state_bus
-        self.state_bus.publish(self.tls_id, get_blank_state(self.tls_id, self.compress_state))
-        self.model_name = 'communicative_' + self.model_name
+        self.state_bus.publish(self.tls_id, get_blank_state(self.tls_id, self.compression_level))
+        self.model_name = 'comm_' + self.model_name
 
 
     def get_state_size(self) -> int:
         # return the input state size for the policy net
-        n = len(get_blank_state(self.tls_id, self.compress_state))
+        n = len(get_blank_state(self.tls_id, self.compression_level))
 
         others = self.state_bus.read(self.tls_id)
         for _, s in others.items():
@@ -23,7 +23,7 @@ class CommDeepQLearning(DeepQLearning):
 
     def get_comm_state(self) -> tuple[int, ...]:
         # Get the joint state from the communication state bus
-        state = get_state(self.conn, self.tls_id, self.compress_state)
+        state = get_state(self.conn, self.tls_id, self.compression_level)
         others = self.state_bus.read(self.tls_id)
         comm_state = list(state)
         for _, s in others.items():
@@ -46,7 +46,7 @@ class CommDeepQLearning(DeepQLearning):
             self.target_net.load_state_dict(self.policy_net.state_dict())
             # print("Target network updated")
 
-        state = get_state(self.conn, self.tls_id, self.compress_state)
+        state = get_state(self.conn, self.tls_id, self.compression_level)
         self.state_bus.publish(self.tls_id, state)
 
         reward = self.controller.run()

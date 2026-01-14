@@ -44,7 +44,7 @@ class DefaultRunner(Runner):
     def __init__(self, tls_id: str, save_dir: str, stats_mode: bool) -> None:
         super().__init__(tls_id, save_dir)
         self.stats_mode = stats_mode
-        self.stats_name = f'cache_stats_{tls_id}.txt'
+        self.stats_name = f'cache_stats__{tls_id}.txt'
 
 
     def start_step(self):

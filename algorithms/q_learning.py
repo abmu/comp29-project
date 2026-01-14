@@ -7,14 +7,12 @@ from utils import file_dump, file_eval
 
 
 class QLearning(Runner):
-    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compress_state: bool = True) -> None:
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compression_level: int = 2) -> None:
         super().__init__(tls_id, save_dir)
         self.controller = None
         self.train_mode = train_mode
-        self.compress_state = compress_state
-        self.table_name = f'q_table_{tls_id}.txt'
-        if not self.compress_state:
-            self.table_name = 'uncompressed_' + self.table_name
+        self.compression_level = compression_level
+        self.table_name = f'q_table__c{compression_level}__{tls_id}.txt'
         self.t = 0
 
         # Q-learning hyperparameters
@@ -70,7 +68,7 @@ class QLearning(Runner):
 
     def start_step(self):
         if self.controller.finished():
-            self.state = get_state(self.conn, self.tls_id, self.compress_state)
+            self.state = get_state(self.conn, self.tls_id, self.compression_level)
             self.action = self.choose_action(self.state)
             self.reward = 0
             self.controller.set_action(self.action)
@@ -85,7 +83,7 @@ class QLearning(Runner):
 
     def finish_step(self, done: bool):
         if self.train_mode and self.controller.finished():
-            next_state = get_state(self.conn, self.tls_id, self.compress_state)
+            next_state = get_state(self.conn, self.tls_id, self.compression_level)
             duration = self.controller.get_total_duration()
             self.update_q(self.state, self.action, self.reward, next_state, duration)
 

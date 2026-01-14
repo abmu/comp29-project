@@ -6,7 +6,7 @@ from agent import DefaultRunner
 from fixed_timer import FixedTimer
 from q_learning import QLearning
 from deep_q_learning import DeepQLearning
-from comm_deep_q_learning import CommDeepQLearning
+from comm_deep_q_learning import CommunicativeDeepQLearning
 from network import Network
 from utils import file_dump
 
@@ -15,22 +15,22 @@ SEED = 29  # may not work well with multiple parallel processes -- non-determini
 
 DIR_PREFIX = '../simulation/'
 
-NET_NAME = 'demo'  # this 'NET' refers to the SUMO definition!
-MODE = 'eval'  # 'train' or 'eval'
+NET_NAME = 'extended'  # this 'NET' refers to the SUMO definition!
+MODE = 'train'  # 'train' or 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
 
 
-def _make_comm_network(tls_ids: list[str], save_dir: str, train_mode: bool, compress_state: bool, sumo_cfg: list[str]) -> Network:
+def _make_comm_network(tls_ids: list[str], save_dir: str, train_mode: bool, compression_level: int, sumo_cfg: list[str]) -> Network:
     state_bus = StateBus()
 
     agents = [
-        CommDeepQLearning(
+        CommunicativeDeepQLearning(
             tls_id=tls_id,
             save_dir=save_dir,
             train_mode=train_mode,
             state_bus=state_bus,
-            compress_state=compress_state
+            compression_level=compression_level
         )
         for tls_id in tls_ids
     ]
@@ -53,60 +53,60 @@ NETWORKS = {
 
 
 
-    'fixed_timer': Network(
-        agents=[
-            FixedTimer(
-                tls_id='CJ_1',
-                save_dir=RESULTS_DIR,
-                stats_mode=False
-            )
-        ],
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
-    ),
-    'q_learning': Network(
-        agents=[
-            QLearning(
-                tls_id='CJ_1',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                compress_state=True
-            )
-        ],
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
-    ),
-    'deep_q_learning': Network(
-        agents=[
-            DeepQLearning(
-                tls_id='CJ_1',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                compress_state=True
-            )
-        ],
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
-    ),
-    'q_learning_uncompressed': Network(
-        agents=[
-            QLearning(
-                tls_id='CJ_1',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                compress_state=False
-            )
-        ],
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
-    ),
-    'deep_q_learning_uncompressed': Network(
-        agents=[
-            DeepQLearning(
-                tls_id='CJ_1',
-                save_dir=RESULTS_DIR,
-                train_mode=(MODE == 'train'),
-                compress_state=False
-            )
-        ],
-        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
-    ),
+    # 'fixed_timer': Network(
+    #     agents=[
+    #         FixedTimer(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             stats_mode=False
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    # 'q_learning': Network(
+    #     agents=[
+    #         QLearning(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             train_mode=(MODE == 'train'),
+    #             compression_level=True
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    # 'deep_q_learning': Network(
+    #     agents=[
+    #         DeepQLearning(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             train_mode=(MODE == 'train'),
+    #             compression_level=True
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    # 'q_learning_uncompressed': Network(
+    #     agents=[
+    #         QLearning(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             train_mode=(MODE == 'train'),
+    #             compression_level=False
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    # 'deep_q_learning_uncompressed': Network(
+    #     agents=[
+    #         DeepQLearning(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             train_mode=(MODE == 'train'),
+    #             compression_level=False
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
 
 
 
@@ -136,7 +136,7 @@ NETWORKS = {
     #             tls_id='CJ_2',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=True
+    #             compression_level=True
     #         )
     #     ],
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls')
@@ -147,7 +147,7 @@ NETWORKS = {
     #             tls_id='CJ_2',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=True
+    #             compression_level=True
     #         )
     #     ],
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls')
@@ -158,7 +158,7 @@ NETWORKS = {
     #             tls_id='CJ_2',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=False
+    #             compression_level=False
     #         )
     #     ],
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls')
@@ -166,45 +166,45 @@ NETWORKS = {
 
 
 
-    # 'fixed_timer': Network(
-    #     agents=[
-    #         FixedTimer(
-    #             tls_id='CJ_1',
-    #             save_dir=RESULTS_DIR,
-    #             stats_mode=False
-    #         ),
-    #         FixedTimer(
-    #             tls_id='CJ_2',
-    #             save_dir=RESULTS_DIR,
-    #             stats_mode=False
-    #         ),
-    #         FixedTimer(
-    #             tls_id='CJ_9',
-    #             save_dir=RESULTS_DIR,
-    #             stats_mode=False
-    #         )
-    #     ],
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
-    # ),
+    'fixed_timer': Network(
+        agents=[
+            FixedTimer(
+                tls_id='CJ_1',
+                save_dir=RESULTS_DIR,
+                stats_mode=False
+            ),
+            FixedTimer(
+                tls_id='CJ_2',
+                save_dir=RESULTS_DIR,
+                stats_mode=False
+            ),
+            FixedTimer(
+                tls_id='CJ_9',
+                save_dir=RESULTS_DIR,
+                stats_mode=False
+            )
+        ],
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    ),
     # 'q_learning': Network(
     #     agents=[
     #         QLearning(
     #             tls_id='CJ_1',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=True
+    #             compression_level=True
     #         ),
     #         QLearning(
     #             tls_id='CJ_2',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=True
+    #             compression_level=True
     #         ),
     #         QLearning(
     #             tls_id='CJ_9',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=True
+    #             compression_level=True
     #         )
     #     ],
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
@@ -215,19 +215,19 @@ NETWORKS = {
     #             tls_id='CJ_1',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=True
+    #             compression_level=True
     #         ),
     #         DeepQLearning(
     #             tls_id='CJ_2',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=True
+    #             compression_level=True
     #         ),
     #         DeepQLearning(
     #             tls_id='CJ_9',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=True
+    #             compression_level=True
     #         )
     #     ],
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
@@ -238,19 +238,19 @@ NETWORKS = {
     #             tls_id='CJ_1',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=False
+    #             compression_level=False
     #         ),
     #         DeepQLearning(
     #             tls_id='CJ_2',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=False
+    #             compression_level=False
     #         ),
     #         DeepQLearning(
     #             tls_id='CJ_9',
     #             save_dir=RESULTS_DIR,
     #             train_mode=(MODE == 'train'),
-    #             compress_state=False
+    #             compression_level=False
     #         )
     #     ],
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
@@ -263,7 +263,7 @@ NETWORKS = {
     #     ],
     #     save_dir=RESULTS_DIR,
     #     train_mode=(MODE == 'train'),
-    #     compress_state=True,
+    #     compression_level=True,
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
     # ),
     # 'deep_q_learning_communicative_uncompressed': _make_comm_network(
@@ -274,7 +274,7 @@ NETWORKS = {
     #     ],
     #     save_dir=RESULTS_DIR,
     #     train_mode=(MODE == 'train'),
-    #     compress_state=False,
+    #     compression_level=False,
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
     # ),
 }
