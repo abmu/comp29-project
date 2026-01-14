@@ -1,13 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-DIR_PREFIX = 'extended/train/'
+DIR_PREFIX = 'extended/eval/'
 files = [
     # 'zebra.txt',
     'fixed_timer.txt',
     'q_learning.txt',
     # 'q_learning_uncompressed.txt',
-    'deep_q_learning.txt',
+    # 'deep_q_learning.txt',
     'deep_q_learning_uncompressed.txt',
     'deep_q_learning_communicative.txt',
     'deep_q_learning_communicative_uncompressed.txt',
