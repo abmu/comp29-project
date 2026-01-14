@@ -132,7 +132,7 @@ def get_blank_state(tls: str, compression: Compression = Compression.C2) -> tupl
             if compression.value > Compression.C0.value:
                 veh.append(-1)
             else:
-                n = min(1, len(detector_group))
+                n = max(1, len(detector_group))
                 veh.extend(-1 for _ in range(n))
 
         waiting_peds = TLS_IDS[tls]['crossings']
