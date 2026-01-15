@@ -3,8 +3,8 @@ from deep_q_learning import DeepQLearning
 
 
 class CommunicativeDeepQLearning(DeepQLearning):
-    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, state_bus: StateBus, compression_level: int = 0) -> None:
-        super().__init__(tls_id, save_dir, train_mode, compression_level)
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, state_bus: StateBus, compression_level: int = 0, seed: int = 0) -> None:
+        super().__init__(tls_id, save_dir, train_mode, compression_level, seed)
         self.state_bus = state_bus
         self.state_bus.publish(self.tls_id, get_blank_state(self.tls_id, self.compression_level))
         self.model_name = 'comm_' + self.model_name

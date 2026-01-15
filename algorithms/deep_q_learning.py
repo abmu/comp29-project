@@ -37,8 +37,8 @@ class ReplayBuffer:
     def push(self, state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: float, done: bool) -> None:
         self.buffer.append((state, action, reward, next_state, duration, done))
 
-    def sample(self, batch_size: int) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-        batch = random.sample(self.buffer, batch_size)
+    def sample(self, batch_size: int, rng: random.Random = random) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        batch = rng.sample(self.buffer, batch_size)
         states, actions, rewards, next_states, durations, dones = map(np.array, zip(*batch))
         return states, actions, rewards, next_states, durations, dones
     
@@ -47,11 +47,12 @@ class ReplayBuffer:
 
 
 class DeepQLearning(Runner):
-    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compression_level: int = 0) -> None:
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compression_level: int = 0, seed: int = 0) -> None:
         super().__init__(tls_id, save_dir)
         self.controller = None
         self.train_mode = train_mode
         self.compression_level = compression_level
+        self.rng = random.Random(seed)
         self.model_name = f'dqn_model__c{compression_level}__{tls_id}.pt'
         self.t = 0
 
@@ -105,10 +106,10 @@ class DeepQLearning(Runner):
 
     def choose_action(self, state: tuple[int, ...]) -> int:
         # choose action using an epsilon-greedy policy
-        actions = list(ACTION_SPACE.keys())
-        if self.train_mode and random.random() < self.epsilon:
+        actions = sorted(ACTION_SPACE.keys())
+        if self.train_mode and self.rng.random() < self.epsilon:
             # exploration - choose random action
-            return random.choice(actions)
+            return self.rng.choice(actions)
         else:
             # exploitation - using DQN
             state_tensor = torch.FloatTensor(state).unsqueeze(0)
@@ -123,7 +124,7 @@ class DeepQLearning(Runner):
         if len(self.memory) < self.batch_size:
             return
 
-        states, actions, rewards, next_states, durations, dones = self.memory.sample(self.batch_size)
+        states, actions, rewards, next_states, durations, dones = self.memory.sample(self.batch_size, self.rng)
 
         states = torch.FloatTensor(states)
         actions = torch.LongTensor(actions).unsqueeze(1)
@@ -177,7 +178,7 @@ class DeepQLearning(Runner):
             duration = self.controller.get_total_duration()
 
             # save transition
-            action_id_to_idx = {aid: i for i, aid in enumerate(ACTION_SPACE.keys())}
+            action_id_to_idx = {aid: i for i, aid in enumerate(sorted(ACTION_SPACE.keys()))}
             action_idx = action_id_to_idx[self.action]
             self.memory.push(self.state, action_idx, self.reward, next_state, duration, done)
 

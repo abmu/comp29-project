@@ -7,11 +7,12 @@ from utils import file_dump, file_eval
 
 
 class QLearning(Runner):
-    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compression_level: int = 2) -> None:
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compression_level: int = 2, seed: int = 0) -> None:
         super().__init__(tls_id, save_dir)
         self.controller = None
         self.train_mode = train_mode
         self.compression_level = compression_level
+        self.rng = random.Random(seed)
         self.table_name = f'q_table__c{compression_level}__{tls_id}.txt'
         self.t = 0
 
@@ -47,10 +48,10 @@ class QLearning(Runner):
 
     def choose_action(self, state: tuple[int, ...]) -> int:
         # choose action using an epsilon-greedy policy
-        actions = list(ACTION_SPACE.keys())
-        if self.train_mode and random.random() < self.epsilon:
+        actions = sorted(ACTION_SPACE.keys())
+        if self.train_mode and self.rng.random() < self.epsilon:
             # exploration - choose random action
-            return random.choice(actions)
+            return self.rng.choice(actions)
         else:
             # exploitation - choose action with highest Q-value
             qs = [self.get_q(state, a) for a in actions]
@@ -59,7 +60,7 @@ class QLearning(Runner):
 
     def update_q(self, state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: float) -> None:
         # update Q-value of state and action combination based on reward and next state
-        actions = list(ACTION_SPACE.keys())
+        actions = sorted(ACTION_SPACE.keys())
         old_q = self.get_q(state, action)
         best_next = max(self.get_q(next_state, a) for a in actions)
         # Semi-Markov Decision Process
