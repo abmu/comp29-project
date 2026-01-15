@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-DIR_PREFIX = 'demo/eval/'
+DIR_PREFIX = 'demo/train/'
 files = [
     # 'zebra.txt',
     'ft.txt',
