@@ -47,6 +47,11 @@ class DefaultRunner(Runner):
         self.stats_name = f'cache_stats__{tls_id}.txt'
 
 
+    def start_episode(self, conn) -> None:
+        self.conn = conn
+        self.controller = Controller(conn, self.tls_id, self.stats_mode)
+
+
     def start_step(self):
         pass
 

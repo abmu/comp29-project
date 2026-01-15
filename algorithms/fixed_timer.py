@@ -1,5 +1,5 @@
 from agent import Runner
-from environment import compute_stats, get_cache
+from environment import Controller, compute_stats, get_cache
 from utils import file_dump
 
 
@@ -14,7 +14,8 @@ class FixedTimer(Runner):
 
 
     def start_episode(self, conn):
-        super().start_episode(conn)
+        self.conn = conn
+        self.controller = Controller(conn, self.tls_id, self.stats_mode)
         self.curr_idx = 0
         
 
