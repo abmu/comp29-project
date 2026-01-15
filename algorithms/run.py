@@ -1,43 +1,41 @@
-import random
-import multiprocessing as mp
 import time
+import traceback
+from multiprocessing import Process, Queue
 from datetime import timedelta
 from pathlib import Path
 from environment import get_sumo_cfg, set_route, StateBus
-# from agent import DefaultRunner
-# from fixed_timer import FixedTimer
+from agent import DefaultRunner
+from fixed_timer import FixedTimer
 from q_learning import QLearning
-# from deep_q_learning import DeepQLearning
-# from comm_deep_q_learning import CommunicativeDeepQLearning
+from deep_q_learning import DeepQLearning
+from comm_deep_q_learning import CommunicativeDeepQLearning
 from network import Network
 from utils import file_dump
 
 
-SEED = 29  # may not work well with multiple parallel processes -- non-determinism of execution
-
 DIR_PREFIX = '../simulation/'
 
 NET_NAME = 'demo'  # this 'NET' refers to the SUMO network definition!
-MODE = 'eval'  # 'train' or 'eval'
+MODE = 'train'  # 'train' or 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
 
 
-# def _make_comm_network(tls_ids: list[str], save_dir: str, train_mode: bool, compression_level: int, sumo_cfg: list[str]) -> Network:
-#     state_bus = StateBus()
+def _make_comm_network(tls_ids: list[str], save_dir: str, train_mode: bool, compression_level: int, sumo_cfg: list[str]) -> Network:
+    state_bus = StateBus()
 
-#     agents = [
-#         CommunicativeDeepQLearning(
-#             tls_id=tls_id,
-#             save_dir=save_dir,
-#             train_mode=train_mode,
-#             state_bus=state_bus,
-#             compression_level=compression_level
-#         )
-#         for tls_id in tls_ids
-#     ]
+    agents = [
+        CommunicativeDeepQLearning(
+            tls_id=tls_id,
+            save_dir=save_dir,
+            train_mode=train_mode,
+            state_bus=state_bus,
+            compression_level=compression_level
+        )
+        for tls_id in tls_ids
+    ]
 
-#     return Network(agents=agents, sumo_cfg=sumo_cfg)    
+    return Network(agents=agents, sumo_cfg=sumo_cfg)
 
 
 NETWORKS = {
@@ -55,7 +53,7 @@ NETWORKS = {
 
 
 
-    # 'ft': Network(
+    # 'ft1': Network(
     #     agents=[
     #         FixedTimer(
     #             tls_id='CJ_1',
@@ -65,13 +63,159 @@ NETWORKS = {
     #     ],
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
     # ),
-    # 'ql_c0': Network(
+    # 'ft2': Network(
     #     agents=[
-    #         QLearning(
+    #         FixedTimer(
     #             tls_id='CJ_1',
     #             save_dir=RESULTS_DIR,
-    #             train_mode=(MODE == 'train'),
-    #             compression_level=0
+    #             stats_mode=False
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    # 'ft3': Network(
+    #     agents=[
+    #         FixedTimer(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             stats_mode=False
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    # 'ft4': Network(
+    #     agents=[
+    #         FixedTimer(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             stats_mode=False
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    # 'ft5': Network(
+    #     agents=[
+    #         FixedTimer(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             stats_mode=False
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    # 'ft6': Network(
+    #     agents=[
+    #         FixedTimer(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             stats_mode=False
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    # 'ft7': Network(
+    #     agents=[
+    #         FixedTimer(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             stats_mode=False
+    #         )
+    #     ],
+    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    # ),
+    'ql1': Network(
+        agents=[
+            QLearning(
+                tls_id='CJ_1',
+                save_dir=RESULTS_DIR,
+                train_mode=(MODE == 'train'),
+                compression_level=2,
+                qid=1
+            )
+        ],
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    ),
+    'ql2': Network(
+        agents=[
+            QLearning(
+                tls_id='CJ_1',
+                save_dir=RESULTS_DIR,
+                train_mode=(MODE == 'train'),
+                compression_level=2,
+                qid=2
+            )
+        ],
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    ),
+    'ql3': Network(
+        agents=[
+            QLearning(
+                tls_id='CJ_1',
+                save_dir=RESULTS_DIR,
+                train_mode=(MODE == 'train'),
+                compression_level=2,
+                qid=3
+            )
+        ],
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    ),
+    'ql4': Network(
+        agents=[
+            QLearning(
+                tls_id='CJ_1',
+                save_dir=RESULTS_DIR,
+                train_mode=(MODE == 'train'),
+                compression_level=2,
+                qid=4
+            )
+        ],
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    ),
+    'ql5': Network(
+        agents=[
+            QLearning(
+                tls_id='CJ_1',
+                save_dir=RESULTS_DIR,
+                train_mode=(MODE == 'train'),
+                compression_level=2,
+                qid=5
+            )
+        ],
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    ),
+    'ql6': Network(
+        agents=[
+            QLearning(
+                tls_id='CJ_1',
+                save_dir=RESULTS_DIR,
+                train_mode=(MODE == 'train'),
+                compression_level=2,
+                qid=6
+            )
+        ],
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    ),
+    'ql7': Network(
+        agents=[
+            QLearning(
+                tls_id='CJ_1',
+                save_dir=RESULTS_DIR,
+                train_mode=(MODE == 'train'),
+                compression_level=2,
+                qid=7
+            )
+        ],
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    ),
+
+
+
+    # 'ft': Network(
+    #     agents=[
+    #         FixedTimer(
+    #             tls_id='CJ_1',
+    #             save_dir=RESULTS_DIR,
+    #             stats_mode=False
     #         )
     #     ],
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
@@ -315,26 +459,42 @@ NETWORKS = {
 }
 
 
-def run_ep(args: tuple[str, int]) -> tuple[str, float]:
+def network_worker(net: str, task_q: Queue, result_q: Queue) -> None:
     """
-    Run an episode using the specified algorithm
+    Run a persistent process per network
     """
-    net, epoch = args
-    random.seed(SEED + epoch)
-    try:
-        reward = NETWORKS[net].run(epoch)
-        return net, reward
-    except Exception as e:
-        print(f'[{net}] [{epoch}] exception: {e}')
-        return net, None
+    network = NETWORKS[net]
+
+    while True:
+        msg = task_q.get()
+        if msg == 'STOP':
+            break
+        episode = msg
+        try:
+            reward = network.run(episode)
+            result_q.put((net, episode, reward))
+        except Exception as e:
+            traceback.print_exc()
+            result_q.put((net, episode, None))
 
 
 if __name__ == "__main__":
     episode_rewards = {a: [] for a in NETWORKS}
-    
-    # create a process pool
-    pool = mp.Pool(processes=len(NETWORKS))
 
+    # setup multiprocessing workers
+    task_q = Queue()
+    result_q = Queue()
+    workers = []
+    for network in NETWORKS:
+        p = Process(
+            target=network_worker,
+            args=(network, task_q, result_q),
+            daemon=True
+        )
+        p.start()
+        workers.append(p)
+    print(f'Running {len(NETWORKS)} workers')
+    
     routes_dir = Path(f'{DIR_PREFIX}routes/{NET_NAME}/{MODE}/').glob('*')
     count = sum(1 if f.is_dir() else 0 for f in routes_dir)  # count the number of folders in the routes directory
     print(f'Using {count} "{MODE}" routes for the network "{NET_NAME}"...')
@@ -347,12 +507,11 @@ if __name__ == "__main__":
         # set SUMO route
         set_route(episode, dirprefix=DIR_PREFIX, netname=NET_NAME, mode=MODE)
 
-        # run NETWORKS in parallel
-        print(f'Running {len(NETWORKS)} instances of SUMO...')
-        jobs = [(network, episode) for network in NETWORKS]
-        results = pool.map(run_ep, jobs)
+        for _ in NETWORKS:
+            task_q.put(episode)
 
-        for network, reward in results:
+        for _ in NETWORKS:
+            network, ep, reward = result_q.get()
             print(f'[{network}] reward = {reward}')
 
             episode_rewards[network].append(reward)
@@ -361,9 +520,14 @@ if __name__ == "__main__":
             fname = f'{RESULTS_DIR}{MODE}/{network}.txt'
             file_dump(fname, str(episode_rewards[network]))
 
-    # start shutdown process and wait for finish
-    pool.close()
-    pool.join()
-
     end_time = time.time()
-    print(f'\nTotal time taken: {timedelta(seconds=(end_time-start_time))}')
+    time_elapsed = timedelta(seconds=(end_time-start_time))
+
+    print(f'\nTotal time taken: {time_elapsed}')
+    file_dump(f'{RESULTS_DIR}{MODE}/time.txt', str(time_elapsed))
+
+    for _ in workers:
+        task_q.put('STOP')
+
+    for p in workers:
+        p.join()
