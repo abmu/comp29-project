@@ -65,7 +65,11 @@ class Controller:
         self.curr_dur = None
         self.next = []
         self.total_steps = 0
-        self._controlled_lanes = set(self.conn.trafficlight.getControlledLanes(self.tls_id))
+        if self.tls_id not in self.conn.trafficlight.getIDList():
+            # not a traffic light
+            self._controlled_lanes = set()
+        else:
+            self._controlled_lanes = set(self.conn.trafficlight.getControlledLanes(self.tls_id))
     
 
     def __str__(self) -> str:
