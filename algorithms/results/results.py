@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-DIR_PREFIX = 'demo/train/'
+NET_NAME = 'demo'
+MODE = 'eval'
+
 files = [
     # 'zebra.txt',
     'ft.txt',
@@ -66,17 +68,19 @@ def to_float_array(lst: list[float | None]) -> np.ndarray:
 def pretty_list(lst: list[float | None]) -> np.ndarray:
     # clean up list data
     lst = to_float_array(lst)
-    lst = remove_outliers_rolling(lst)
-    lst = moving_average(lst)
+    if MODE == 'train':
+        lst = remove_outliers_rolling(lst)
+        lst = moving_average(lst)
     return lst
 
 
 lists = []
 # read python-style lists from text files
 for file in files:    
-    with open(DIR_PREFIX + file, 'r') as f:
+    with open(f'{NET_NAME}/{MODE}/' + file, 'r') as f:
         lst = eval(f.readlines()[0])
         lists.append(pretty_list(lst))
+
 
 epochs = np.arange(1, len(lists[0]) + 1)
 
