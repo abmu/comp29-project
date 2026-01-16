@@ -69,10 +69,10 @@ def get_reward(waiting_vehicles: list[list[list[float]]], waiting_peds: list[lis
         current_cache.append([veh_delay, veh_throughput, ped_delay, ped_throughput])
 
     # weights -- calculated from 'cache_stats.txt' file
-    a = - (1.0 / 62.74)  # total current vehicle delay
-    b = 1.0 / 0.2348  # vehicle throughput
-    c = - (1.0 / 211.7)  # total current pedestrian delay
-    d = 1.0 / 0.2526  # pedestrian throughput
+    a = - (1.0 / 63.074)  # total current vehicle delay
+    b = 1.0 / 0.23459  # vehicle throughput
+    c = - (1.0 / 211.69)  # total current pedestrian delay
+    d = 1.0 / 0.25248  # pedestrian throughput
 
     reward = (
         a * veh_delay +
