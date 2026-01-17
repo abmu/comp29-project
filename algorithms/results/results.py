@@ -2,16 +2,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 NET_NAME = 'crossing'
-MODE = 'train'
+MODE = 'eval'
 
 files = [
     'zebra.txt',
     'ft.txt',
     # 'ql_c0.txt',
     # 'ql_c1.txt',
-    'ql_c2.txt',
+    # 'ql_c2.txt',
     'dqn_c0.txt',
-    'dqn_c1.txt',
+    # 'dqn_c1.txt',
     'dqn_c2.txt',
     # 'deep_q_learning_communicative.txt',
     # 'deep_q_learning_communicative_uncompressed.txt',
@@ -69,9 +69,9 @@ def pretty_list(lst: list[float | None]) -> np.ndarray:
     # clean up list data
     lst = to_float_array(lst)
     if MODE == 'train':
-        pass
-        # lst = remove_outliers_rolling(lst)
-        # lst = moving_average(lst)
+        # return lst
+        lst = remove_outliers_rolling(lst)
+        lst = moving_average(lst)
     return lst
 
 
