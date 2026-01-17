@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-NET_NAME = 'demo'
-MODE = 'eval'
+NET_NAME = 'crossing'
+MODE = 'train'
 
 files = [
-    # 'zebra.txt',
+    'zebra.txt',
     'ft.txt',
     # 'ql_c0.txt',
     # 'ql_c1.txt',
@@ -69,8 +69,9 @@ def pretty_list(lst: list[float | None]) -> np.ndarray:
     # clean up list data
     lst = to_float_array(lst)
     if MODE == 'train':
-        lst = remove_outliers_rolling(lst)
-        lst = moving_average(lst)
+        pass
+        # lst = remove_outliers_rolling(lst)
+        # lst = moving_average(lst)
     return lst
 
 
