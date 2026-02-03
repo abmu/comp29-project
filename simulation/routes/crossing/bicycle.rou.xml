@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-01-25 22:06:44.583033 by Eclipse SUMO randomTrips.py UNKNOWN
+<!-- generated on 2026-02-02 18:57:49.462979 by Eclipse SUMO randomTrips.py UNKNOWN
 <configuration>
     <net-file value="../networks/crossing/main.net.xml"/>
-    <output-trip-file value="../routes/crossing/eval/50/bicycle.trips.xml"/>
-    <route-file value="../routes/crossing/eval/50/bicycle.rou.xml"/>
+    <output-trip-file value="../routes/crossing/train/10000/bicycle.trips.xml"/>
+    <route-file value="../routes/crossing/train/10000/bicycle.rou.xml"/>
     <prefix value="bicycle"/>
     <vehicle-class value="bicycle"/>
     <fringe-factor value="max"/>
-    <seed value="50"/>
-    <insertion-density value="50.0"/>
+    <seed value="10000"/>
+    <insertion-density value="100.0"/>
     <binomial value="100"/>
 </configuration>
 -->
 
-<!-- generated on 2026-01-25T22:06:44.580104+00:00 by Eclipse SUMO duarouter 1.25.0
+<!-- generated on 2026-02-02T18:57:49.459960+00:00 by Eclipse SUMO duarouter 1.25.0
 <duarouterConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
 
     <input>
         <net-file value="../networks/crossing/main.net.xml"/>
-        <route-files value="../routes/crossing/eval/50/bicycle.trips.xml"/>
+        <route-files value="../routes/crossing/train/10000/bicycle.trips.xml"/>
     </input>
 
     <output>
-        <output-file value="../routes/crossing/eval/50/bicycle.rou.xml"/>
+        <output-file value="../routes/crossing/train/10000/bicycle.rou.xml"/>
         <alternatives-output value="NUL"/>
     </output>
 
@@ -43,55 +43,133 @@
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
     <vType id="bicycle_bicycle" vClass="bicycle"/>
-    <vehicle id="bicycle0" type="bicycle_bicycle" depart="15.00">
-        <route edges="BynPl_2_1 MalSt_1_1"/>
-    </vehicle>
-    <vehicle id="bicycle1" type="bicycle_bicycle" depart="108.00">
-        <route edges="TorPl_1_1 MalSt_1_1"/>
-    </vehicle>
-    <vehicle id="bicycle2" type="bicycle_bicycle" depart="321.00">
+    <vehicle id="bicycle0" type="bicycle_bicycle" depart="92.00">
         <route edges="BynPl_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="bicycle3" type="bicycle_bicycle" depart="767.00">
-        <route edges="TorPl_1_1 BynPl_1_1"/>
+    <vehicle id="bicycle1" type="bicycle_bicycle" depart="107.00">
+        <route edges="BynPl_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="bicycle4" type="bicycle_bicycle" depart="1422.00">
+    <vehicle id="bicycle2" type="bicycle_bicycle" depart="204.00">
         <route edges="BynPl_2_1 TorPl_2_1"/>
     </vehicle>
-    <vehicle id="bicycle5" type="bicycle_bicycle" depart="1598.00">
-        <route edges="BynPl_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="bicycle6" type="bicycle_bicycle" depart="2345.00">
-        <route edges="BynPl_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="bicycle7" type="bicycle_bicycle" depart="2376.00">
+    <vehicle id="bicycle3" type="bicycle_bicycle" depart="210.00">
         <route edges="MalSt_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="bicycle8" type="bicycle_bicycle" depart="2631.00">
+    <vehicle id="bicycle4" type="bicycle_bicycle" depart="299.00">
         <route edges="TorPl_1_1 MalSt_1_1"/>
     </vehicle>
-    <vehicle id="bicycle9" type="bicycle_bicycle" depart="2670.00">
-        <route edges="MalSt_2_1 TorPl_2_1"/>
-    </vehicle>
-    <vehicle id="bicycle10" type="bicycle_bicycle" depart="2919.00">
-        <route edges="BynPl_2_1 TorPl_2_1"/>
-    </vehicle>
-    <vehicle id="bicycle11" type="bicycle_bicycle" depart="3075.00">
-        <route edges="TorPl_1_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="bicycle12" type="bicycle_bicycle" depart="3105.00">
+    <vehicle id="bicycle5" type="bicycle_bicycle" depart="462.00">
         <route edges="BynPl_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="bicycle13" type="bicycle_bicycle" depart="3455.00">
-        <route edges="BynPl_2_1 TorPl_2_1"/>
+    <vehicle id="bicycle6" type="bicycle_bicycle" depart="477.00">
+        <route edges="BynPl_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="bicycle14" type="bicycle_bicycle" depart="3470.00">
-        <route edges="TorPl_1_1 MalSt_1_1"/>
+    <vehicle id="bicycle7" type="bicycle_bicycle" depart="824.00">
+        <route edges="TorPl_1_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="bicycle15" type="bicycle_bicycle" depart="3525.00">
+    <vehicle id="bicycle8" type="bicycle_bicycle" depart="891.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle9" type="bicycle_bicycle" depart="1049.00">
+        <route edges="MalSt_2_1 TorPl_2_1"/>
+    </vehicle>
+    <vehicle id="bicycle10" type="bicycle_bicycle" depart="1163.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle11" type="bicycle_bicycle" depart="1363.00">
+        <route edges="BynPl_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle12" type="bicycle_bicycle" depart="1383.00">
         <route edges="BynPl_2_1 MalSt_1_1"/>
     </vehicle>
-    <vehicle id="bicycle16" type="bicycle_bicycle" depart="3594.00">
+    <vehicle id="bicycle13" type="bicycle_bicycle" depart="1520.00">
+        <route edges="BynPl_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle14" type="bicycle_bicycle" depart="1613.00">
+        <route edges="TorPl_1_1 MalSt_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle15" type="bicycle_bicycle" depart="1626.00">
+        <route edges="BynPl_2_1 TorPl_2_1"/>
+    </vehicle>
+    <vehicle id="bicycle16" type="bicycle_bicycle" depart="1656.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle17" type="bicycle_bicycle" depart="1862.00">
+        <route edges="BynPl_2_1 MalSt_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle18" type="bicycle_bicycle" depart="2039.00">
+        <route edges="MalSt_2_1 TorPl_2_1"/>
+    </vehicle>
+    <vehicle id="bicycle19" type="bicycle_bicycle" depart="2103.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle20" type="bicycle_bicycle" depart="2136.00">
+        <route edges="BynPl_2_1 TorPl_2_1"/>
+    </vehicle>
+    <vehicle id="bicycle21" type="bicycle_bicycle" depart="2136.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle22" type="bicycle_bicycle" depart="2156.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle23" type="bicycle_bicycle" depart="2165.00">
+        <route edges="BynPl_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle24" type="bicycle_bicycle" depart="2234.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle25" type="bicycle_bicycle" depart="2438.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle26" type="bicycle_bicycle" depart="2504.00">
+        <route edges="MalSt_2_1 TorPl_2_1"/>
+    </vehicle>
+    <vehicle id="bicycle27" type="bicycle_bicycle" depart="2527.00">
+        <route edges="MalSt_2_1 TorPl_2_1"/>
+    </vehicle>
+    <vehicle id="bicycle28" type="bicycle_bicycle" depart="2612.00">
         <route edges="TorPl_1_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle29" type="bicycle_bicycle" depart="2763.00">
+        <route edges="TorPl_1_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle30" type="bicycle_bicycle" depart="2822.00">
+        <route edges="BynPl_2_1 MalSt_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle31" type="bicycle_bicycle" depart="2965.00">
+        <route edges="BynPl_2_1 MalSt_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle32" type="bicycle_bicycle" depart="3003.00">
+        <route edges="TorPl_1_1 MalSt_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle33" type="bicycle_bicycle" depart="3007.00">
+        <route edges="BynPl_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle34" type="bicycle_bicycle" depart="3063.00">
+        <route edges="TorPl_1_1 MalSt_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle35" type="bicycle_bicycle" depart="3124.00">
+        <route edges="TorPl_1_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle36" type="bicycle_bicycle" depart="3136.00">
+        <route edges="BynPl_2_1 MalSt_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle37" type="bicycle_bicycle" depart="3148.00">
+        <route edges="TorPl_1_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle38" type="bicycle_bicycle" depart="3188.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="bicycle39" type="bicycle_bicycle" depart="3191.00">
+        <route edges="BynPl_2_1 TorPl_2_1"/>
+    </vehicle>
+    <vehicle id="bicycle40" type="bicycle_bicycle" depart="3255.00">
+        <route edges="MalSt_2_1 TorPl_2_1"/>
+    </vehicle>
+    <vehicle id="bicycle41" type="bicycle_bicycle" depart="3324.00">
+        <route edges="BynPl_2_1 TorPl_2_1"/>
+    </vehicle>
+    <vehicle id="bicycle42" type="bicycle_bicycle" depart="3541.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
     </vehicle>
 </routes>
