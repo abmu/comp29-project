@@ -1,16 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-NET_NAME = 'extended'
+NET_NAME = 'crossing'
 MODE = 'eval'
 
 files = [
-    # 'zebra.txt',
+    'zebra.txt',
     # 'ft.txt',
+
     'dqn_c0_1k.txt',
     'dqn_c0_2.5k.txt',
-    'cdqn_c0_1k.txt',
-    'cdqn_c0_2.5k.txt',
+    # 'dqn_c0_10k.txt',
+    # 'cdqn_c0_1k.txt',
+    # 'cdqn_c0_2.5k.txt',
+    # 'cdqn_c0_10k.txt',
+
     # 'ql_c0.txt',
     # 'ql_c1.txt',
     # 'ql_c2.txt',

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-02-02 18:57:49.125572 by Eclipse SUMO randomTrips.py UNKNOWN
+<!-- generated on 2026-02-02 18:59:09.406352 by Eclipse SUMO randomTrips.py UNKNOWN
 <configuration>
     <net-file value="../networks/crossing/main.net.xml"/>
-    <output-trip-file value="../routes/crossing/train/10000/car.trips.xml"/>
-    <route-file value="../routes/crossing/train/10000/car.rou.xml"/>
+    <output-trip-file value="../routes/crossing/eval/50/car.trips.xml"/>
+    <route-file value="../routes/crossing/eval/50/car.rou.xml"/>
     <prefix value="car"/>
     <fringe-factor value="max"/>
-    <seed value="10000"/>
-    <insertion-density value="100.0"/>
+    <seed value="50"/>
+    <insertion-density value="50.0"/>
     <binomial value="100"/>
 </configuration>
 -->
 
-<!-- generated on 2026-02-02T18:57:49.122726+00:00 by Eclipse SUMO duarouter 1.25.0
+<!-- generated on 2026-02-02T18:59:09.403748+00:00 by Eclipse SUMO duarouter 1.25.0
 <duarouterConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
 
     <input>
         <net-file value="../networks/crossing/main.net.xml"/>
-        <route-files value="../routes/crossing/train/10000/car.trips.xml"/>
+        <route-files value="../routes/crossing/eval/50/car.trips.xml"/>
     </input>
 
     <output>
-        <output-file value="../routes/crossing/train/10000/car.rou.xml"/>
+        <output-file value="../routes/crossing/eval/50/car.rou.xml"/>
         <alternatives-output value="NUL"/>
     </output>
 
@@ -41,109 +41,58 @@
 -->
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
-    <vehicle id="car0" depart="93.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car1" depart="190.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car2" depart="212.00">
+    <vehicle id="car0" depart="42.00">
         <route edges="TorPl_1_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car3" depart="255.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car4" depart="291.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car5" depart="371.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car6" depart="546.00">
+    <vehicle id="car1" depart="181.00">
         <route edges="TorPl_1_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car7" depart="579.00">
+    <vehicle id="car2" depart="368.00">
         <route edges="MalSt_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car8" depart="591.00">
+    <vehicle id="car3" depart="691.00">
         <route edges="TorPl_1_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car9" depart="635.00">
+    <vehicle id="car4" depart="866.00">
         <route edges="MalSt_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car10" depart="835.00">
+    <vehicle id="car5" depart="1005.00">
         <route edges="TorPl_1_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car11" depart="855.00">
+    <vehicle id="car6" depart="1150.00">
         <route edges="MalSt_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car12" depart="883.00">
+    <vehicle id="car7" depart="1164.00">
         <route edges="MalSt_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car13" depart="1085.00">
+    <vehicle id="car8" depart="1554.00">
         <route edges="MalSt_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car14" depart="1161.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car15" depart="1339.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car16" depart="1397.00">
+    <vehicle id="car9" depart="1758.00">
         <route edges="TorPl_1_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car17" depart="1404.00">
+    <vehicle id="car10" depart="1996.00">
         <route edges="MalSt_2_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car18" depart="1435.00">
+    <vehicle id="car11" depart="2042.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="car12" depart="2296.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="car13" depart="2601.00">
         <route edges="TorPl_1_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car19" depart="1488.00">
+    <vehicle id="car14" depart="2627.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="car15" depart="2904.00">
+        <route edges="MalSt_2_1 BynPl_1_1"/>
+    </vehicle>
+    <vehicle id="car16" depart="2964.00">
         <route edges="TorPl_1_1 BynPl_1_1"/>
     </vehicle>
-    <vehicle id="car20" depart="1514.00">
-        <route edges="TorPl_1_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car21" depart="1712.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car22" depart="1748.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car23" depart="1942.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car24" depart="1943.00">
-        <route edges="TorPl_1_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car25" depart="2151.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car26" depart="2228.00">
-        <route edges="TorPl_1_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car27" depart="2320.00">
-        <route edges="TorPl_1_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car28" depart="2393.00">
-        <route edges="TorPl_1_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car29" depart="2509.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car30" depart="2680.00">
-        <route edges="TorPl_1_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car31" depart="3310.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car32" depart="3414.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car33" depart="3500.00">
-        <route edges="MalSt_2_1 BynPl_1_1"/>
-    </vehicle>
-    <vehicle id="car34" depart="3510.00">
+    <vehicle id="car17" depart="3090.00">
         <route edges="TorPl_1_1 BynPl_1_1"/>
     </vehicle>
 </routes>
