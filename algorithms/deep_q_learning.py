@@ -13,14 +13,14 @@ from environment import ACTION_SPACE, get_state, get_blank_state
     Deep Q-Network model
 """
 class DQN(nn.Module):
-    def __init__(self, state_dim: int, action_dim: int):
+    def __init__(self, state_dim: int, action_dim: int, hidden_dim: int = 64):
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(state_dim, 64),
+            nn.Linear(state_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(64, 64),
+            nn.Linear(hidden_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(64, action_dim)
+            nn.Linear(hidden_dim, action_dim)
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -60,7 +60,7 @@ class DeepQLearning(Runner):
         self.batch_size = 64
         self.target_update = 72000  # steps
         self.gamma = 0.9  # discount factor
-        self.epsilon_decay = 1.5e-7 #1.5e-6
+        self.epsilon_decay = 1.5e-7  #1.5e-6
         self.epsilon_max = 1.0
         self.epsilon_min = 0.01
 

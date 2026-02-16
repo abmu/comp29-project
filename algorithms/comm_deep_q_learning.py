@@ -1,5 +1,29 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
 from environment import StateBus, ACTION_SPACE, get_state, get_blank_state
-from deep_q_learning import DeepQLearning
+from deep_q_learning import ReplayBuffer, DeepQLearning
+
+
+"""
+    Communicative Deep Q-Network model
+"""
+class CDQN(nn.Module):
+    def __init__(self, state_dim: int, neighbour_dim: int, action_dim: int, hidden_dim: int = 256):
+        super().__init__()
+        input_dim = state_dim + neighbour_dim
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, max(int(hidden_dim/2), action_dim)),
+            nn.ReLU(),
+            nn.Linear(max(int(hidden_dim/2), action_dim), action_dim)
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.model(x)
 
 
 class CommunicativeDeepQLearning(DeepQLearning):
@@ -10,15 +34,37 @@ class CommunicativeDeepQLearning(DeepQLearning):
         self.model_name = 'comm_' + self.model_name
 
 
-    def get_state_size(self) -> int:
+    def get_state_size(self) -> tuple[int, int]:
         # return the input state size for the policy net
-        n = len(get_blank_state(self.tls_id, self.compression_level))
+        state = len(get_blank_state(self.tls_id, self.compression_level))
 
         others = self.state_bus.read(self.tls_id)
+        neighbour = 0
         for _, s in others.items():
-            n += len(s)
+            neighbour += len(s)
 
-        return n
+        return state, neighbour
+
+
+    def initialise(self) -> None:
+        # initialise neural networks
+        state_size, neighbour_size = self.get_state_size()
+        action_size = len(ACTION_SPACE)
+
+        self.policy_net = CDQN(state_size, neighbour_size, action_size)
+        if not self.train_mode:
+            self.policy_net.load_state_dict(torch.load(self.save_dir + self.model_name))
+            self.policy_net.eval()
+            self.t = float('inf')
+            self.epsilon_min = 0
+
+        self.target_net = CDQN(state_size, neighbour_size, action_size)
+        self.target_net.load_state_dict(self.policy_net.state_dict())
+
+        self.optimiser = optim.Adam(self.policy_net.parameters(), lr=self.learning_rate)
+        self.memory = ReplayBuffer()
+
+        self.initialised = True
 
 
     def get_comm_state(self) -> tuple[int, ...]:

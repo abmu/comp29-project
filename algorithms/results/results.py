@@ -5,7 +5,7 @@ NET_NAME = 'crossing'
 MODE = 'eval'
 
 files = [
-    'zebra.txt',
+    # 'zebra.txt',
     # 'ft.txt',
 
     'dqn_c0_1k.txt',
@@ -17,7 +17,7 @@ files = [
 
     # 'ql_c0.txt',
     # 'ql_c1.txt',
-    # 'ql_c2.txt',
+    'ql_c2.txt',
     # 'dqn_c0.txt',
     # 'dqn_c1.txt',
     # 'dqn_c2.txt',

@@ -69,17 +69,17 @@ Summarise your report concisely.
 \chapter{Introduction}
 
 \section{The Problem}
-Traffic lights are ubiquitous signalling devices used to control the flow of vehicle and pedestrian traffic, primarily for safety and better regulation of traffic. First introduced in 1868 on Parliament Square in London, there have been a wide range of designs created with the most common being a three-colour design -- that is green, amber, and red.
+Traffic lights are ubiquitous signalling devices used to control the flow of vehicle and pedestrian traffic, primarily for safety and better regulation of traffic. First introduced in 1868 on Parliament Square in London \cite{ThamesLeisureFacts2017}, there have been a wide range of designs created with the most common being a three-colour design -- that is green, amber, and red.
 
 The three-colour de jure standard typically uses an internal clock to cycle through and control the duration of each signal phase in a pre-programmed pattern. Whilst this is an obvious approach, the fixed timer takes for granted that traffic demand will remain relatively constant over time, disregarding finer granularity and variations in conditions.
 
-In an endeavour to improve upon this, advanced traffic light systems equipped with sensors are progressively being introduced. These systems dynamically adapt signal timings in response to observed traffic conditions by using rule-based logic and manually designed heuristics. This approach offers improvements in waiting times and vehicle throughput, however it relies on predefined rules defined by domain experts that may fail to generalise and perform optimally in all conditions.
+In an endeavour to improve upon this, advanced traffic light systems equipped with sensors are progressively being introduced. These systems dynamically adapt signal timings in response to observed traffic conditions by using rule-based logic and manually designed heuristics. This approach offers improvements in waiting times and vehicle throughput \cite{FHWA_ASCT17}, however it relies on predefined rules defined by domain experts that may fail to generalise and perform optimally in all conditions.
 
 \section{Aims and Objectives}
 
-The overall aim...
+The overall aim of this dissertation will be to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. Rather than explicitly defining behaviour in different traffic scenarios as before, we will observe how optimal decision-making policies may be learnt independently through the use of reinforcement learning algorithms.
 
-The objective of this dissertation will be to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. Rather than explicitly defining behaviour in different traffic scenarios as before, we will observe how optimal decision-making policies may be learnt independently through the use of reinforcement learning algorithms.
+Our first objective will be to define an environment in which our simulations and experiments will be conducted. Following this we will review the traffic light systems currently in use and then build an abstracted computer representation of the area. The next objective will then be to develop our intelligent agents progressively, going through various reinforcement learning algorithms to see what improvements are made. At each stage, the impact on both pedestrians and vehicles will be considered. We will also consider the impact of changing the road design in itself as a means of making improvements. Our final objective will then be to assess the feasibility of our agents and what factors would need to be considered in a tangible implementation.
 
 Time is a currency that once spent cannot be regained. Traffic lights govern our lives to the extent that saving mere fractions of a second at the individual level can compound to an indescribable amount saved when considering the aggregate. By leveraging intelligent agents, this research hopes to take traffic lights a step further -- regardless of how big that step may be.
 
@@ -96,26 +96,19 @@ Continuing from this, a novel approach in which multiple intelligent agents inte
 
 Finally, after testing and evaluating the different approaches in unforeseen traffic scenarios, we will draw our overall conclusions. Feasibility of such a project will be discussed, as well as interesting technical challenges that were encountered. Future work and limitations to consider will then be commented on.
 
-\chapter{Title of second chapter}
+\chapter{Simulated Environment}
 
-The main chapters should start with a brief summary -- this chapter is about, or introduces, some aspect of the work.
+% The main chapters should start with a brief summary -- this chapter is about, or introduces, some aspect of the work.
+Before we get to our intelligent agents, we must first construct an environment where the agent can receive input -- or state, rather -- and perform actions. For the sake of simplicity this environment will be constrained to the streets surrounding University College London's Bloomsbury Campus. This area provides scope sufficient for the agents to train well and generalise to other situations.
 
-\section{Main Content}
-Often lots of citations here (and elsewhere), e.g. \cite{Rey:D} or \cite[Theorem 2.3]{PriorNOP70}.   Bibtex can help with this, but is not essential. If you want pictures, try
+\section{University College London}
+OpenStreetMap is a map database maintained by a community of volunteers. Using their data obtained from satellite imagery as well as community submissions, we can extract a portion of University College London's Bloomsbury Campus.
 
-\begin{center}
-\end{center}
-You can use 
-\begin{itemize}
-\item lists
-\item like this
-\end{itemize}
-or numbered
-\begin{enumerate}
-\item like this,
-\item or this
-\end{enumerate}
-but don't overdo it.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ucl_bloomsbury_campus.png}
+    \caption{Map of University College London's Bloomsbury Campus extracted from OpenStreetMap data.}
+\end{figure}
 
 \section{More Content}
 
@@ -163,7 +156,23 @@ M.~Reynolds.
 \newblock A decidable temporal logic of parallelism.
 \newblock {\em Notre Dame Journal of Formal Logic}, 38(3):  419--436,
   1997.
+
+\bibitem[Tha17]{ThamesLeisureFacts2017}
+Thames Leisure.
+\newblock 12 amazing facts about London.
+\newblock {\em Thames Leisure}, archived January 7, 2017.
+\newblock Available at:
+  https://web.archive.org/web/20170107005431/http://www.thamesleisure.co.uk/12-amazing-facts-london/.
+
+\bibitem[FHW17]{FHWA_ASCT17}
+Federal Highway Administration.
+\newblock EDC-1: Adaptive Signal Control Technology.
+\newblock {\em Federal Highway Administration}, 2017.
+\newblock Available at:
+  https://www.fhwa.dot.gov/innovation/everydaycounts/edc-1/asct.cfm.
+
 \end{thebibliography}
+
 \chapter{Other appendices, e.g., code listing}
 Put your appendix sections here
 

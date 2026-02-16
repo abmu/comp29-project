@@ -16,7 +16,7 @@ from utils import file_dump
 DIR_PREFIX = '../simulation/'
 
 NET_NAME = 'extended'  # this 'NET' refers to the SUMO network definition!
-MODE = 'eval'  # 'train' or 'eval'
+MODE = 'train'  # 'train' or 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
 
