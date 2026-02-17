@@ -116,29 +116,36 @@ Although the data from OpenStreetMap provides a lot of useful information, we wi
 \section{Simulation of Urban MObility}
 Simulation of Urban MObility (SUMO) is an open source, multi-modal traffic simulation package designed to handle large networks. It allows for intermodal simulation including pedestrians and comes with a large set of tools for scenario creation.
 
-Using the image in Figure~\ref{fig:ucl_bloomsbury_campus}, we can create a ``network'' using the \emph{netedit} graphical network editor included in SUMO. Networks are primarily comprised of edges, which is subdivided into lanes, and junctions, which are nodes where the edges meet. Junctions additionally support crossings, lane connections, and traffic lights.  
+Using the image in Figure~\ref{fig:ucl_bloomsbury_campus}, we can create a network using the \emph{netedit} graphical network editor included in SUMO. Networks are primarily comprised of edges, which is subdivided into lanes, and junctions, which are nodes where the edges meet. Junctions additionally support crossings, lane connections, and traffic lights.  
 
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/sumo_network.png}
+        \includegraphics[width=\textwidth]{images/netedit_demo.png}
         \caption{Road network in netedit.}
-        \label{fig:sumo_network}
+        \label{fig:netedit_demo}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/sumo_traffic_light.png}
-        \caption{Traffic light phase configuration.}
-        \label{fig:sumo_traffic_light}
+        \includegraphics[width=\textwidth]{images/sumo_demo.png}
+        \caption{Simulation view in SUMO.}
+        \label{fig:sumo_demo}
     \end{subfigure}
-    \caption{SUMO simulation environment.}
-    \label{fig:sumo_environment}
+    \caption{Demo simulation environment.}
+    \label{fig:demo_simulation}
 \end{figure}
 
+Red circles are the junctions, maroon is the connected junctions...
 
-Can set priorities...
+Bike lanes, pedestrian lanes, roads... Crossings... Traffic Light System... Can set priorities...
+
+\section{Route Generation}
+
+Tools made available... Create a script...
+
+Include image of pedestrians, bicycle, and cars...
 
 \section{Summary}
 The main chapters should have a short summary, highlighting what the chapter has covered and any key points that need emphasising.
