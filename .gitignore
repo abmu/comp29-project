@@ -1,3 +1,11 @@
+### Latex ###
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.toc
+
 ### Route folders ###
 simulation/routes/demo/*/
 simulation/networks/demo/detector.*.xml

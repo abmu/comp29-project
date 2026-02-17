@@ -37,7 +37,7 @@ $\Box$ \end{quotation}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\title{{\vspace{-14em} \includegraphics[scale=0.4]{ucl_logo.png}}\\
+\title{{\vspace{-14em} \includegraphics[scale=0.4]{images/ucl_logo.png}}\\
 {{\Huge Investigating the use of Reinforcement Learning Algorithms in Traffic Environments}}\\
 % {\large Optional Subtitle}\\
 }
@@ -99,18 +99,21 @@ Finally, after testing and evaluating the different approaches in unforeseen tra
 \chapter{Simulated Environment}
 
 % The main chapters should start with a brief summary -- this chapter is about, or introduces, some aspect of the work.
-Before we get to our intelligent agents, we must first construct an environment where the agent can receive input -- or state, rather -- and perform actions. For the sake of simplicity this environment will be constrained to the streets surrounding University College London's Bloomsbury Campus. This area provides scope sufficient for the agents to train well and generalise to other situations.
+Before we get to our intelligent agents, we must first construct an environment where the agent can receive input -- or state, rather -- and perform actions. For the sake of simplicity this environment will be constrained to the streets surrounding University College London's (UCL) Bloomsbury Campus. This area provides scope sufficient for the agents to train well and generalise to other situations.
 
 \section{University College London}
-OpenStreetMap is a map database maintained by a community of volunteers. Using their data obtained from satellite imagery as well as community submissions, we can extract a portion of University College London's Bloomsbury Campus.
+OpenStreetMap is a map database maintained by a community of volunteers. Using their data obtained from ariel photo imagery, satellite imagery, geodata sources, as well as manual community additions \cite{HaklayWeberOSM08}, we can extract a portion of UCL's Bloomsbury Campus\footnotemark\footnotetext{The map centre is: 51.52519°N, 0.12870°W (WGS84).}, also complete with data such as traffic lights and crossings.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{ucl_bloomsbury_campus.png}
-    \caption{Map of University College London's Bloomsbury Campus extracted from OpenStreetMap data.}
+    \includegraphics[width=0.70\textwidth]{images/ucl_bloomsbury_campus.png}
+    \caption{Map of UCL's Bloomsbury Campus extracted from OpenStreetMap data.}
 \end{figure}
 
-\section{More Content}
+Although the data from OpenStreetMap provides a lot of useful information, we will supplement it with Google Street View -- featured in the Google Maps software -- to find out more precise information such as lane markings and widths. Street View provides interactive panoramas from positions along the streets.
+
+\section{Simulation of Urban MObility}
+Simulation of Urban MObility (SUMO) is an open source, multi-modal traffic simulation package designed to handle large networks. It allows for intermodal simulation including pedestrians and comes with a large set of tools for scenario creation.
 
 \section{Summary}
 The main chapters should have a short summary, highlighting what the chapter has covered and any key points that need emphasising.
@@ -170,6 +173,12 @@ Federal Highway Administration.
 \newblock {\em Federal Highway Administration}, 2017.
 \newblock Available at:
   https://www.fhwa.dot.gov/innovation/everydaycounts/edc-1/asct.cfm.
+
+\bibitem[HW08]{HaklayWeberOSM08}
+M.~Haklay and P.~Weber.
+\newblock OpenStreetMap: User-generated street maps.
+\newblock {\em IEEE Pervasive Computing}, 7(4): 12--18, 2008.
+\newblock doi:10.1109/MPRV.2008.80.
 
 \end{thebibliography}
 
