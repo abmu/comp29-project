@@ -89,7 +89,7 @@ lists = []
 for file in files:    
     with open(f'{NET_NAME}/{MODE}/' + file, 'r') as f:
         lst = eval(f.readlines()[0])
-        lst[10:20] = [0] * 7
+        # lst[10:20] = [0] * 7
         lists.append(pretty_list(lst))
 
 

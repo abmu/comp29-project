@@ -2,6 +2,7 @@ TODO
 
 Report
 - Mention how not completely accurate -- cars and pedestrians seem more risk prone in the simulation, results do not show emergency brake and other warnings, in real life people might get annoyed, non-determinism etc.
+- https://sumo.dlr.de/docs/Tools/Visualization.html
 
 Algorithms
 - Extend network, and think about network communication with the traffic light systems to improve performance.
@@ -17,6 +18,5 @@ State
 - Mention fully uncompressed in-depth state with distinction between cars and bicycles, and direction of pedestrians on crossings, phase durations, etc.
 
 Routes
-- BUG: episode 36, pedestrian652, Disconnected walk for person -- need to investigate
 - Improve pedestrians accuracy by varying fringe-factor -- simulates pedestrians going into/out of buildings
 - Manually adjust weight of edges to make certain edges more likely to spawn, rather than random choice -- simulates commonly used/ main roads
