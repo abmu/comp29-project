@@ -145,7 +145,7 @@ Though not visible in the road geometry, lane and junction priorities have also 
 
 \section{Route Generation}
 
-The SUMO installation includes an additional collection of tools for convenience. One such tool is a  \texttt{randomTrips.py} script written in Python which enables automatic generation of trips and routes\footnotemark\footnotetext{N.B. a \emph{trip} defines a random start A and end B, whereas a \emph{route} defines the exact edges to traverse to get from that start A to end B.} for a given road network.
+The SUMO installation includes an additional collection of tools for convenience. One such tool is a  \texttt{randomTrips.py} script written in Python which enables automatic generation of trips and routes\footnotemark\footnotetext{N.B. a \emph{trip} defines a random start A and end B, whereas a \emph{route} defines the exact edges to traverse to get from that start A to end B.} for different origin-destination pairs for a given road network.
 
 We use this script to generate traffic for the following three types of entities, though SUMO provides the flexibility for more:
 \begin{itemize}
@@ -157,18 +157,65 @@ We use this script to generate traffic for the following three types of entities
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.48\textwidth]{images/entity_demo.png}
-    \caption{Example of car, bicycle, and pedestrians.}
+    \caption{Example of car, bicycle, and pedestrian entities.}
     \label{fig:entity_demo}
 \end{figure}
 
 In Figure~\ref{fig:entity_demo}, the car, travelling east, is shown as a yellow rectangle with brake lights; the bicycle, travelling east on the bicycle lane, is depicted as a yellow trapezium-like shape emerging from the left side of the image; and the pedestrians are represented as blue circles.
 
-Route generation is controlled by several parameters, and the ones we use are:
+Route generation is controlled by several parameters, including:
+\begin{itemize}
+    \item \texttt{seed}: Ensures reproducibility of the random generation process.
+    \item \texttt{insertion-density}: Controls the density of generated entities.
+    \item \texttt{binomial}: Controls how vehicle insertions are distributed over time by sampling departures from a binomial distribution.
+    \item \texttt{fringe-factor}: Ensures that vehicles spawn at the outer edges of the network.
+    \item \texttt{random-factor}: Randomizes edge weights to increase variability between generated routes.
+\end{itemize}
+There are other obvious parameters omitted which allow you to specify information such as the input network for which the routes are generated, the output trip and route files, the entity type, and the start and end time of entity generation.
+
+\subsection{Binomial Parameter}
+
+The \texttt{--binomial} parameter allows vehicle departures to be sampled from a Binomial distribution. Rather than inserting vehicles into the simulation at perfectly regular intervals, stochastic variation is introduced such that some seconds contain more vehicle departures and others fewer.
+
+This is important because real-world traffic arrivals are not perfectly periodic due to the behaviour of drivers as well as variations in the environment. Regular, deterministic insertion can lead to unrealistically synchronised traffic flows.
+
+\[
+X \sim \mathrm{Binomial}(N, p)
+\]
+
+\[
+\mathbb{E}[X] = Np
+\]
+
+Where \( Np \) equals the insertion rate calculated from the \texttt{--insertion-density} parameter. Thus, the overall expected value of departures per time step still remains equal to the deterministic insertion rate.
+
+[... image comparing regular interval vs. binomial adjusted insertions]
+
+In traffic theory, Poisson processes are commonly used and preferred over the Binomial distribution to model vehicle arrivals \cite{GerloughSchuhl1955}. In fact, for sufficiently large N and small p, the binomial distribution approximates a Poisson distribution:
+
+\[
+\mathrm{Binomial}(N, p) \approx \mathrm{Poisson}(\lambda),
+\quad \text{where} \quad \lambda = Np
+\]
+
+The \texttt{randomTrips.py} script provides flexibility in the sense that the vehicle traffic itself may be defined and generated using different methods. For example, you may define there to be \( n \) fixed `flows' or routes which traffic may take -- some of which may annoyingly be duplicates -- or you simply let any of the possible routes for the traffic be arbitrarily, independently chosen each time a new vehicle is inserted.
+
+Unfortunately, whilst there isn't a problem with the Poisson distribution per se, the script is designed such that it is only compatible with the prior traffic generation method and certain parameters. Binomial sampling on the other hand is compatible with the latter method and other parameters which are somewhat more flexible and have less implementation-specific issues. For this reason, it was chosen.
 
 \section{Summary}
+
+Overall, this automated route generation pipeline enables scalable creation of diverse traffic scenarios while maintaining full experimental control.
+
 The main chapters should have a short summary, highlighting what the chapter has covered and any key points that need emphasising.
 
 \chapter{Evaluation Framework}
+
+To create diverse training and evaluation datasets, we generate multiple route sets using different random seeds and traffic density configurations. The training dataset consists of 1000 route sets per network with baseline density parameters. The evaluation dataset includes several alternative density configurations (e.g., increased and decreased traffic levels), each generated with multiple seeds to ensure statistical diversity.
+
+Routes are stored in a structured directory hierarchy organized by network name, dataset type (train/eval), and random seed. This setup ensures reproducibility and simplifies downstream experimentation.
+
+---
+
 If you have a formal theorem you might try this.
 \begin{definition}\label{def}
 See definition~\ref{def}.
@@ -237,6 +284,14 @@ Department for Transport.
 \newblock Available at:
   https://www.gov.uk/guidance/the-highway-code/using-the-road-159-to-203.
 \newblock Accessed: 20 February 2026.
+
+\bibitem[GS55]{GerloughSchuhl1955}
+D.~L.~Gerlough and A.~Schuhl.
+\newblock Use of Poisson Distribution in Highway Traffic: The Probability Theory Applied to Distribution of Vehicles on Two-Lane Highways.
+\newblock {\em Research Paper, Eno Foundation for Highway Traffic Control}, 1955.
+\newblock Available at:
+  https://rosap.ntl.bts.gov/view/dot/16299.
+\newblock Accessed: 26 February 2026.
 
 \end{thebibliography}
 
