@@ -82,9 +82,17 @@ In an endeavour to improve upon this, advanced traffic light systems equipped wi
 
 The overall aim of this dissertation will be to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. Rather than explicitly defining behaviour in different traffic scenarios as before, we will observe how optimal decision-making policies may be learnt independently through the use of reinforcement learning algorithms.
 
-!!! BULLET POINT LIST !!!
+Based on this aim, the following objectives are defined:
 
-Our first objective will be to define an environment in which our simulations and experiments will be conducted. Following this we will review the traffic light systems currently in use and then build an abstracted computer representation of the area. The next objective will then be to develop our intelligent agents progressively, going through various reinforcement learning algorithms to see what improvements are made. At each stage, the impact on both pedestrians and vehicles will be considered. We will also consider the impact of changing the road design in itself as a means of making improvements. Our final objective will then be to assess the feasibility of our agents and what factors would need to be considered in a tangible implementation.
+\begin{enumerate}
+  \item Define an environment in which our simulations and experiments will be conducted. Following this we will review the traffic light systems currently in use and then build an abstracted computer representation of the area.
+  
+  \item Develop our intelligent agents progressively, going through various reinforcement learning algorithms to see what improvements are made.
+  
+  \item At each stage, consider the impact on both pedestrians and vehicles. Also consider the impact of changing the road design in itself as a means of making improvements.
+  
+  \item Finally, assess the feasibility of our agents and what factors would need to be considered in a tangible implementation.
+\end{enumerate}
 
 Time is a currency that once spent cannot be regained. Traffic lights govern our lives to the extent that saving mere fractions of a second at the individual level can compound to an indescribable amount saved when considering the aggregate. By leveraging intelligent agents, this research hopes to take traffic lights a step further -- regardless of how big that step may be.
 
@@ -192,8 +200,6 @@ X \sim \mathrm{Binomial}(N, p)
 
 Where \( N \) is given by the \texttt{--binomial} parameter, and \( Np \) equals the insertion rate calculated from the \texttt{--insertion-density} parameter. Thus, the overall expected value of departures per time step still remains equal to the deterministic insertion rate.
 
-% figures comparing regular interval vs. binomial adjusted insertions
-
 \begin{figure}[ht]
 \centering
   \begin{subfigure}{0.49\textwidth}
@@ -204,10 +210,10 @@ Where \( N \) is given by the \texttt{--binomial} parameter, and \( Np \) equals
         height=6cm,
         ybar,
         bar width=3pt,
-        ymin=0, ymax=2,
+        ymin=0, ymax=4,
         xlabel={Time (s)},
         ylabel={Departures},
-        title={(a) Deterministic ($1$/sec)},
+        title={(a) Deterministic (Rate = $1$/sec)},
         xtick={0,5,...,30},
         grid=both,
       ]
@@ -262,19 +268,24 @@ In traffic theory, Poisson processes are commonly used and preferred over the Bi
 
 The \texttt{randomTrips.py} script provides flexibility in the sense that the vehicle traffic itself may be defined and generated using different methods. For example, you may define there to be \( n \) fixed `flows' or routes which traffic may take -- some of which may annoyingly be duplicates -- or you simply let any of the possible routes for the traffic be arbitrarily, independently chosen each time a new vehicle is inserted.
 
-Unfortunately, whilst there isn't a problem with the Poisson distribution per se, the script is designed such that it is only compatible with the prior method of generation and certain parameters. Binomial sampling on the other hand is compatible with the latter method and other parameters which are somewhat more flexible and have less implementation-specific issues. For this reason, it was chosen.
+Unfortunately, whilst there isn't a problem with the Poisson distribution per se, the script is designed such that it is only compatible with the prior method of generation. Binomial sampling on the other hand is compatible with the latter method as well as other parameters which are somewhat more flexible and have less implementation-specific issues. For this reason, it was chosen.
 
 \section{Summary}
 
-Overall, this automated route generation pipeline enables scalable creation of diverse traffic scenarios while maintaining full experimental control.
+This chapter described the creation of a simulated environment based on the streets surrounding UCL's Bloomsbury campus. Road network data was extracted from OpenStreetMap and refined using Google Street View. The network was implemented using SUMO, where edges and junctions were defined.
 
-The main chapters should have a short summary, highlighting what the chapter has covered and any key points that need emphasising.
+Using SUMO's \texttt{randomTrips.py} tool, there is a way for scalable creation of diverse traffic scenarios. Stochastic vehicle insertions is used to better approximate real-world traffic variability. Overall, these components establish a way in which we can train and evaluate intelligent agents.
 
-\chapter{Evaluation Framework}
+\chapter{Training Framework}
 
 To create diverse training and evaluation datasets, we generate multiple route sets using different random seeds and traffic density configurations. The training dataset consists of 1000 route sets per network with baseline density parameters. The evaluation dataset includes several alternative density configurations (e.g., increased and decreased traffic levels), each generated with multiple seeds to ensure statistical diversity.
 
 Routes are stored in a structured directory hierarchy organized by network name, dataset type (train/eval), and random seed. This setup ensures reproducibility and simplifies downstream experimentation.
+
+\section{Existing Traffic Lights}
+
+[WRITE ABOUT EXISTING TRAFFIC LIGHT SYSTEMS USED FOR THE BASELINE]
+...
 
 ---
 
