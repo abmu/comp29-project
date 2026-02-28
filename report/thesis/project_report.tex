@@ -195,7 +195,7 @@ There are other obvious parameters omitted which allow you to specify informatio
 
 \subsection{Binomial Distribution}
 
-The \texttt{--binomial} parameter allows vehicle departures to be sampled from a Binomial distribution. Real-world traffic arrivals are not perfectly periodic due to the behaviour of drivers as well as variations in the environment. Rather than inserting vehicles into the simulation at perfectly regular intervals, stochastic variation is introduced such that some seconds contain more vehicle departures and others fewer.
+The \texttt{--binomial} parameter allows vehicle departures to be sampled from a Binomial distribution. Real-world traffic arrivals are not perfectly periodic due to human behaviour as well as variations in the environment. Rather than inserting vehicles into the simulation at perfectly regular intervals, stochastic variation is introduced such that some seconds contain more vehicle departures and others fewer.
 
 \[
 X \sim \mathrm{Binomial}(N, p)
@@ -277,7 +277,7 @@ In traffic theory, Poisson processes are commonly used and preferred over the Bi
 
 The \texttt{randomTrips.py} script provides flexibility in defining vehicle traffic. For example, you may define there to be \( n \) fixed `flows' which traffic may take -- some of which may annoyingly be duplicates -- or you let any of the possible routes for the traffic be arbitrarily, independently chosen each time a new vehicle is inserted.
 
-Whilst there isn't a problem with the Poisson distribution per se, the script is designed such that it is only compatible with the prior definition method. Binomial sampling on the other hand is compatible with the latter method as well as other parameters which are more flexible for our purposes and have less implementation-specific issues. For this reason, it was chosen.
+Whilst there is no problem with the Poisson distribution per se, the script is designed such that it is only compatible with the prior definition method. Binomial sampling on the other hand is compatible with the latter method as well as other parameters which are more flexible for our purposes and have less implementation-specific issues. For this reason, it was chosen.
 
 \section{Summary}
 
@@ -287,7 +287,7 @@ Using SUMO's \texttt{randomTrips.py} tool, there is a way for scalable creation 
 
 \chapter{Reward System}
 
-Now that we have seen how an environment -- composed of a network and traffic routes -- is constructed, we will calculate a baseline performance for a particular environment that uses contemporary traffic light system algorithms. A numerical reward system will be developed and used to judge the performance; a good reward system is paramount to training intelligent agents effectively.
+Now that we have seen how an environment -- composed of a network and traffic routes -- is constructed, we will develop a numerical reward system used to evaluate the performance of different intelligent agents. This reward system will use contemporary traffic light system algorithms as a baseline; a good reward system is paramount to training intelligent agents effectively.
 
 \section{Existing Traffic Lights}
 
