@@ -103,6 +103,9 @@ Based on this aim, the following objectives are defined:
 Time is a currency that once spent cannot be regained. Traffic lights govern our lives to the extent that saving mere fractions of a second at the individual level can compound to an indescribable amount saved when considering the aggregate. By leveraging intelligent agents, this research hopes to take traffic lights a step further -- regardless of how big that step may be.
 
 \section{Report Overview}
+
+\emph{!!! MUST REDO SINCE THE STRUCTURE HAS CHANGED !!!}
+
 We will begin with defining the environment in which we will be conducting our traffic experiments, and then building out this environment using available open source tools and libraries. Whilst accuracy and scope of the environment are important, they will not take precedence over the implementation and analysis of the intelligent agents themselves.
 
 Following this, the context and theory behind reinforcement learning itself will be explored, as well as definitions and terminology that will be used throughout the dissertation. These foundations will be necessary when explaining the motivation behind decisions made later on.
@@ -192,9 +195,7 @@ There are other obvious parameters omitted which allow you to specify informatio
 
 \subsection{Binomial Distribution}
 
-The \texttt{--binomial} parameter allows vehicle departures to be sampled from a Binomial distribution. Rather than inserting vehicles into the simulation at perfectly regular intervals, stochastic variation is introduced such that some seconds contain more vehicle departures and others fewer.
-
-This is important because real-world traffic arrivals are not perfectly periodic due to the behaviour of drivers as well as variations in the environment. Regular, deterministic insertion can lead to unrealistically synchronised traffic flows.
+The \texttt{--binomial} parameter allows vehicle departures to be sampled from a Binomial distribution. Real-world traffic arrivals are not perfectly periodic due to the behaviour of drivers as well as variations in the environment. Rather than inserting vehicles into the simulation at perfectly regular intervals, stochastic variation is introduced such that some seconds contain more vehicle departures and others fewer.
 
 \[
 X \sim \mathrm{Binomial}(N, p)
@@ -274,9 +275,9 @@ In traffic theory, Poisson processes are commonly used and preferred over the Bi
 \quad \text{where} \quad \lambda = Np
 \]
 
-The \texttt{randomTrips.py} script provides flexibility to define and generate vehicle traffic using different methods. For example, you may define there to be \( n \) fixed `flows' which traffic may take -- some of which may annoyingly be duplicates -- or you let any of the possible routes for the traffic be arbitrarily, independently chosen each time a new vehicle is inserted.
+The \texttt{randomTrips.py} script provides flexibility in defining vehicle traffic. For example, you may define there to be \( n \) fixed `flows' which traffic may take -- some of which may annoyingly be duplicates -- or you let any of the possible routes for the traffic be arbitrarily, independently chosen each time a new vehicle is inserted.
 
-Whilst there isn't a problem with the Poisson distribution per se, the script is designed such that it is only compatible with the prior generation method. Binomial sampling on the other hand is compatible with the latter method as well as other parameters which are more flexible for our purposes and have less implementation-specific issues. For this reason, it was chosen.
+Whilst there isn't a problem with the Poisson distribution per se, the script is designed such that it is only compatible with the prior definition method. Binomial sampling on the other hand is compatible with the latter method as well as other parameters which are more flexible for our purposes and have less implementation-specific issues. For this reason, it was chosen.
 
 \section{Summary}
 
@@ -284,11 +285,9 @@ This chapter described the creation of a simulated environment based on the stre
 
 Using SUMO's \texttt{randomTrips.py} tool, there is a way for scalable creation of diverse traffic scenarios. Stochastic vehicle insertions is used to better approximate real-world traffic variability. Overall, these components establish a way in which we can train and evaluate intelligent agents.
 
-\chapter{Training Framework}
+\chapter{Reward System}
 
-To create diverse training and evaluation datasets, we generate multiple route sets using different random seeds and traffic density configurations. The training dataset consists of 1000 route sets per network with baseline density parameters. The evaluation dataset includes several alternative density configurations (e.g., increased and decreased traffic levels), each generated with multiple seeds to ensure statistical diversity.
-
-Routes are stored in a structured directory hierarchy organized by network name, dataset type (train/eval), and random seed. This setup ensures reproducibility and simplifies downstream experimentation.
+Now that we have seen how an environment -- composed of a network and traffic routes -- is constructed, we must calculate its baseline performance. We will comment on the environment specifics, including the current traffic light system algorithms, as well as how a reward is defined; a good reward system is paramount to training intelligent agents effectively.
 
 \section{Existing Traffic Lights}
 
