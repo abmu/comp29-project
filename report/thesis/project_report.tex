@@ -85,11 +85,17 @@ The overall aim of this dissertation will be to perform a detailed analysis and 
 Based on this aim, the following objectives are defined:
 
 \begin{enumerate}
-  \item Define an environment in which our simulations and experiments will be conducted. Following this we will review the traffic light systems currently in use and then build an abstracted computer representation of the area.
+  \item Define an environment in which our simulations and experiments will be conducted.
   
-  \item Develop our intelligent agents progressively, going through various reinforcement learning algorithms to see what improvements are made.
+  \item Build an abstracted computer representation of the area.
   
-  \item At each stage, consider the impact on both pedestrians and vehicles. Also consider the impact of changing the road design in itself as a means of making improvements.
+  \item Review the traffic light systems currently in use.
+  
+  \item Develop our own intelligent agents progressively, going through various reinforcement learning algorithms to see what improvements are made.
+  
+  \item Consider the impact on both pedestrians and vehicles, and the effects of changing the road design in itself as a means of making improvements.
+  
+  \item Evaluate the performance of our intelligent agents.
   
   \item Finally, assess the feasibility of our agents and what factors would need to be considered in a tangible implementation.
 \end{enumerate}
@@ -184,7 +190,7 @@ Route generation is controlled by several parameters, including:
 \end{itemize}
 There are other obvious parameters omitted which allow you to specify information such as the input network for which the routes are generated, the output trip and route files, the entity type, and the start and end time of entity generation.
 
-\subsection{Binomial Parameter}
+\subsection{Binomial Distribution}
 
 The \texttt{--binomial} parameter allows vehicle departures to be sampled from a Binomial distribution. Rather than inserting vehicles into the simulation at perfectly regular intervals, stochastic variation is introduced such that some seconds contain more vehicle departures and others fewer.
 
@@ -259,6 +265,8 @@ Where \( N \) is given by the \texttt{--binomial} parameter, and \( Np \) equals
   \label{fig:binomial_vs_deterministic}
 \end{figure}
 
+\subsection{Poisson Distribution}
+
 In traffic theory, Poisson processes are commonly used and preferred over the Binomial distribution to model vehicle arrivals \cite{GerloughSchuhl1955}. In fact, for sufficiently large N and small p, the binomial distribution approximates a Poisson distribution:
 
 \[
@@ -266,9 +274,9 @@ In traffic theory, Poisson processes are commonly used and preferred over the Bi
 \quad \text{where} \quad \lambda = Np
 \]
 
-The \texttt{randomTrips.py} script provides flexibility in the sense that the vehicle traffic itself may be defined and generated using different methods. For example, you may define there to be \( n \) fixed `flows' or routes which traffic may take -- some of which may annoyingly be duplicates -- or you simply let any of the possible routes for the traffic be arbitrarily, independently chosen each time a new vehicle is inserted.
+The \texttt{randomTrips.py} script provides flexibility to define and generate vehicle traffic using different methods. For example, you may define there to be \( n \) fixed `flows' which traffic may take -- some of which may annoyingly be duplicates -- or you let any of the possible routes for the traffic be arbitrarily, independently chosen each time a new vehicle is inserted.
 
-Unfortunately, whilst there isn't a problem with the Poisson distribution per se, the script is designed such that it is only compatible with the prior method of generation. Binomial sampling on the other hand is compatible with the latter method as well as other parameters which are somewhat more flexible and have less implementation-specific issues. For this reason, it was chosen.
+Whilst there isn't a problem with the Poisson distribution per se, the script is designed such that it is only compatible with the prior generation method. Binomial sampling on the other hand is compatible with the latter method as well as other parameters which are more flexible for our purposes and have less implementation-specific issues. For this reason, it was chosen.
 
 \section{Summary}
 
