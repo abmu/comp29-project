@@ -309,7 +309,13 @@ Typically used in rural roads or highway operations, they may be semi-actuated, 
 
 Unlike fixed-time or purely vehicle-actuated control systems, adaptive traffic control enables signal timings to be adjusted in real time based on observed traffic conditions. Data is collected from inductive loops, cameras, or other technologies.
 
+By modifying parameters such as cycle length, phase splits, and offsets in response to traffic \cite{LiPengHouEtAl2023}, adaptive controllers seek to reduce delays, smooth traffic flow, and increase throughput (though it may also be used to \emph{discourage} high volumes of traffic at the request of local residents for example).
 
+ADD REFERENCES!!! 15\% improvement SCOUT, UK based, new system to replace it...
+
+Split Cycle Offset Optimisation Technique (SCOOT) and the Sydney Coordinated Adaptive Traffic System (SCATS) are widely deployed in urban areas. These systems group signals into regions and make dynamic adjustments to balance delays and improve coordination. This helps promote ``green waves'', where vehicles encounter consecutive green lights without having to stop.
+
+WRITE ABOUT TRADEOFFS!!!
 
 \subsection{Limitations}
 
@@ -319,7 +325,7 @@ Comment on insertion density for pedestrians and vehicles (-adjusted to make equ
 
 \section{Reward Calculation}
 
-Cache stats, mean + standard deviation, weights.
+Cache stats, mean + standard deviation, weights...
 
 Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian).
 
