@@ -78,7 +78,7 @@ The three-colour de jure standard typically uses an internal clock to cycle thro
 
 In an endeavour to improve upon this, advanced traffic light systems equipped with sensors are progressively being introduced. These systems dynamically adapt signal timings in response to observed traffic conditions by using rule-based logic and manually designed heuristics. This approach offers improvements in waiting times and vehicle throughput \cite{FHWA_ASCT17}, however it relies on predefined rules defined by domain experts that may fail to generalise and perform optimally in all conditions.
 
-\section{Aims and Objectives}
+\section{Aim and Objectives}
 
 The overall aim of this dissertation will be to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. Rather than explicitly defining behaviour in different traffic scenarios as before, we will observe how optimal decision-making policies may be learnt independently through the use of reinforcement learning algorithms.
 
@@ -289,7 +289,7 @@ Using SUMO's \texttt{randomTrips.py} tool, there is a way for scalable creation 
 
 Now that we have seen how an environment -- composed of a network and traffic routes -- is constructed, we will develop a numerical reward system used to evaluate the performance of different intelligent agents. This reward system will use a contemporary traffic light system algorithm as a baseline; a good reward system is paramount to training intelligent agents effectively.
 
-\section{Existing Traffic Lights}
+\section{Existing Traffic Light Systems}
 
 Modern traffic light control has changed significantly over the years, ranging from simple fixed-time mechanisms to complex adaptive and coordinated systems. Broadly speaking, systems can be categorised into three main types: fixed-time control, vehicle-actuated control, or adaptive traffic control.
 
@@ -301,23 +301,27 @@ Such systems are predictable and inexpensive, used in city centers, interchanges
 
 \subsection{Vehicle-Actuated Control}
 
-Actuated systems are an improvement over purely fixed-time control systems. These systems utilise sensors -- such as inductive loop detectors or cameras -- to detect vehicle presence or demand. Pedestrians can also use push buttons to register their presence \cite{PedestrianCrossings23}.
+Actuated systems are an improvement over purely fixed-time control systems. These systems utilise sensors -- such as inductive loop detectors or cameras -- to detect vehicles. Pedestrians can also use push buttons to register their presence \cite{PedestrianCrossings23}. This may for example enable one route at an intersection to stay active if other routes are barren.
 
-
+Typically used in rural roads or highway operations, they may be semi-actuated, where detectors are only placed on side approaches, or fully actuated, in which detectors are installed on all approaches. Overall, responsiveness to traffic conditions is improved, reducing unnecessary waiting. However, it relies on rule-based logic and manually defined heuristics, which may fail to perform optimally in all conditions \cite{LiPengHouEtAl2023}.
 
 \subsection{Adaptive Traffic Control}
+
+Unlike fixed-time or purely vehicle-actuated control systems, adaptive traffic control enables signal timings to be adjusted in real time based on observed traffic conditions. Data is collected from inductive loops, cameras, or other technologies.
+
+
 
 \subsection{Limitations}
 
 \section{Baseline Environment}
 
-- Comment on insertion density for pedestrians and vehicles (-adjusted to make equal with pedestrians density)
+Comment on insertion density for pedestrians and vehicles (-adjusted to make equal with pedestrians density)
 
 \section{Reward Calculation}
 
-- Cache stats, mean + standard deviation, weights
+Cache stats, mean + standard deviation, weights.
 
-- Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian)
+Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian).
 
 \section{Summary}
 
@@ -388,6 +392,15 @@ Department for Transport.
 \newblock {\em GOV.UK}, 5 December 2023.
 \newblock Available at:
   https://www.gov.uk/government/publications/know-your-traffic-signs/pedestrian-cycle-and-equestrian-crossings.
+\newblock Accessed: 1 March 2026.
+
+\bibitem[Li23]{LiPengHouEtAl2023}
+J.~Li, L.~Peng, K.~Hou, Y.~Tian, Y.~Ma, S.~Xu and T.~Z.~Qiu.
+\newblock Adaptive signal control and coordination for urban traffic control in a connected vehicle environment: A review.
+\newblock {\em Digital Transportation and Safety}, 2(2): 89--111, 2023.
+\newblock doi:10.48130/DTS-2023-0008.
+\newblock Available at:
+  https://maxapress.com/article/doi/10.48130/DTS-2023-0008.
 \newblock Accessed: 1 March 2026.
 
 \end{thebibliography}
