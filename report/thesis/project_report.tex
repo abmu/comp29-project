@@ -185,11 +185,11 @@ In Figure~\ref{fig:entity_demo}, the car, travelling east, is shown as a yellow 
 
 Route generation is controlled by several parameters, including:
 \begin{itemize}
-    \item \texttt{seed}: Ensures reproducibility of the random generation process.
-    \item \texttt{insertion-density}: Controls the density of generated entities.
-    \item \texttt{binomial}: Controls how vehicle insertions are distributed over time by sampling departures from a binomial distribution.
-    \item \texttt{fringe-factor}: Ensures that vehicles spawn at the outer edges of the network.
-    \item \texttt{random-factor}: Randomizes edge weights to increase variability between generated routes.
+    \item \texttt{--seed}: Ensures reproducibility of the random generation process.
+    \item \texttt{--insertion-density}: Controls the density of generated entities.
+    \item \texttt{--binomial}: Controls how vehicle insertions are distributed over time by sampling departures from a binomial distribution.
+    \item \texttt{--fringe-factor}: Ensures that vehicles spawn at the outer edges of the network.
+    \item \texttt{--random-factor}: Randomizes edge weights to increase the variability between generated routes.
 \end{itemize}
 There are other obvious parameters omitted which allow you to specify information such as the input network for which the routes are generated, the output trip and route files, the entity type, and the start and end time of entity generation.
 
@@ -287,25 +287,39 @@ Using SUMO's \texttt{randomTrips.py} tool, there is a way for scalable creation 
 
 \chapter{Reward System}
 
-Now that we have seen how an environment -- composed of a network and traffic routes -- is constructed, we will develop a numerical reward system used to evaluate the performance of different intelligent agents. This reward system will use contemporary traffic light system algorithms as a baseline; a good reward system is paramount to training intelligent agents effectively.
+Now that we have seen how an environment -- composed of a network and traffic routes -- is constructed, we will develop a numerical reward system used to evaluate the performance of different intelligent agents. This reward system will use a contemporary traffic light system algorithm as a baseline; a good reward system is paramount to training intelligent agents effectively.
 
 \section{Existing Traffic Lights}
 
-[WRITE ABOUT EXISTING TRAFFIC LIGHT SYSTEMS USED FOR THE BASELINE]
-...
+Modern traffic light control has changed significantly over the years, ranging from simple fixed-time mechanisms to complex adaptive and coordinated systems. Broadly speaking, systems can be categorised into three main types: fixed-time control, vehicle-actuated control, or adaptive traffic control.
 
----
+\subsection{Fixed-Time Control}
 
-If you have a formal theorem you might try this.
-\begin{definition}\label{def}
-See definition~\ref{def}.
-\end{definition}
-\begin{theorem}
-For all $n\in\nats,\; 1^n=1$.
-\end{theorem}
-\begin{proof}
-By induction over $n$.
-\end{proof}
+Fixed-time traffic signals operate according to a predetermined schedule. Signal phases and cycle lengths are configured in advanced, typically using historical data \cite{GoelBusGershenson}. The controller cycles repeatedly through these phases regardless of traffic conditions.
+
+Such systems are predictable and inexpensive, used in city centers, interchanges, or roadworks. However, they assume stable traffic patterns. During periods of unusual demand, fixed-time systems cannot respond dynamically, leading to inefficient utilisation of junctions.
+
+\subsection{Vehicle-Actuated Control}
+
+Actuated systems are an improvement over purely fixed-time control systems. These systems utilise sensors -- such as inductive loop detectors or cameras -- to detect vehicle presence or demand. Pedestrians can also use push buttons to register their presence \cite{PedestrianCrossings23}.
+
+
+
+\subsection{Adaptive Traffic Control}
+
+\subsection{Limitations}
+
+\section{Baseline Environment}
+
+- Comment on insertion density for pedestrians and vehicles (-adjusted to make equal with pedestrians density)
+
+\section{Reward Calculation}
+
+- Cache stats, mean + standard deviation, weights
+
+- Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian)
+
+\section{Summary}
 
 \chapter{etc.}
 
@@ -323,19 +337,6 @@ How the project might be continued, but don't give the impression you ran out of
 
 
 \begin{thebibliography}{HHM99}
-
-
-\bibitem[Pri70]{PriorNOP70}  %%only an example
-A.~Prior.
-\newblock The notion of the present.
-\newblock {\em Studium Generale}, 23:  245--248, 1970.
-
-
-\bibitem[Rey97]{Rey:D}
-M.~Reynolds.
-\newblock A decidable temporal logic of parallelism.
-\newblock {\em Notre Dame Journal of Formal Logic}, 38(3):  419--436,
-  1997.
 
 \bibitem[Tha17]{ThamesLeisureFacts2017}
 Thames Leisure.
@@ -372,6 +373,22 @@ D.~L.~Gerlough and A.~Schuhl.
 \newblock Available at:
   https://rosap.ntl.bts.gov/view/dot/16299.
 \newblock Accessed: 26 February 2026.
+
+\bibitem[GBG]{GoelBusGershenson}
+S.~Goel, S.~F.~Bus and C.~Gershenson.
+\newblock Self-Organisation in Traffic Lights: Evolution of Signal Control with Advances in Sensors and Communications.
+\newblock {\em Research Paper, University at Albany}.
+\newblock Available at:
+  https://arxiv.org/pdf/1708.07188.
+\newblock Accessed: 1 March 2026.
+
+\bibitem[DfT23]{PedestrianCrossings23}
+Department for Transport.
+\newblock Know your traffic signs: Pedestrian, cycle and equestrian crossings.
+\newblock {\em GOV.UK}, 5 December 2023.
+\newblock Available at:
+  https://www.gov.uk/government/publications/know-your-traffic-signs/pedestrian-cycle-and-equestrian-crossings.
+\newblock Accessed: 1 March 2026.
 
 \end{thebibliography}
 
