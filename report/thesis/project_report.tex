@@ -311,11 +311,9 @@ Unlike fixed-time or purely vehicle-actuated control systems, adaptive traffic c
 
 By modifying parameters such as cycle length, phase splits, and offsets in response to traffic \cite{LiPengHouEtAl2023}, adaptive controllers seek to reduce delays, smooth traffic flow, and increase throughput (though it may also be used to \emph{discourage} high volumes of traffic at the request of local residents for example).
 
-ADD REFERENCES!!! 15\% improvement SCOUT, UK based, new system to replace it...
+Split Cycle Offset Optimisation Technique (SCOOT) and the Sydney Coordinated Adaptive Traffic System (SCATS) are two examples widely deployed in urban areas. These systems group signals into regions and make dynamic adjustments to balance delays and improve coordination. This helps promote ``green waves'', where vehicles encounter consecutive green lights without having to stop, but possibly with added pedestrian and cyclist delays \cite{CesmeUrbanikII2021}.
 
-Split Cycle Offset Optimisation Technique (SCOOT) and the Sydney Coordinated Adaptive Traffic System (SCATS) are widely deployed in urban areas. These systems group signals into regions and make dynamic adjustments to balance delays and improve coordination. This helps promote ``green waves'', where vehicles encounter consecutive green lights without having to stop.
-
-WRITE ABOUT TRADEOFFS!!!
+SCOOT has demonstrated an improvement in traffic performance of order of 15\% compared to fixed-time control systems \cite{ITS2012}. In London, with the introduction of the cloud-based Real Time Optimiser platform, this is being replaced with FUSION -- intended to bring even further improvements. However, these systems still rely on human-designed algorithms. Optimal strategies are not necessarily ``learnt'', nor does it adapt to every possible traffic scenario without explicit modeling by engineers.
 
 \subsection{Limitations}
 
@@ -408,6 +406,20 @@ J.~Li, L.~Peng, K.~Hou, Y.~Tian, Y.~Ma, S.~Xu and T.~Z.~Qiu.
 \newblock Available at:
   https://maxapress.com/article/doi/10.48130/DTS-2023-0008.
 \newblock Accessed: 1 March 2026.
+
+\bibitem[ITS12]{ITS2012}
+Institute for Transport Studies, University of Leeds.
+\newblock Urban traffic control systems: Evidence on performance.
+\newblock {\em Institute for Transport Studies, University of Leeds}, archived October 19, 2012.
+\newblock Available at:
+  https://web.archive.org/web/20121019152217/http://www.konsult.leeds.ac.uk/private/level2/instruments/instrument014/l2\_014c.htm.
+
+\bibitem[CU21]{CesmeUrbanikII2021}
+B.~Cesme and T.~Urbanik~II.
+\newblock Signal Coordination: Are We Really Coordinating For All Users?
+\newblock {\em Kittelson \& Associates, Inc.}, October 15, 2021.
+\newblock Available at:
+  https://www.kittelson.com/ideas/pros-and-cons-of-signal-coordination/.
 
 \end{thebibliography}
 
