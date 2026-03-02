@@ -317,6 +317,24 @@ SCOOT has demonstrated an improvement in traffic performance of order of 15\% co
 
 \subsection{Limitations}
 
+Existing traffic light systems work well enough, however there are several fundamental limitations.
+
+Firstly, these systems rely on parameter tuning and predefined logic. Even for adaptive traffic control the optimisation strategies used are engineered by domain experts. Performance is constrained by assumptions embedded in the design and, when traffic conditions deviate from these, optimality is not guaranteed.
+
+Secondly, most traditional systems are designed such that they prioritise vehicular throughput. Pedestrians and cyclists are typically the secondary optimisation target. This may lead to scenarios in which vehicles reap the benefits at the expense of pedestrians who may see increased waiting times.
+
+Thirdly, these systems are limited with regards to learning. Although adaptive traffic control systems respond in real time, they do not learn from historical experience in the sense of improving their strategy. Parameters may be recalibrated periodically by engineers, but this is not autonomous and novel strategies may be missed. Considering the scale of these systems, it may be hard to consider all possible variables.
+
+Finally, implementation and maintenance costs are non-trivial. These systems require extensive sensor and communication infrastructure, calibration, as well as continuous monitoring by traffic engineers. The complexity of these systems also make them less transparent and harder to validate formally with respect to performance benefits.
+
+\subsection{Motivation for Reinforcement Learning}
+
+Reinforcement learning offers an alternative method of traffic signal control. Control policies are not explicitly programmed, but instead emerge through intelligent agents interacting with a traffic environment. An intelligent agent can observe current traffic state, select a signal phase action, and receive feedback in the form of a reward from the environment.
+
+Over time, behaviour gradually improves and a control strategy emerges through experience, as opposed to encoding behaviour manually for every possible scenario. The ability to learn makes this very powerful; most limitations discovered above are mitigated by learning -- though perhaps not the infrastructure costs. Ergo, this will be explored for the remainder of this dissertation.
+
+
+
 \section{Baseline Environment}
 
 Comment on insertion density for pedestrians and vehicles (-adjusted to make equal with pedestrians density)
