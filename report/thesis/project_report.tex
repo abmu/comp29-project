@@ -118,6 +118,54 @@ Continuing from this, a novel approach in which multiple intelligent agents inte
 
 Finally, after testing and evaluating the different approaches in unforeseen traffic scenarios, we will draw our overall conclusions. Feasibility of such a project will be discussed, as well as interesting technical challenges that were encountered. Future work and limitations to consider will then be commented on.
 
+\chapter{Literature Review}
+
+Modern traffic light control has changed significantly over the years, ranging from simple fixed-time mechanisms to complex adaptive and coordinated systems. Broadly speaking, systems can be categorised into three main types: fixed-time control, vehicle-actuated control, or adaptive traffic control. These will explored in this chapter, as well as the motivations for introducing intelligent agents.
+
+\section{Fixed-Time Control}
+
+Fixed-time traffic signals operate according to a predetermined schedule. Signal phases and cycle lengths are configured in advanced, typically using historical data \cite{GoelBusGershenson}. The controller cycles repeatedly through these phases regardless of traffic conditions.
+
+Such systems are predictable and inexpensive, used in city centers, interchanges, or roadworks. However, they assume stable traffic patterns. During periods of unusual demand, fixed-time systems cannot respond dynamically, leading to inefficient utilisation of junctions.
+
+\section{Vehicle-Actuated Control}
+
+Actuated systems are an improvement over purely fixed-time control systems. These systems utilise sensors -- such as inductive loop detectors or cameras -- to detect vehicles. Pedestrians can also use push buttons to register their presence \cite{PedestrianCrossings23}. This may for example enable one route at an intersection to stay active if other routes are barren.
+
+Typically used in rural roads or highway operations, they may be semi-actuated, where detectors are only placed on side approaches, or fully actuated, in which detectors are installed on all approaches. Overall, responsiveness to traffic conditions is improved, reducing unnecessary waiting. However, it relies on rule-based logic and manually defined heuristics, which may fail to perform optimally in all conditions \cite{LiPengHouEtAl2023}.
+
+\section{Adaptive Traffic Control}
+
+Unlike fixed-time or purely vehicle-actuated control systems, adaptive traffic control enables signal timings to be adjusted in real time based on observed traffic conditions. Data is collected from inductive loops, cameras, or other technologies.
+
+By modifying parameters such as cycle length, phase splits, and offsets in response to traffic \cite{LiPengHouEtAl2023}, adaptive controllers seek to reduce delays, smooth traffic flow, and increase throughput (though it may also be used to \emph{discourage} high volumes of traffic at the request of local residents for example).
+
+Split Cycle Offset Optimisation Technique (SCOOT) and the Sydney Coordinated Adaptive Traffic System (SCATS) are two examples widely deployed in urban areas. These systems group signals into regions and make dynamic adjustments to balance delays and improve coordination. This helps promote ``green waves'', where vehicles encounter consecutive green lights without having to stop, but possibly with added pedestrian and cyclist delays \cite{CesmeUrbanikII2021}.
+
+SCOOT has demonstrated an improvement in traffic performance of order of 15\% compared to fixed-time control systems \cite{ITS2012}. In London, with the introduction of the cloud-based Real Time Optimiser platform, this is being replaced with FUSION -- intended to bring even further improvements. However, these systems still rely on human-designed algorithms. Optimal strategies are not necessarily ``learnt'', nor does it adapt to every possible traffic scenario without explicit modeling by engineers.
+
+\section{Limitations}
+
+Existing traffic light systems work well enough, however there are several fundamental limitations.
+
+Firstly, these systems rely on parameter tuning and predefined logic. Even for adaptive traffic control the optimisation strategies used are engineered by domain experts. Performance is constrained by assumptions embedded in the design and, when traffic conditions deviate from these, optimality is not guaranteed.
+
+Secondly, most traditional systems are designed such that they prioritise vehicular throughput. Pedestrians and cyclists are typically the secondary optimisation target. This may lead to scenarios in which vehicles reap the benefits at the expense of pedestrians who may see increased waiting times.
+
+Thirdly, these systems are limited with regards to learning. Although adaptive traffic control systems respond in real time, they do not learn from historical experience in the sense of improving their strategy. Parameters may be recalibrated periodically by engineers, but this is not autonomous and novel strategies may be missed. Considering the scale of these systems, it may be hard to consider all possible variables.
+
+Finally, implementation and maintenance costs are non-trivial. These systems require extensive sensor and communication infrastructure, calibration, as well as continuous monitoring by traffic engineers. The complexity of these systems also make them less transparent and harder to validate formally with respect to performance benefits.
+
+\section{Motivation for Reinforcement Learning}
+
+Reinforcement learning offers an alternative method of traffic signal control. Control policies are not explicitly programmed, but instead emerge through intelligent agents interacting with a traffic environment. An intelligent agent can observe current traffic state, select a signal phase action, and receive feedback in the form of a reward from the environment.
+
+Over time, behaviour gradually improves and a control strategy emerges through experience, as opposed to encoding behaviour manually for every possible scenario. The ability to learn makes this very powerful; most limitations discovered above are mitigated by learning -- though perhaps not the infrastructure costs. Ergo, this will be explored for the remainder of this dissertation.
+
+\section{Summary}
+
+This chapter described the fixed-time control, vehicle-actuated control, and adaptive traffic control systems in detail, mentioning the benefits and drawbacks of each. The fundamental limitations of these systems as a whole were also explored, motivating why a novel approach which uses reinforcement learning is desirable.
+
 \chapter{Simulated Environment}
 
 % The main chapters should start with a brief summary -- this chapter is about, or introduces, some aspect of the work.
@@ -289,55 +337,13 @@ Using SUMO's \texttt{randomTrips.py} tool, there is a way for scalable creation 
 
 Now that we have seen how an environment -- composed of a network and traffic routes -- is constructed, we will develop a numerical reward system used to evaluate the performance of different intelligent agents. This reward system will use a contemporary traffic light system algorithm as a baseline; a good reward system is paramount to training intelligent agents effectively.
 
-\section{Existing Traffic Light Systems}
-
-Modern traffic light control has changed significantly over the years, ranging from simple fixed-time mechanisms to complex adaptive and coordinated systems. Broadly speaking, systems can be categorised into three main types: fixed-time control, vehicle-actuated control, or adaptive traffic control.
-
-\subsection{Fixed-Time Control}
-
-Fixed-time traffic signals operate according to a predetermined schedule. Signal phases and cycle lengths are configured in advanced, typically using historical data \cite{GoelBusGershenson}. The controller cycles repeatedly through these phases regardless of traffic conditions.
-
-Such systems are predictable and inexpensive, used in city centers, interchanges, or roadworks. However, they assume stable traffic patterns. During periods of unusual demand, fixed-time systems cannot respond dynamically, leading to inefficient utilisation of junctions.
-
-\subsection{Vehicle-Actuated Control}
-
-Actuated systems are an improvement over purely fixed-time control systems. These systems utilise sensors -- such as inductive loop detectors or cameras -- to detect vehicles. Pedestrians can also use push buttons to register their presence \cite{PedestrianCrossings23}. This may for example enable one route at an intersection to stay active if other routes are barren.
-
-Typically used in rural roads or highway operations, they may be semi-actuated, where detectors are only placed on side approaches, or fully actuated, in which detectors are installed on all approaches. Overall, responsiveness to traffic conditions is improved, reducing unnecessary waiting. However, it relies on rule-based logic and manually defined heuristics, which may fail to perform optimally in all conditions \cite{LiPengHouEtAl2023}.
-
-\subsection{Adaptive Traffic Control}
-
-Unlike fixed-time or purely vehicle-actuated control systems, adaptive traffic control enables signal timings to be adjusted in real time based on observed traffic conditions. Data is collected from inductive loops, cameras, or other technologies.
-
-By modifying parameters such as cycle length, phase splits, and offsets in response to traffic \cite{LiPengHouEtAl2023}, adaptive controllers seek to reduce delays, smooth traffic flow, and increase throughput (though it may also be used to \emph{discourage} high volumes of traffic at the request of local residents for example).
-
-Split Cycle Offset Optimisation Technique (SCOOT) and the Sydney Coordinated Adaptive Traffic System (SCATS) are two examples widely deployed in urban areas. These systems group signals into regions and make dynamic adjustments to balance delays and improve coordination. This helps promote ``green waves'', where vehicles encounter consecutive green lights without having to stop, but possibly with added pedestrian and cyclist delays \cite{CesmeUrbanikII2021}.
-
-SCOOT has demonstrated an improvement in traffic performance of order of 15\% compared to fixed-time control systems \cite{ITS2012}. In London, with the introduction of the cloud-based Real Time Optimiser platform, this is being replaced with FUSION -- intended to bring even further improvements. However, these systems still rely on human-designed algorithms. Optimal strategies are not necessarily ``learnt'', nor does it adapt to every possible traffic scenario without explicit modeling by engineers.
-
-\subsection{Limitations}
-
-Existing traffic light systems work well enough, however there are several fundamental limitations.
-
-Firstly, these systems rely on parameter tuning and predefined logic. Even for adaptive traffic control the optimisation strategies used are engineered by domain experts. Performance is constrained by assumptions embedded in the design and, when traffic conditions deviate from these, optimality is not guaranteed.
-
-Secondly, most traditional systems are designed such that they prioritise vehicular throughput. Pedestrians and cyclists are typically the secondary optimisation target. This may lead to scenarios in which vehicles reap the benefits at the expense of pedestrians who may see increased waiting times.
-
-Thirdly, these systems are limited with regards to learning. Although adaptive traffic control systems respond in real time, they do not learn from historical experience in the sense of improving their strategy. Parameters may be recalibrated periodically by engineers, but this is not autonomous and novel strategies may be missed. Considering the scale of these systems, it may be hard to consider all possible variables.
-
-Finally, implementation and maintenance costs are non-trivial. These systems require extensive sensor and communication infrastructure, calibration, as well as continuous monitoring by traffic engineers. The complexity of these systems also make them less transparent and harder to validate formally with respect to performance benefits.
-
-\subsection{Motivation for Reinforcement Learning}
-
-Reinforcement learning offers an alternative method of traffic signal control. Control policies are not explicitly programmed, but instead emerge through intelligent agents interacting with a traffic environment. An intelligent agent can observe current traffic state, select a signal phase action, and receive feedback in the form of a reward from the environment.
-
-Over time, behaviour gradually improves and a control strategy emerges through experience, as opposed to encoding behaviour manually for every possible scenario. The ability to learn makes this very powerful; most limitations discovered above are mitigated by learning -- though perhaps not the infrastructure costs. Ergo, this will be explored for the remainder of this dissertation.
-
 
 
 \section{Baseline Environment}
 
 Comment on insertion density for pedestrians and vehicles (-adjusted to make equal with pedestrians density)
+
+SUMO provides an application programming interface that enables us to connect to our environment for the purposes of observation and control from within Python code.
 
 \section{Reward Calculation}
 
