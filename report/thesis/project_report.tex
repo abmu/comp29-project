@@ -339,11 +339,74 @@ Now that we have seen how an environment -- composed of a network and traffic ro
 
 \section{Baseline Environment}
 
-It is crucial that we understand the performance of existing traffic light systems so we can make an accurate judgement as to the benefits of our intelligent agents. Using the demo network created previously in Figure~\ref{fig:demo_simulation}, consisting of one traffic light system (TLS), three zebra crossings, and several regular crossings, we can create a baseline environment. From this environment we can calculate the weights for our reward system which will be discussed later.
+It is crucial that we understand the performance of existing traffic light systems so we can make an accurate judgement as to the benefits of our intelligent agents. Using the demo network created previously in Figure~\ref{fig:demo_simulation}, consisting of one traffic light system (TLS), three zebra crossings, and several regular crossings, we can create a baseline environment.
 
-In London, adaptive traffic light control systems are widley used, which enables coordination between traffic lights -- as mentioned in our literature review. SUMO unfortunately does not support this system natively, and building an custom controller replica goes beyond the scope of this dissertation. Furthermore, there is only one TLS in this demo network so there wouldn't be any possibility of TLS coordination regardless.
+\subsection{Traffic Light System}
 
-So, for the sake of simplicity, the TLS will use fixed-time control.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/tls_demo.png}
+    \caption{Traffic Light System in the demo network.}
+    \label{fig:tls_demo}
+\end{figure}
+
+In Figure~\ref{fig:tls_demo} above, green represents traffic -- including pedestrians -- that is northbound; blue represents westbound traffic; red represents southbound traffic; and yellow represents eastbound traffic.
+
+In London, adaptive traffic light control systems are widely used enabling coordination between traffic lights -- as mentioned in our literature review. SUMO unfortunately does not support this system natively, and building a controller replica goes beyond the scope of this dissertation. Furthermore, there is only one TLS in this demo network so there wouldn't be any multi-TLS coordination regardless.
+
+For the sake of simplicity, the TLS will use fixed-time control. The general practice is for the cycle length to be between 50 and 120 seconds, with 90 seconds often being considered optimum \cite{FHWA_SIIG04}. Below is a simple cycle striking a balance between safety and operational performance.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{c c l l}
+\hline
+\textbf{Phase} & \textbf{Duration (s)} & \textbf{Approach} & \textbf{State} \\
+\hline
+1 & 30 & Northbound/Southbound & Green \\
+2 & 3  & Northbound/Southbound & Amber \\
+3 & 2  & All approaches & Red \\
+\hline
+4 & 30 & Eastbound/Westbound & Green \\
+5 & 3  & Eastbound/Westbound & Amber \\
+6 & 2  & All approaches & Red \\
+\hline
+7 & 10 & Pedestrians & Green \\
+8 & 10 & All approaches & Red \\
+\hline
+\textbf{Total} & \textbf{90} & \\
+\hline
+\end{tabular}
+\caption{Fixed-time control phase structure.}
+\end{table}
+
+\subsection{Routes}
+
+In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen such that they were moderate representing an average scenario -- not too light, but not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set explained in the previous chapter.
+
+The traffic densities were set such that the road users, i.e.\ cars and bicycles, had the same density when combined as the pedestrians.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l}
+\hline
+\textbf{Phase} & \textbf{Duration (s)} & \textbf{Approach} & \textbf{State} \\
+\hline
+1 & 30 & Northbound/Southbound & Green \\
+2 & 3  & Northbound/Southbound & Amber \\
+3 & 2  & All approaches & Red \\
+\hline
+4 & 30 & Eastbound/Westbound & Green \\
+5 & 3  & Eastbound/Westbound & Amber \\
+6 & 2  & All approaches & Red \\
+\hline
+7 & 10 & Pedestrians & Green \\
+8 & 10 & All approaches & Red \\
+\hline
+\textbf{Total} & \textbf{90} & \\
+\hline
+\end{tabular}
+\caption{Fixed-time control phase structure.}
+\end{table}
 
 Comment on insertion density for pedestrians and vehicles (-adjusted to make equal with pedestrians density)
 
@@ -381,7 +444,7 @@ Thames Leisure.
 \newblock Available at:
   https://web.archive.org/web/20170107005431/http://www.thamesleisure.co.uk/12-amazing-facts-london/.
 
-\bibitem[FHW17]{FHWA_ASCT17}
+\bibitem[ASC17]{FHWA_ASCT17}
 Federal Highway Administration.
 \newblock EDC-1: Adaptive Signal Control Technology.
 \newblock {\em Federal Highway Administration}, 2017.
@@ -448,6 +511,13 @@ B.~Cesme and T.~Urbanik~II.
 \newblock {\em Kittelson \& Associates, Inc.}, October 15, 2021.
 \newblock Available at:
   https://www.kittelson.com/ideas/pros-and-cons-of-signal-coordination/.
+
+\bibitem[SIIG04]{FHWA_SIIG04}
+Federal Highway Administration.
+\newblock Signalized Intersections: Informational Guide — Chapter 9: Intersection-Wide Treatments.
+\newblock {\em Federal Highway Administration}, August, 2004.
+\newblock Available at:
+  https://www.fhwa.dot.gov/publications/research/safety/04091/09.cfm.
 
 \end{thebibliography}
 
