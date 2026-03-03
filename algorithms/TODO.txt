@@ -5,8 +5,8 @@ Report
 - https://sumo.dlr.de/docs/Tools/Visualization.html
 
 Algorithms
+- Add offset to traffic light timers
 - Switch to libsumo instead of TraCI
-- Extend network, and think about network communication with the traffic light systems to improve performance.
 - Distributed data being sent -- rather than centralised -- compared to real life systems like SCOOT + MOVA + VA
 
 Implement evaluation framework

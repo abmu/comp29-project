@@ -7,6 +7,10 @@ if not os.environ.get('SUMO_HOME'):
 sys.path.append(os.path.join(os.environ['SUMO_HOME'], 'tools'))
 import traci
 
+LIBSUMO = True
+if LIBSUMO:
+    import libsumo as traci
+
 from environment import TOTAL_STEPS, simulation_step
 from agent import Runner
 
@@ -25,6 +29,8 @@ class Network:
         tid = str(uuid.uuid4())
         traci.start(self.sumo_cfg, label=tid)
         conn = traci.getConnection(tid)
+        if LIBSUMO:
+            conn = traci
 
         for agent in self.agents:
             agent.start_episode(conn)

@@ -337,13 +337,17 @@ Using SUMO's \texttt{randomTrips.py} tool, there is a way for scalable creation 
 
 Now that we have seen how an environment -- composed of a network and traffic routes -- is constructed, we will develop a numerical reward system used to evaluate the performance of different intelligent agents. This reward system will use a contemporary traffic light system algorithm as a baseline; a good reward system is paramount to training intelligent agents effectively.
 
-
-
 \section{Baseline Environment}
+
+It is crucial that we understand the performance of existing traffic light systems so we can make an accurate judgement as to the benefits of our intelligent agents. Using the demo network created previously in Figure~\ref{fig:demo_simulation}, consisting of one traffic light system (TLS), three zebra crossings, and several regular crossings, we can create a baseline environment. From this environment we can calculate the weights for our reward system which will be discussed later.
+
+In London, adaptive traffic light control systems are widley used, which enables coordination between traffic lights -- as mentioned in our literature review. SUMO unfortunately does not support this system natively, and building an custom controller replica goes beyond the scope of this dissertation. Furthermore, there is only one TLS in this demo network so there wouldn't be any possibility of TLS coordination regardless.
+
+So, for the sake of simplicity, the TLS will use fixed-time control.
 
 Comment on insertion density for pedestrians and vehicles (-adjusted to make equal with pedestrians density)
 
-SUMO provides an application programming interface that enables us to connect to our environment for the purposes of observation and control from within Python code.
+SUMO provides an application programming interface that enables us to connect to our environment for the purposes of observation and control from within Python code. Known as Traffic Control Interface (TraCI).
 
 \section{Reward Calculation}
 
