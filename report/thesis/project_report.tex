@@ -104,7 +104,7 @@ Time is a currency that once spent cannot be regained. Traffic lights govern our
 
 \section{Report Overview}
 
-\emph{!!! MUST REDO SINCE THE STRUCTURE HAS CHANGED !!!}
+\textcolor{red}{\textbf{\emph{!!! MUST REDO SINCE THE STRUCTURE HAS CHANGED !!!}}}
 
 We will begin with defining the environment in which we will be conducting our traffic experiments, and then building out this environment using available open source tools and libraries. Whilst accuracy and scope of the environment are important, they will not take precedence over the implementation and analysis of the intelligent agents themselves.
 
@@ -157,6 +157,8 @@ Thirdly, these systems are limited with regards to learning. Although adaptive t
 Finally, implementation and maintenance costs are non-trivial. These systems require extensive sensor and communication infrastructure, calibration, as well as continuous monitoring by traffic engineers. The complexity of these systems also make them less transparent and harder to validate formally with respect to performance benefits.
 
 \section{Motivation for Reinforcement Learning}
+
+\textcolor{red}{\textbf{\emph{!!! ADD SHORT SECTION ABOUT EXISTING REINFORCEMENT LEARNING + TRAFFIC LIGHT !!!}}}
 
 Reinforcement learning offers an alternative method of traffic signal control. Control policies are not explicitly programmed, but instead emerge through intelligent agents interacting with a traffic environment. An intelligent agent can observe current traffic state, select a signal phase action, and receive feedback in the form of a reward from the environment.
 
@@ -405,13 +407,17 @@ The parameters used in route generation for our baseline environment can be summ
 \begin{itemize}
     \item \texttt{--insertion-density}: 100 for cars and bicycles respectively, 200 for pedestrians $(100+100\equiv200)$.
     \item \texttt{--binomial}: $N=100$, where $N$ is the number of trials.
-    \item \texttt{--fringe-factor}: Max -- vehicles are only inserted from the very edges, rather than middle of the road.
+    \item \texttt{--fringe-factor}: Max -- vehicles are only inserted from the very edges, rather than middle of the road. Disabled for pedestrians.
     \item \texttt{--random-factor}: None -- all active edges are given equal weighting when determining which to insert a new vehicle.
 \end{itemize}
 
 \section{Reward Calculation}
 
-SUMO provides an application programming interface that enables us to connect to our environment for the purposes of observation and control from within Python code. Known as Traffic Control Interface (TraCI).
+Using the \texttt{randomTrips.py} script with the baseline environment and parameters defined above, we can generate traffic routes. 1000 distinct routes -- each comprising of cars, bicycles, and pedestrians -- are generated in total, each one having a generation period of 1 hour (3600 seconds). A seed is also set for each, enumerating from 1, to ensure variability and reproducibility in the routes.
+
+The SUMO package provides an interface that enables us to connect to our environment simulation -- called ``\emph{sumo}'' itself -- for the purposes of observation and control. Known as Traffic Control Interface (TraCI), it uses a TCP based client/server architecture, where \emph{sumo} is the server connected to by clients.
+
+TraCI also provides a Python module of the same name, where you can create clients which connect to the environment simulation that is spun up.
 
 Cache stats, mean + standard deviation, weights...
 
