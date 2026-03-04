@@ -253,7 +253,7 @@ X \sim \mathrm{Binomial}(N, p)
 \mathbb{E}[X] = Np
 \]
 
-Where \( N \) is given by the \texttt{--binomial} parameter, and \( Np \) equals the insertion rate calculated from the \texttt{--insertion-density} parameter. Thus, the overall expected value of departures per time step still remains equal to the deterministic insertion rate.
+Where \( N \) is the number of trials given by the \texttt{--binomial} parameter, \( p \) is the probability of success, and \( Np \) equals the insertion rate calculated from the \texttt{--insertion-density} parameter. Thus, the overall expected value of departures per time step still remains equal to the deterministic insertion rate.
 
 \begin{figure}[ht]
 \centering
@@ -357,62 +357,61 @@ In London, adaptive traffic light control systems are widely used enabling coord
 For the sake of simplicity, the TLS will use fixed-time control. The general practice is for the cycle length to be between 50 and 120 seconds, with 90 seconds often being considered optimum \cite{FHWA_SIIG04}. Below is a simple cycle striking a balance between safety and operational performance.
 
 \begin{table}[h]
-\centering
-\begin{tabular}{c c l l}
-\hline
-\textbf{Phase} & \textbf{Duration (s)} & \textbf{Approach} & \textbf{State} \\
-\hline
-1 & 30 & Northbound/Southbound & Green \\
-2 & 3  & Northbound/Southbound & Amber \\
-3 & 2  & All approaches & Red \\
-\hline
-4 & 30 & Eastbound/Westbound & Green \\
-5 & 3  & Eastbound/Westbound & Amber \\
-6 & 2  & All approaches & Red \\
-\hline
-7 & 10 & Pedestrians & Green \\
-8 & 10 & All approaches & Red \\
-\hline
-\textbf{Total} & \textbf{90} & \\
-\hline
-\end{tabular}
-\caption{Fixed-time control phase structure.}
+  \centering
+  \begin{tabular}{c c l l}
+    \hline
+    \textbf{Phase} & \textbf{Duration (s)} & \textbf{Approach} & \textbf{State} \\
+    \hline
+    1 & 30 & Northbound/Southbound & Green \\
+    2 & 3  & Northbound/Southbound & Amber \\
+    3 & 2  & All approaches & Red \\
+    \hline
+    4 & 30 & Eastbound/Westbound & Green \\
+    5 & 3  & Eastbound/Westbound & Amber \\
+    6 & 2  & All approaches & Red \\
+    \hline
+    7 & 10 & Pedestrians & Green \\
+    8 & 10 & All approaches & Red \\
+    \hline
+    \textbf{Total} & \textbf{90} & \\
+    \hline
+  \end{tabular}
+  \caption{Fixed-time control phase structure.}
 \end{table}
 
 \subsection{Routes}
 
-In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen such that they were moderate representing an average scenario -- not too light, but not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set explained in the previous chapter.
+In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen based on observations such that they were moderate, emulating an average day-to-day scenario -- not too light, not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set with $N=100$ to approximate a Poisson distribution as explained in the previous chapter.
 
-The traffic densities were set such that the road users, i.e.\ cars and bicycles, had the same density when combined as the pedestrians.
+The \texttt{--insertion-density} parameter, which specifies the number of entities per hour per kilometer of road, were assigned for each entity type such that the traffic densities for road users, i.e.\ the cars and bicycles which use road lanes, was the same when combined as the pedestrians.
 
 \begin{table}[h]
-\centering
-\begin{tabular}{l l l}
-\hline
-\textbf{Phase} & \textbf{Duration (s)} & \textbf{Approach} & \textbf{State} \\
-\hline
-1 & 30 & Northbound/Southbound & Green \\
-2 & 3  & Northbound/Southbound & Amber \\
-3 & 2  & All approaches & Red \\
-\hline
-4 & 30 & Eastbound/Westbound & Green \\
-5 & 3  & Eastbound/Westbound & Amber \\
-6 & 2  & All approaches & Red \\
-\hline
-7 & 10 & Pedestrians & Green \\
-8 & 10 & All approaches & Red \\
-\hline
-\textbf{Total} & \textbf{90} & \\
-\hline
-\end{tabular}
-\caption{Fixed-time control phase structure.}
+  \centering
+  \begin{tabular}{l l c c}
+    \hline
+    \textbf{Entity} & \textbf{Type} & \textbf{Insertion Density (hr/km)} & \textbf{Relative to Pedestrians} \\
+    \hline
+    Car & Road User & 100 & 0.5$\times$ \\
+    Bicycle & Road User & 100 & 0.5$\times$ \\
+    Pedestrian & Pavement User & 200 & 1.0$\times$ \\
+    \hline
+  \end{tabular}
+  \caption{Comparison of the insertion density of the entities.}
 \end{table}
 
-Comment on insertion density for pedestrians and vehicles (-adjusted to make equal with pedestrians density)
+It is important to note that in reality, in a dense urban environment such as London, there tends to be many more pedestrians to other road users, and there is typically more cars than bicycles. But, for the purposes of this dissertation, these nuances are ignored.
 
-SUMO provides an application programming interface that enables us to connect to our environment for the purposes of observation and control from within Python code. Known as Traffic Control Interface (TraCI).
+The parameters used in route generation for our baseline environment can be summarised and simplified as follows:
+\begin{itemize}
+    \item \texttt{--insertion-density}: 100 for cars and bicycles respectively, 200 for pedestrians $(100+100\equiv200)$.
+    \item \texttt{--binomial}: $N=100$.
+    \item \texttt{--fringe-factor}: Max -- vehicles are only inserted from the very edges, rather than middle of the road.
+    \item \texttt{--random-factor}: None -- all active edges are given equal weighting when determining which to insert a new vehicle.
+\end{itemize}
 
 \section{Reward Calculation}
+
+SUMO provides an application programming interface that enables us to connect to our environment for the purposes of observation and control from within Python code. Known as Traffic Control Interface (TraCI).
 
 Cache stats, mean + standard deviation, weights...
 
