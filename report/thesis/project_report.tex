@@ -381,7 +381,7 @@ For the sake of simplicity, the TLS will use fixed-time control. The general pra
 
 \subsection{Routes}
 
-In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen based on anecdotal observations that they were moderate, emulating an average day-to-day scenario -- not too light, not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set with $N=100$ to approximate a Poisson distribution as explained in the previous chapter.
+In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen based on anecdotal observations\footnotemark\footnotetext{Not the best approach, but ``I know it when I see it'' \cite{Stewart1964}.} that they were moderate, emulating an average day-to-day scenario -- not too light, not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set with $N=100$ to approximate a Poisson distribution as explained previously.
 
 The \texttt{--insertion-density} parameter, which specifies the number of entities per hour per kilometer of road, was assigned for each entity type such that the traffic densities for road users, i.e.\ the cars and bicycles which use road lanes, had a combined density equivalent to pedestrians.
 
@@ -519,6 +519,13 @@ Federal Highway Administration.
 \newblock {\em Federal Highway Administration}, August, 2004.
 \newblock Available at:
   https://www.fhwa.dot.gov/publications/research/safety/04091/09.cfm.
+
+\bibitem[PS64]{Stewart1964}
+P.~Stewart.
+\newblock "I know it when I see it".
+\newblock {\em Jacobellis v. Ohio}, 1964.
+\newblock Available at:
+  https://en.wikipedia.org/wiki/I\_know\_it\_when\_I\_see\_it.
 
 \end{thebibliography}
 
