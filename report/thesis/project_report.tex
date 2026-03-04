@@ -381,15 +381,15 @@ For the sake of simplicity, the TLS will use fixed-time control. The general pra
 
 \subsection{Routes}
 
-In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen based on observations such that they were moderate, emulating an average day-to-day scenario -- not too light, not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set with $N=100$ to approximate a Poisson distribution as explained in the previous chapter.
+In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen based on anecdotal observations that they were moderate, emulating an average day-to-day scenario -- not too light, not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set with $N=100$ to approximate a Poisson distribution as explained in the previous chapter.
 
-The \texttt{--insertion-density} parameter, which specifies the number of entities per hour per kilometer of road, were assigned for each entity type such that the traffic densities for road users, i.e.\ the cars and bicycles which use road lanes, was the same when combined as the pedestrians.
+The \texttt{--insertion-density} parameter, which specifies the number of entities per hour per kilometer of road, was assigned for each entity type such that the traffic densities for road users, i.e.\ the cars and bicycles which use road lanes, had a combined density equivalent to pedestrians.
 
 \begin{table}[h]
   \centering
   \begin{tabular}{l l c c}
     \hline
-    \textbf{Entity} & \textbf{Type} & \textbf{Insertion Density (hr/km)} & \textbf{Relative to Pedestrians} \\
+    \textbf{Entity} & \textbf{Type} & \textbf{Insertion Density (per hr/km)} & \textbf{Relative to Pedestrians} \\
     \hline
     Car & Road User & 100 & 0.5$\times$ \\
     Bicycle & Road User & 100 & 0.5$\times$ \\
@@ -404,7 +404,7 @@ It is important to note that in reality, in a dense urban environment such as Lo
 The parameters used in route generation for our baseline environment can be summarised and simplified as follows:
 \begin{itemize}
     \item \texttt{--insertion-density}: 100 for cars and bicycles respectively, 200 for pedestrians $(100+100\equiv200)$.
-    \item \texttt{--binomial}: $N=100$.
+    \item \texttt{--binomial}: $N=100$, where $N$ is the number of trials.
     \item \texttt{--fringe-factor}: Max -- vehicles are only inserted from the very edges, rather than middle of the road.
     \item \texttt{--random-factor}: None -- all active edges are given equal weighting when determining which to insert a new vehicle.
 \end{itemize}
@@ -418,6 +418,8 @@ Cache stats, mean + standard deviation, weights...
 Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian).
 
 \section{Summary}
+
+...
 
 \chapter{etc.}
 
