@@ -381,9 +381,9 @@ For the sake of simplicity, the TLS will use fixed-time control. The general pra
   \caption{Fixed-time control phase structure.}
 \end{table}
 
-\subsection{Routes}
+\subsection{Traffic Parameters}
 
-In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen based on anecdotal observations\footnotemark\footnotetext{Not the best approach, but ``I know it when I see it'' \cite{Stewart1964}.} that they were moderate, emulating an average day-to-day scenario -- not too light, not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set with $N=100$ to approximate a Poisson distribution as explained previously.
+In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen based on anecdotal observations\footnotemark\footnotetext{Not the best approach, but ``\emph{I know it when I see it}'' \cite{Stewart1964}.} that they were moderate, emulating an average day-to-day scenario -- not too light, not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set with $N=100$ to approximate a Poisson distribution as explained previously.
 
 The \texttt{--insertion-density} parameter, which specifies the number of entities per hour per kilometer of road, was assigned for each entity type such that the traffic densities for road users, i.e.\ the cars and bicycles which use road lanes, had a combined density equivalent to pedestrians.
 
@@ -413,11 +413,22 @@ The parameters used in route generation for our baseline environment can be summ
 
 \section{Reward Calculation}
 
-Using the \texttt{randomTrips.py} script with the baseline environment and parameters defined above, we can generate traffic routes. 1000 distinct routes -- each comprising of cars, bicycles, and pedestrians -- are generated in total, each one having a generation period of 1 hour (3600 seconds). A seed is also set for each, enumerating from 1, to ensure variability and reproducibility in the routes.
+Using the \texttt{randomTrips.py} script with the baseline environment and parameters defined above, we can generate traffic routes. We generate 1000 distinct routes -- each comprising of cars, bicycles, and pedestrians -- in total for the demo network, each one having a generation period of 1 hour (3600 seconds). A seed is also set for each, enumerating from 1, to ensure variability and reproducibility in the routes.
+
+\subsection{Traffic Control Interface}
 
 The SUMO package provides an interface that enables us to connect to our environment simulation -- called ``\emph{sumo}'' itself -- for the purposes of observation and control. Known as Traffic Control Interface (TraCI), it uses a TCP based client/server architecture, where \emph{sumo} is the server connected to by clients.
 
-TraCI also provides a Python module of the same name, where you can create clients which connect to the environment simulation that is spun up.
+TraCI also provides a Python module of the same name, where you can create clients which connect to the environment simulation that is spun up. This is what the rest of the algorithms and systems in this dissertation will be built upon.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/traci_connect.png}
+    \caption{TraCI: establishing a connection to SUMO \cite{TraCIProtocol26}.}
+    \label{fig:traci_connect}
+\end{figure}
+
+\subsection{Weights}
 
 Cache stats, mean + standard deviation, weights...
 
@@ -464,7 +475,7 @@ M.~Haklay and P.~Weber.
 \newblock {\em IEEE Pervasive Computing}, 7(4): 12--18, 2008.
 \newblock doi:10.1109/MPRV.2008.80.
 
-\bibitem[DfT]{HighwayCode159to203}
+\bibitem[HWC]{HighwayCode159to203}
 Department for Transport.
 \newblock The Highway Code: Using the road (Rules 159--203).
 \newblock {\em GOV.UK}.
@@ -532,6 +543,13 @@ P.~Stewart.
 \newblock {\em Jacobellis v. Ohio}, 1964.
 \newblock Available at:
   https://en.wikipedia.org/wiki/I\_know\_it\_when\_I\_see\_it.
+
+\bibitem[Tr26]{TraCIProtocol26}
+German Aerospace Center (DLR).
+\newblock TraCI Protocol Specification
+\newblock {\em SUMO Documentation}, February 13, 2026.
+\newblock Available at:
+  https://sumo.dlr.de/docs/TraCI/Protocol.html.
 
 \end{thebibliography}
 

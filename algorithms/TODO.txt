@@ -11,7 +11,6 @@ Algorithms
 
 Implement evaluation framework
 - Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian)
-- Comment on insertion density for pedestrians and vehicles (-adjusted to make equal with pedestrians density)
 - Explore other methods such as other Q-learning techniques (Double DQN, Dueling DQN) and actor-critic
 
 State
