@@ -392,18 +392,20 @@ For the sake of simplicity, the TLS will use fixed-time control. The general pra
 
 In Figure~\ref{fig:detectors_demo} above, the yellow-coloured detectors placed at the departure lanes are induction loops, and the aqua-coloured detectors placed at the approaches are lane area detectors.
 
-A step length -- the time between each step -- in our simulation is defined as 1 second. After each simulation step, the detectors can be queried for information pertaining to vehicles passing through them such as the vehicle count, mean speed, unique identifiers of the vehicles themselves, and time since last detection.
+A step length -- the time between each step -- in our simulation is defined as 1 second. After each simulation step, the detectors can be queried for information such as the vehicle count passing through them, mean speed, unique identifiers of the vehicles themselves, and time since last detection.
 
-Induction loops have a fixed length, making them ideal for measuring vehicle throughput. Lane area detectors -- perhaps implemented as a vehicle tracking camera in reality -- can cover a larger area, making it tailored for measuring queues of standing traffic and keeping track of wait times.
+Induction loops have a fixed length, making them ideal for measuring vehicle throughput. Lane area detectors -- perhaps implemented as a vehicle tracking camera in reality -- can cover a larger area, making it tailored for measuring queues of traffic and keeping track of wait times.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.48\textwidth]{images/pedestrians_demo.png}
-    \caption{Example of pedestrians crossing.}
+    \caption{Example of pedestrians crossing the road.}
     \label{fig:pedestrians_demo}
 \end{figure}
 
-Whilst there is no support for pedestrian detectors, 
+SUMO has no explicit support for pedestrian detectors, however a pseudo-detector can be made. To measure the queue of pedestrians waiting to use a crossing, pedestrians who are on the walking edges adjacent to the crossing are filtered such that only the pedestrians whose next walking edge is the crossing itself remain.
+
+Pedestrians about to exit a crossing is measured by retrieving all pedestrians currently using that crossing and checking whether the remaining length of road before they finish crossing is below a threshold.
 
 \subsection{Traffic Parameters}
 
@@ -454,7 +456,7 @@ TraCI also provides a Python module of the same name, where you can create clien
 
 \subsection{Weights}
 
-_
+% _
 
 4 weights, values from detectors, every simulation step calculated...
 
