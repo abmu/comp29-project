@@ -381,6 +381,30 @@ For the sake of simplicity, the TLS will use fixed-time control. The general pra
   \caption{Fixed-time control phase structure.}
 \end{table}
 
+\subsection{Detectors}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/detectors_demo.png}
+    \caption{Detectors in the demo network.}
+    \label{fig:detectors_demo}
+\end{figure}
+
+In Figure~\ref{fig:detectors_demo} above, the yellow-coloured detectors placed at the departure lanes are induction loops, and the aqua-coloured detectors placed at the approaches are lane area detectors.
+
+A step length -- the time between each step -- in our simulation is defined as 1 second. After each simulation step, the detectors can be queried for information pertaining to vehicles passing through them such as the vehicle count, mean speed, unique identifiers of the vehicles themselves, and time since last detection.
+
+Induction loops have a fixed length, making them ideal for measuring vehicle throughput. Lane area detectors -- perhaps implemented as a vehicle tracking camera in reality -- can cover a larger area, making it tailored for measuring queues of standing traffic and keeping track of wait times.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/pedestrians_demo.png}
+    \caption{Example of pedestrians crossing.}
+    \label{fig:pedestrians_demo}
+\end{figure}
+
+Whilst there is no support for pedestrian detectors, 
+
 \subsection{Traffic Parameters}
 
 In our baseline environment, the traffic densities for cars, bicycles, and pedestrians were chosen based on anecdotal observations\footnotemark\footnotetext{Not the best approach, but ``\emph{I know it when I see it}'' \cite{Stewart1964}.} that they were moderate, emulating an average day-to-day scenario -- not too light, not too dense. Furthermore, they were generated with the \texttt{--binomial} parameter set with $N=100$ to approximate a Poisson distribution as explained previously.
@@ -430,7 +454,11 @@ TraCI also provides a Python module of the same name, where you can create clien
 
 \subsection{Weights}
 
-Cache stats, mean + standard deviation, weights...
+_
+
+4 weights, values from detectors, every simulation step calculated...
+
+Cache stats, mean + standard deviation diagram.
 
 Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian).
 
