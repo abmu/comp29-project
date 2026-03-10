@@ -454,22 +454,70 @@ TraCI also provides a Python module of the same name, where you can create clien
     \label{fig:traci_connect}
 \end{figure}
 
+Using TraCI, we run our baseline environment with the 1000 distinct routes generated previously in turn. For each route, the simulation is executed for 3600 seconds producing a total of $1\,000 \times 3\,600 = 3\,600\,000$ simulation steps across all runs.
+
+\subsection{Reward Formula}
+
+The reward formula combines four measurable indicators of traffic performance into a single scalar value that can be used to evaluate performance, and can be optimised by an intelligent agent. They are as follows, calculated using the aforementioned detectors:
+
+\begin{itemize}
+  \item $z_{vd}$: Total vehicle delay
+  \item $z_{vt}$: Total vehicle throughput
+  \item $z_{pd}$: Total pedestrian delay
+  \item $z_{pt}$: Total pedestrian throughput
+\end{itemize}
+
+Delay is defined as the continuous time (seconds) in which vehicles or pedestrians in the detection area have had a speed of less than 0.1 m/s, indicating waiting. Vehicle throughput is defined as the number of vehicles crossing the departure detectors; pedestrian throughput is defined as the number of pedestrians finishing using their crossing.
+
+At time step $t$, the reward $R_t$ can be expressed as a weighted sum of the four metrics: 
+
+\begin{equation}
+  \label{reward_formula}
+  R_t =
+  w_{vd}(-z_{vd}) +
+  w_{vt}(z_{vt}) +
+  w_{pd}(-z_{pd}) +
+  w_{pt}(z_{pt})
+\end{equation}
+
+Where the coefficients, or weights rather, $w_{vd}$, $w_{vt}$, $w_{pd}$, and $w_{pt}$ determine the relative importance of each metric. Delay terms are negated since increased delay represents worse performance.
+
 \subsection{Weights}
 
-% _
+The four metric values $z_{vd}$, $z_{vt}$, $z_{pd}$, and $z_{pt}$ are calculated per each of the 3\,600\,000 simulation steps and then cached inside of a buffer with four columns. Once the final route has finished running, we can use the \texttt{numpy} Python module to calculate statistics regarding each metric stored within the buffer.
 
-4 weights, values from detectors, every simulation step calculated...
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lrrrrr}
+    \hline
+    \textbf{Metric} & \textbf{Mean} & \textbf{Standard Deviation} & \textbf{Min} & \textbf{Max} & \textbf{Sum} \\
+    \hline
+    $z_{vd}$ & 63.07 & 67.07 & 0 & 5032 & 227066504 \\
+    $z_{vt}$ & 0.235 & 0.515 & 0 & 5 & 844528 \\
+    $z_{pd}$ & 211.69 & 220.43 & 0 & 1702 & 762082178 \\
+    $z_{pt}$ & 0.252 & 1.199 & 0 & 21 & 908941 \\
+    \hline
+  \end{tabular}
+  \caption{Summary statistics for vehicle and pedestrian metrics (runtime: 3:16:02).}
+\end{table}
 
-Cache stats, mean + standard deviation diagram.
+These metrics are not for a single vehicle or pedestrian, but rather it is based on the cumulative value for all vehicles or pedestrians that are on the detectors at a given simulation step.
 
-Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian).
+Since we want to compare our intelligent agents to the baseline fixed-time control traffic light system, \eqref{reward_formula}
+
+% Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian).
 
 \section{Summary}
 
 ...
 
-\chapter{etc.}
+\chapter{Q-Learning}
 
+\chapter{Deep Q-Learning}
+
+\chapter{Communicative Deep Q-Learning}
+
+\chapter{Supplementary Analysis}
 
 \chapter{Conclusions}
 \section{Achievements}
