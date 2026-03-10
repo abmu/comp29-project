@@ -499,11 +499,66 @@ The four metric values $z_{vd}$, $z_{vt}$, $z_{pd}$, and $z_{pt}$ are calculated
     \hline
   \end{tabular}
   \caption{Summary statistics for vehicle and pedestrian metrics (runtime: 3:16:02).}
+  \label{summary_statistics}
 \end{table}
 
 These metrics are not for a single vehicle or pedestrian, but rather it is based on the cumulative value for all vehicles or pedestrians that are on the detectors at a given simulation step.
 
-Since we want to compare our intelligent agents to the baseline fixed-time control traffic light system, \eqref{reward_formula}
+Since the fixed-time control TLS will serve as the baseline against which we evaluate our intelligent agents, the weights in formula \eqref{reward_formula} are adjusted based on the summary statistics in Table~\ref{summary_statistics} above. Namely, each of the weights are normalised using the mean value for the corresponding metric such that the average calculated reward for the fixed-time control TLS is a baseline of 0.
+
+\begin{itemize}
+  \item $w_{vd}$: $\frac{1}{63.07}=0.01586$
+  \item $w_{vt}$: $\frac{1}{0.235}=4.255$
+  \item $w_{pd}$: $\frac{1}{211.69}=0.004724$
+  \item $w_{pt}$: $\frac{1}{0.252}=3.968$
+\end{itemize}
+
+If we now calculate the reward after each of the 1000 routes in the baseline environment using the fixed-control TLS, we confirm that the average calculated reward is 0.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Epoch},
+      ylabel={Reward},
+      title={Basline environment reward per epoch},
+      grid=both,
+  ]
+
+  \addplot[
+      blue,
+      mark=none
+  ] coordinates {
+  (1,109.38930128314561)
+  (2,186.96047578269847)
+  (3,-289.21154449775764)
+  (4,231.60410435212435)
+  (5,-168.89018111873187)
+  (6,48.1086352289675)
+  (7,107.22828484751321)
+  (8,-141.1657136221898)
+  (9,-221.89980235055333)
+  (10,-109.94763652112302)
+  (11,-131.44974203739335)
+  (12,23.376908424753957)
+  (13,-144.6534009865058)
+  (14,-44.01117795611748)
+  (15,157.37021871184209)
+  (16,476.0903135584084)
+  (17,588.441932043707)
+  (18,-470.544285444961)
+  (19,-58.0236433109836)
+  (20,429.34482946587434)
+  % continue the same pattern for the rest of the values
+  };
+  \addlegendentry{Fixed-time control}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Reward vs Epoch for the baseline environment using a fixed-time control TLS.}
+\end{figure}
 
 % Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian).
 
