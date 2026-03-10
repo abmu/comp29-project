@@ -9,6 +9,8 @@
 \usepackage{amsmath}
 \usepackage[a4paper, margin = 3cm, bottom = 2.5cm]{geometry}
 
+\usepackage{float}
+
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
@@ -458,8 +460,7 @@ Using TraCI, we run our baseline environment with the 1000 distinct routes gener
 
 \subsection{Reward Formula}
 
-The reward formula combines four measurable indicators of traffic performance into a single scalar value that can be used to evaluate performance, and can be optimised by an intelligent agent. They are as follows, calculated using the aforementioned detectors:
-
+The reward formula combines four measurable indicators of traffic performance into a single scalar value that can be used to evaluate performance, and can be optimised by an intelligent agent. They are as follows, calculated using the aforementioned detectors queried using TraCI:
 \begin{itemize}
   \item $z_{vd}$: Total vehicle delay
   \item $z_{vt}$: Total vehicle throughput
@@ -513,58 +514,45 @@ Since the fixed-time control TLS will serve as the baseline against which we eva
   \item $w_{pt}$: $\frac{1}{0.252}=3.968$
 \end{itemize}
 
-If we now calculate the reward after each of the 1000 routes in the baseline environment using the fixed-control TLS, we confirm that the average calculated reward is 0.
+If we calculate the reward after each of the 1000 routes is run using the fixed-control TLS, we confirm that the average calculated reward is about 0.
 
-\begin{figure}[h]
+\textcolor{red}{\textbf{\emph{!!! RERUN EXPERIMENT TO GET CORRECT GRAPH !!!}}}
+
+\begin{figure}[H]
   \centering
   \begin{tikzpicture}
   \begin{axis}[
       width=14cm,
       height=8cm,
-      xlabel={Epoch},
+      xlabel={Route},
       ylabel={Reward},
-      title={Basline environment reward per epoch},
+      title={Basline environment reward per route},
       grid=both,
   ]
 
   \addplot[
       blue,
       mark=none
-  ] coordinates {
-  (1,109.38930128314561)
-  (2,186.96047578269847)
-  (3,-289.21154449775764)
-  (4,231.60410435212435)
-  (5,-168.89018111873187)
-  (6,48.1086352289675)
-  (7,107.22828484751321)
-  (8,-141.1657136221898)
-  (9,-221.89980235055333)
-  (10,-109.94763652112302)
-  (11,-131.44974203739335)
-  (12,23.376908424753957)
-  (13,-144.6534009865058)
-  (14,-44.01117795611748)
-  (15,157.37021871184209)
-  (16,476.0903135584084)
-  (17,588.441932043707)
-  (18,-470.544285444961)
-  (19,-58.0236433109836)
-  (20,429.34482946587434)
-  % continue the same pattern for the rest of the values
-  };
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_ft.txt};
   \addlegendentry{Fixed-time control}
 
   \end{axis}
   \end{tikzpicture}
-  \caption{Reward vs Epoch for the baseline environment using a fixed-time control TLS.}
+  \caption{Reward per route using a fixed-time control TLS.}
 \end{figure}
 
-% Comment on different weights to prioritise either pedestrians or vehicles (currently equal) -- test max pedestrian priority, or max vehicle -- empirically what would be the best choice (average number of people per one vehicle vs one pedestrian).
+Equal weighting is currently given to pedestrians and road users (cars and bicycles) as a consequence of the traffic parameters mentioned previously for our baseline environment and the current reward formula. Neither is implicitly being prioritised over the other.
+
+Although not explored further in this dissertation, an interesting extension would be to vary the weights to prioritise either pedestrians or vehicles. For example, vehicles may reasonably be assigned a slightly higher priority considering that cars in England have an average occupancy of approximately 1.57 persons per \cite{StatistaCarOccupancy}. However, this may conflict with broader urban plans of encouraging walking and improving pedestrian safety.
 
 \section{Summary}
 
-...
+This chapter explored the creation of a baseline environment that incorporates a fixed-control traffic light system as well as well defined traffic parameters. To observe car, bicycle, and pedestrian traffic, a set of detectors was deployed.
+
+Using the TraCI interface, a way for controlling and observing the simulation environment was created. This also enabled a weighted reward formula to be defined and calculated. Both of which will be crucial for our following intelligent agents.
 
 \chapter{Q-Learning}
 
@@ -683,6 +671,13 @@ German Aerospace Center (DLR).
 \newblock {\em SUMO Documentation}, February 13, 2026.
 \newblock Available at:
   https://sumo.dlr.de/docs/TraCI/Protocol.html.
+
+\bibitem[Sta19]{StatistaCarOccupancy}
+Statista Research Department.
+\newblock Average car and van occupancy in England from 2002 to 2018.
+\newblock {\em Statista}, July, 2019.
+\newblock Available at:
+  https://www.statista.com/statistics/314719/average-car-and-van-occupancy-in-england/.
 
 \end{thebibliography}
 
