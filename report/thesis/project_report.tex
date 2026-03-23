@@ -215,6 +215,8 @@ In Figure~\ref{fig:netedit_demo}, the red circles and intermediary maroon links 
 
 Though not visible in the road geometry, lane and junction priorities have also been set, consistent with rules 170--183 of The Highway Code \cite{HighwayCode159to203}. In the UK, `main' and `side' roads are relative terms, with the road with priority (e.g. no give-way markings, or priority road signs) functioning as the main road, while the road required to give way is the side road.
 
+\textcolor{red}{\textbf{\emph{!!! MENTION ERRORS IN CREATING SIMULATION AND HOW IT WAS FIXED -- BICYCLE LANES OVERLAPPING !!!}}}
+
 \section{Route Generation}
 
 The SUMO installation includes an additional collection of tools for convenience. One such tool is a  \texttt{randomTrips.py} script written in Python which enables automatic generation of trips and routes\footnotemark\footnotetext{N.B. a \emph{trip} defines a random start A and end B, whereas a \emph{route} defines the exact edges to traverse to get from that start A to end B.} for different origin-destination pairs for a given road network.
@@ -555,6 +557,16 @@ This chapter explored the creation of a baseline environment that incorporates a
 Using the TraCI interface, a way for controlling and observing the simulation environment was created. This also enabled a weighted reward formula to be defined and calculated. Both of which will be crucial for our following intelligent agents.
 
 \chapter{Q-Learning}
+
+Having created a baseline environment with a traffic light system which can be observed and controlled, as well as creating a reward system, we now create the first of our intelligent agents. The context of reinforcement learning and the Markov decision process will first be explored before creating an implementation of the Q-learning algorithm. The performance will then be evaluated, and the next steps will be considered.
+
+\section{Markov Decision Process}
+
+\section{Q-Learning Algorithm}
+
+\section{Performance}
+
+Mention computer hardware specification -- mention GPU not strictly relevant
 
 \chapter{Deep Q-Learning}
 
