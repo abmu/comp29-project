@@ -215,7 +215,7 @@ In Figure~\ref{fig:netedit_demo}, the red circles and intermediary maroon links 
 
 Though not visible in the road geometry, lane and junction priorities have also been set, consistent with rules 170--183 of The Highway Code \cite{HighwayCode159to203}. In the UK, `main' and `side' roads are relative terms, with the road with priority (e.g. no give-way markings, or priority road signs) functioning as the main road, while the road required to give way is the side road.
 
-\textcolor{red}{\textbf{\emph{!!! MENTION ERRORS IN CREATING SIMULATION AND HOW IT WAS FIXED -- BICYCLE LANES OVERLAPPING !!!}}}
+\textcolor{red}{\textbf{\emph{!!! MENTION ERRORS IN CREATING SIMULATION AND HOW IT WAS FIXED -- BICYCLE LANES OVERLAPPING CAUSING DEADLOCK, PEDESTRIANS JAMMED ON EDGE !!!}}}
 
 \section{Route Generation}
 
@@ -558,15 +558,56 @@ Using the TraCI interface, a way for controlling and observing the simulation en
 
 \chapter{Q-Learning}
 
-Having created a baseline environment with a traffic light system which can be observed and controlled, as well as creating a reward system, we now create the first of our intelligent agents. The context of reinforcement learning and the Markov decision process will first be explored before creating an implementation of the Q-learning algorithm. The performance will then be evaluated, and the next steps will be considered.
+Having created a baseline environment with a traffic light system which can be observed and controlled, as well as creating a reward system, we now create the first of our intelligent agents. Reinforcement learning and the Markov decision process will first be briefly explained before implementing the Q-learning algorithm. The performance and possible improvements will then be considered.
 
-\section{Markov Decision Process}
+\section{Background}
 
-\section{Q-Learning Algorithm}
+Reinforcement learning relates to how an intelligent agent should take actions in a dynamic environment to maximise a reward. The Reward Hypothesis states that ``\emph{all of what we mean by goals and purposes can be well thought of as maximization of the expected value of the cumulative sum of a received scalar signal (reward)}''\cite{RichardSutton1990}.
 
-\section{Performance}
+Thereby the goal of our agents may be formally defined as selecting optimal actions based on the state of the SUMO environment to maximise total future reward defined by formula \eqref{reward_formula}.
+
+\subsection{State \& Actions}
+
+For each time step in our environment simulation, for each traffic light system (TLS), the state can be broadly split into three sections: the current traffic light phase of the TLS, the number of vehicles currently using the lanes controlled by the TLS, and the number of pedestrians currently in the pavement waiting areas of the TLS.
+
+Consider our demo network created previously. We can annotate the TLS with the different components which constitute the state as shown below.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/state_demo.png}
+    \caption{Annotated state in the demo network.}
+    \label{fig:detectors_demo}
+\end{figure}
+
+In Figure~\ref{fig:detectors_demo} above, the labels with prefix `\emph{N}' means \emph{north}, `\emph{E}' means \emph{east}, `\emph{S}' means \emph{south} and `\emph{W}' means \emph{west}. If the cardinal direction \emph{X} is followed by letter `\emph{B}', the label should be interpreted as \emph{X-bound}, e.g.\ `\emph{NB1}' should read as the number of vehicles in the \emph{first}, or rather, leftmost lane when travelling \emph{northbound}. In this instance, there are two lanes going northbound, with one being a dedicated bicycle lane.
+
+If \emph{X} is instead followed by letter `\emph{C}', the label should be interpreted as \emph{X-crossing-wait-area}, e.g.\ `\emph{SC2}' should read as the number of pedestrians in the \emph{second} of the two \emph{wait area} for the \emph{south} \emph{crossing} of the TLS. In some TLS where it is hard to define a relative cardinal direction for the crossing -- e.g.\ a single crossing in a two-way road -- the cardinal direction \emph{X} may be chosen arbitrarily. Finally, the `\emph{Phase}' label reflects the current traffic light phase of the TLS.
+
+For this particular TLS, the state is comprised of 15 parts, therefore it can be encoded as an $n$-tuple where $n$ is $15$. Generalising this idea, we can write the state $S$ at time $t$ for any TLS as follows.
+
+\[
+  Vehicles_t = (NB1, ..., NBa, WB1, ..., WBb, SB1, ..., SBc, WB1, ..., WBd)
+\]
+\[
+  Pedestrians_t = (SC1, SC2, WC1, WC2, NC1, NC2, EC1, EC2)
+\]
+\[
+  S_t = (TLS\ Phase) + Vehicles_t + Pedestrians_t
+\]
+
+Where \emph{a}, \emph{b}, ... are the number of lanes going northbound, ... respectively. Note that in some cases, the $Pedestrians_t$ tuple for example may not contain an entry for any of the crossing wait area depending on the topology of the TLS.
+
+\subsection{Markov Decision Process}
+
+
+
+\section{Q-Learning}
+
+\section{Results}
 
 Mention computer hardware specification -- mention GPU not strictly relevant
+
+\section{Summary}
 
 \chapter{Deep Q-Learning}
 
@@ -690,6 +731,13 @@ Statista Research Department.
 \newblock {\em Statista}, July, 2019.
 \newblock Available at:
   https://www.statista.com/statistics/314719/average-car-and-van-occupancy-in-england/.
+
+\bibitem[RS90]{RichardSutton1990}
+R.~S.~Sutton. and M.~L.~Littman.
+\newblock The reward hypothesis.
+\newblock {\em Web page, University of Alberta}, ~1990.
+\newblock Available at:
+  http://incompleteideas.net/rlai.cs.ualberta.ca/RLAI/rewardhypothesis.html.
 
 \end{thebibliography}
 

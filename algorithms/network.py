@@ -28,9 +28,10 @@ class Network:
         
         tid = str(uuid.uuid4())
         traci.start(self.sumo_cfg, label=tid)
-        conn = traci.getConnection(tid)
         if LIBSUMO:
             conn = traci
+        else:
+            conn = traci.getConnection(tid)
 
         for agent in self.agents:
             agent.start_episode(conn)
