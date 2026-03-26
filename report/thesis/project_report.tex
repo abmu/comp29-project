@@ -222,14 +222,14 @@ Importantly, subtle issues such as bicycle lanes overlapping in such a way that 
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/before_fix_demo.png}
-        \caption{Before manual fixing.}
+        \caption{Before manual lane fixing.}
         \label{fig:demo_before_fix}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/after_fix_demo.png}
-        \caption{After manual fixing.}
+        \caption{After manual lane fixing.}
         \label{fig:demo_after_fix}
     \end{subfigure}
     \caption{Demo network fix example.}
@@ -507,9 +507,30 @@ Where the coefficients, or weights rather, $w_{vd}$, $w_{vt}$, $w_{pd}$, and $w_
 
 \subsection{Penalty}
 
-At any given step in our simulation, if a vehicle or pedestrian is \emph{teleported} out of the simulation, a penalty will be occurred of $-1000.0$ units. This was empirically chosen as it is a non-insignificant value relative to the average reward per step (when the step length is $1$ second as defined previously).
+At any given step in our simulation, if a vehicle is \emph{teleported} to their next edge in the simulation, or out of the simulation entirely, a penalty will be occurred of $-1000.0$ units. This was empirically chosen as it is non-insignificant relative to the average reward per step (when the step length is $1$ second as defined previously).
 
-Teleports are a useful feature of SUMO which ensure that any vehicle or pedestrian that is stuck -- due to a grid-lock or being jammed -- or simply waiting too long for the purposes of our simulation is removed to allow for other entities to progress normally. However, they may also occur when two vehicles are unable to decide who to prioritise, an artefact of setting the step length to a high value of $1$ second.
+Teleports are a useful feature of SUMO which ensure that any vehicle that is stuck -- due to a grid-lock or being jammed -- or simply waiting too long is moved along to allow for other entities to progress normally. However, this can also occur when two vehicles occasionally `collide' and are unable to decide who should be prioritise and who should yield.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/collision_begin_demo.png}
+        \caption{Collision starts during step $1726$.}
+        \label{fig:demo_collision_beign}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/collision_end_demo.png}
+        \caption{Just before resolution, step $2026$.}
+        \label{fig:demo_collision_end}
+    \end{subfigure}
+    \caption{Collision example in the $811$th generated route, lasting $300$ steps.}
+    \label{fig:demo_collision}
+\end{figure}
+
+This is as an artefact of setting the step length to a high value of $1$ second, resulting in a scneario.
 
 \subsection{Weights}
 
