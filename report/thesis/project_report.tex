@@ -178,7 +178,7 @@ Before we get to our intelligent agents, we must first construct an environment 
 \section{OpenStreetMap}
 OpenStreetMap is a map database maintained by a community of volunteers. Using their data obtained from ariel photo imagery, satellite imagery, geodata sources, as well as manual community additions \cite{HaklayWeberOSM08}, we can extract a portion of UCL's Bloomsbury Campus\footnotemark\footnotetext{The map centre is: 51.52519°N, 0.12870°W (WGS84).}, also complete with data such as traffic lights and crossings.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.70\textwidth]{images/ucl_bloomsbury_campus.png}
     \caption{Map of UCL's Bloomsbury Campus extracted from OpenStreetMap data.}
@@ -192,7 +192,7 @@ Simulation of Urban MObility (SUMO) is an open source, multi-modal traffic simul
 
 Using the image in Figure~\ref{fig:ucl_bloomsbury_campus}, we can create a network using the \emph{netedit} graphical network editor included in SUMO. Networks are primarily comprised of edges, which is subdivided into lanes, and junctions, which are nodes where the edges meet. Junctions additionally support crossings, lane connections, and traffic lights.  
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \begin{subfigure}{0.48\textwidth}
         \centering
@@ -215,9 +215,9 @@ In Figure~\ref{fig:netedit_demo}, the red circles and intermediary maroon links 
 
 Though not visible in the road geometry, lane and junction priorities have also been set, consistent with rules 170--183 of The Highway Code \cite{HighwayCode159to203}. In the UK, `main' and `side' roads are relative terms, with the road with priority (e.g. no give-way markings, or priority road signs) functioning as the main road, while the road required to give way is the side road.
 
-Importantly, subtle issues such as bicycle lanes overlapping in such a way that `deadlocks' occasionally occurred in which bicycles indefinitely wait on the other to move, or pedestrians being `jammed' on narrow pavements due to there not being enough space were carefully resolved through a manual editing process.
+Importantly, subtle issues such as bicycle lanes overlapping in such a way that `deadlocks' occasionally occurred in which bicycles indefinitely wait on the other to move, or pedestrians being `jammed' on narrow pavements due to there not being enough space were carefully resolved through a manual editing process. Figure~\ref{fig:demo_before_fix} gives an example of deadlocked `entities'.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \begin{subfigure}{0.48\textwidth}
         \centering
@@ -232,7 +232,7 @@ Importantly, subtle issues such as bicycle lanes overlapping in such a way that 
         \caption{After manual lane fixing.}
         \label{fig:demo_after_fix}
     \end{subfigure}
-    \caption{Demo network fix example.}
+    \caption{Demo network fix example of junction bicycle lanes.}
     \label{fig:demo_network_fix}
 \end{figure}
 
@@ -247,7 +247,7 @@ We use this script to generate traffic for the following three types of entities
   \item Pedestrians
 \end{itemize}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.48\textwidth]{images/entity_demo.png}
     \caption{Example of car, bicycle, and pedestrian entities.}
@@ -368,7 +368,7 @@ It is crucial that we understand the performance of existing traffic light syste
 
 \subsection{Traffic Light System}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.48\textwidth]{images/tls_demo.png}
     \caption{Traffic Light System in the demo network.}
@@ -406,7 +406,7 @@ For the sake of simplicity, the TLS will use fixed-time control. The general pra
 
 \subsection{Detectors}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.48\textwidth]{images/detectors_demo.png}
     \caption{Detectors in the demo network.}
@@ -419,7 +419,7 @@ A step length -- the time between each step -- in our simulation is defined as 1
 
 Induction loops have a fixed length, making them ideal for measuring vehicle throughput. Lane area detectors -- perhaps implemented as a vehicle tracking camera in reality -- can cover a larger area, making it tailored for measuring queues of traffic and keeping track of wait times.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.48\textwidth]{images/pedestrians_demo.png}
     \caption{Example of pedestrians crossing the road.}
@@ -470,7 +470,7 @@ The SUMO package provides an interface that enables us to connect to our environ
 
 TraCI also provides a Python module of the same name, where you can create clients which connect to the environment simulation that is spun up. This is what the rest of the algorithms and systems in this dissertation will be built upon.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.48\textwidth]{images/traci_connect.png}
     \caption{TraCI: establishing a connection to SUMO \cite{TraCIProtocol26}.}
@@ -511,7 +511,7 @@ At any given step in our simulation, if a vehicle is \emph{teleported} to their 
 
 Teleports are a useful feature of SUMO which ensure that any vehicle that is stuck -- due to a grid-lock or being jammed -- or simply waiting too long is moved along to allow for other entities to progress normally. However, this can also occur when two vehicles occasionally `collide' and are unable to decide who should be prioritise and who should yield.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \begin{subfigure}{0.48\textwidth}
         \centering
