@@ -402,6 +402,7 @@ For the sake of simplicity, the TLS will use fixed-time control. The general pra
     \hline
   \end{tabular}
   \caption{Fixed-time control phase structure.}
+  \label{tab:phase_structure}
 \end{table}
 
 \subsection{Detectors}
@@ -615,7 +616,7 @@ Reinforcement learning relates to how an intelligent agent should take actions i
 
 Thereby the goal of our agents may be formally defined as selecting optimal actions based on the state of the SUMO environment to maximise total future reward defined by formula \eqref{reward_formula}.
 
-\subsection{State \& Actions}
+\subsection{State}
 
 For each time step in our environment simulation, for each traffic light system (TLS), the state can be broadly split into three sections: the current traffic light phase of the TLS, the number of vehicles currently using the lanes controlled by the TLS, and the number of pedestrians currently in the pavement waiting areas of the TLS.
 
@@ -628,23 +629,55 @@ Consider our demo network created previously. We can annotate the TLS with the d
     \label{fig:detectors_demo}
 \end{figure}
 
-In Figure~\ref{fig:detectors_demo} above, the labels with prefix `\emph{N}' means \emph{north}, `\emph{E}' means \emph{east}, `\emph{S}' means \emph{south} and `\emph{W}' means \emph{west}. If the cardinal direction \emph{X} is followed by letter `\emph{B}', the label should be interpreted as \emph{X-bound}, e.g.\ `\emph{NB1}' should read as the number of vehicles in the \emph{first}, or rather, leftmost lane when travelling \emph{northbound}. In this instance, there are two lanes going northbound, with one being a dedicated bicycle lane.
+In Figure~\ref{fig:detectors_demo} above, the labels with prefix `\emph{N}' means \emph{north}, `\emph{E}' means \emph{east}, `\emph{S}' means \emph{south} and `\emph{W}' means \emph{west}.
 
-If \emph{X} is instead followed by letter `\emph{C}', the label should be interpreted as \emph{X-crossing-wait-area}, e.g.\ `\emph{SC2}' should read as the number of pedestrians in the \emph{second} of the two \emph{wait area} for the \emph{south} \emph{crossing} of the TLS. In some TLS where it is hard to define a relative cardinal direction for the crossing -- e.g.\ a single crossing in a two-way road -- the cardinal direction \emph{X} may be chosen arbitrarily. Finally, the `\emph{Phase}' label reflects the current traffic light phase of the TLS.
+If the cardinal direction \emph{X} is followed by letter `\emph{B}', the label should be interpreted as \emph{X-bound}, e.g.\ `\emph{NB1}' should read as the number of vehicles in the \emph{first}, or rather, leftmost lane when travelling \emph{northbound}. In this instance, there are two lanes going northbound, with one being a dedicated bicycle lane. If \emph{X} is instead followed by letter `\emph{C}', the label should be interpreted as \emph{X-crossing-wait-area}, e.g.\ `\emph{SC2}' should read as the number of pedestrians in the \emph{second} of the two \emph{wait area} for the \emph{south} \emph{crossing} of the TLS. Finally, the `\emph{Phase}' label reflects the current traffic light phase of the TLS.
 
-For this particular TLS, the state is comprised of 15 parts, therefore it can be encoded as an $n$-tuple where $n$ is $15$. Generalising this idea, we can write the state $S$ at time $t$ for any TLS as follows.
+For this particular TLS, the state is comprised of 15 parts, therefore it can be encoded as an $n$-tuple where $n$ is $15$. Generalising this idea, we can write the state $S$ at time $t$ for any TLS\footnotemark\footnotetext{In some TLS it may be hard to define a relative cardinal direction, e.g.\ for a single crossing in a two-way road, or for an exit lane in a roundabout with more than 4 exits. In such cases it would be desirable to use an alternative naming scheme for the state variables.} as follows.
 
 \[
-  Vehicles_t = (NB1, ..., NBa, WB1, ..., WBb, SB1, ..., SBc, WB1, ..., WBd)
+  Veh_t = (NB_1, ..., NB_a, WB_1, ..., WB_b, SB_1, ..., SB_c, EB_1, ..., EB_d)
 \]
 \[
-  Pedestrians_t = (SC1, SC2, WC1, WC2, NC1, NC2, EC1, EC2)
+  Ped_t = (SC_1, SC_2, WC_1, WC_2, NC_1, NC_2, EC_1, EC_2)
 \]
 \[
-  S_t = (TLS\ Phase) + Vehicles_t + Pedestrians_t
+  S_t = (Phase_t,) + Veh_t + Ped_t
 \]
 
-Where \emph{a}, \emph{b}, ... are the number of lanes going northbound, ... respectively. Note that in some cases, the $Pedestrians_t$ tuple for example may not contain an entry for any of the crossing wait area depending on the topology of the TLS.
+Where \emph{a}, \emph{b}, \emph{c}, and \emph{d} are the number of lanes going northbound, westbound, southbound, and eastbound respectively. Note that in some cases, the $Veh_t$ (vehicles) and $Ped_t$ (pedestrians) tuples may not contain an entry for some lanes or crossings listed depending on the TLS topology.
+
+\subsection{Actions}
+
+Recall Table~\ref{tab:phase_structure} in which we defined the fixed-time control phase structure. Phases 1--3 of the TLS related to the northbound/southbound approaches, phases 4--6 related to the eastbound/westbound approaches, and finally phases 7--8 related to the collective pedestrian approaches of the TLS.
+
+We will formally define an action to be one which switches -- or maintains -- the approach that is currently active. The three actions will be switching to phase 1, switching to phase 4, or switching to phase 7. The rest of the phases are \emph{not} viable switches that can be made directly by the agent. Rather, these will be considered \emph{phase switch} actions mapped to a particular action as shown.
+
+TODO
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{c c l l}
+    \hline
+    \textbf{Phase} & \textbf{Duration (s)} & \textbf{Approach} & \textbf{State} \\
+    \hline
+    1 & 30 & Northbound/Southbound & Green \\
+    2 & 3  & Northbound/Southbound & Amber \\
+    3 & 2  & All approaches & Red \\
+    \hline
+    4 & 30 & Eastbound/Westbound & Green \\
+    5 & 3  & Eastbound/Westbound & Amber \\
+    6 & 2  & All approaches & Red \\
+    \hline
+    7 & 10 & Pedestrians & Green \\
+    8 & 10 & All approaches & Red \\
+    \hline
+    \textbf{Total} & \textbf{90} & \\
+    \hline
+  \end{tabular}
+  \caption{Fixed-time control phase structure.}
+  \label{tab:phase_structure}
+\end{table}
 
 \subsection{Markov Decision Process}
 
