@@ -530,9 +530,9 @@ Teleports ensure that any vehicle that is stuck -- due to a grid-lock or being j
     \label{fig:demo_collision}
 \end{figure}
 
-The issue in Figure~\ref{fig:demo_collision} is as an artefact of setting the step length to a value $1$ second. Vehicles are only able to make judgements every second leading to high reactions times and sometimes sub-optimal choices. Here, two vehicles are seen trying to progress to the same position, arriving at the exact same second, and from practically the same distance, leading to the simulation unable to decide who should have priority.
+The issue in Figure~\ref{fig:demo_collision} is as an artefact of setting the step length to a value of $1$ second. Vehicles are only able to make judgements every second leading to high reactions times and sometimes sub-optimal choices. Here, two vehicles are seen trying to progress to the same position, arriving at the exact same second, and from practically the same distance, leading to the simulation unable to resolve priority.
 
-This may be resolved by setting the step length to $0.1$ seconds, allowing arrival measurements to be taken with sub-second precision making it easier to identify who should have priority. However the $\sim10\times$ increase in simulation time to resolve a problem that occurs rarely was not deemed a worthwhile tradeoff.
+This may be resolved by setting the step length to $0.1$ seconds, allowing arrival measurements to be taken with sub-second precision making it easier to identify who should yield. However the $\sim10\times$ increase in simulation time to resolve a problem that occurs rarely was not deemed a worthwhile tradeoff.
 
 \subsection{Weights}
 
@@ -567,7 +567,7 @@ Since the fixed-time control TLS will serve as the baseline against which we eva
 
 If we calculate the reward after each of the 1000 routes is run using the fixed-control TLS, we confirm that the average calculated reward is about 0.
 
-The 3 visible spikes in the graph correspond to routes in which teleportations occurred incurring penalties. Although not ideal, they are indeed rare, and do not effect the final result to a significant degree. Penalties will be a useful feature which discourage actions by our traffic light agents that cause vehicles to wait inordinately long.
+The 3 visible spikes in the graph correspond to routes in which teleportations occurred incurring penalties. Although not ideal, they are indeed rare and do not effect the final result significantly. Penalties will be a useful feature which discourage actions by our traffic light agents that cause vehicles to wait inordinately long.
 
 \begin{figure}[H]
   \centering
