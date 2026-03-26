@@ -215,7 +215,7 @@ In Figure~\ref{fig:netedit_demo}, the red circles and intermediary maroon links 
 
 Though not visible in the road geometry, lane and junction priorities have also been set, consistent with rules 170--183 of The Highway Code \cite{HighwayCode159to203}. In the UK, `main' and `side' roads are relative terms, with the road with priority (e.g. no give-way markings, or priority road signs) functioning as the main road, while the road required to give way is the side road.
 
-Importantly, subtle issues such as bicycle lanes overlapping in such a way that `deadlocks' occasionally occurred in which bicycles indefinitely wait on the other to move, or pedestrians being `jammed' on narrow pavements due to there not being enough space were carefully resolved through a manual editing process. Figure~\ref{fig:demo_before_fix} gives an example of deadlocked `entities'.
+Importantly, subtle issues such as bicycle lanes overlapping in such a way that `deadlocks' occasionally occurred in which bicycles indefinitely wait on the other to move, or pedestrians being `jammed' on narrow pavements due to there not being enough space were carefully resolved through manual editing. Figure~\ref{fig:demo_before_fix} gives an example of gridlocked entities.
 
 \begin{figure}[H]
     \centering
@@ -507,9 +507,9 @@ Where the coefficients, or weights rather, $w_{vd}$, $w_{vt}$, $w_{pd}$, and $w_
 
 \subsection{Penalty}
 
-At any given step in our simulation, if a vehicle is \emph{teleported} to their next edge in the simulation, or out of the simulation entirely, a penalty will be occurred of $-1000.0$ units. This was empirically chosen as it is non-insignificant relative to the average reward per step (when the step length is $1$ second as defined previously).
+At any given step in our simulation, if a vehicle is \emph{teleported} to their next edge in the simulation, or out of the simulation entirely, a penalty will be occurred of $-1000.0$ units. This was chosen as it is non-insignificant relative to the average reward per step (when step length is $1$ second).
 
-Teleports are a useful feature of SUMO which ensure that any vehicle that is stuck -- due to a grid-lock or being jammed -- or simply waiting too long is moved along to allow for other entities to progress normally. However, this can also occur when two vehicles occasionally `collide' and are unable to decide who should be prioritise and who should yield.
+Teleports ensure that any vehicle that is stuck -- due to a grid-lock or being jammed -- or simply waiting too long is moved along to allow for other entities to progress normally. Occasionally, two vehicles may unfortunately `collide', unable to decide who should be prioritised and who should yield due to problems with SUMO itself.
 
 \begin{figure}[H]
     \centering
@@ -523,14 +523,16 @@ Teleports are a useful feature of SUMO which ensure that any vehicle that is stu
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/collision_end_demo.png}
-        \caption{Just before resolution, step $2026$.}
+        \caption{Just before teleportations during step $2026$.}
         \label{fig:demo_collision_end}
     \end{subfigure}
     \caption{Collision example in the $811$th generated route, lasting $300$ steps.}
     \label{fig:demo_collision}
 \end{figure}
 
-This is as an artefact of setting the step length to a high value of $1$ second, resulting in a scneario.
+The issue in Figure~\ref{fig:demo_collision} is as an artefact of setting the step length to a value $1$ second. Vehicles are only able to make judgements every second leading to high reactions times and sometimes sub-optimal choices. Here, two vehicles are seen trying to progress to the same position, arriving at the exact same second, and from practically the same distance, leading to the simulation unable to decide who should have priority.
+
+This may be resolved by setting the step length to $0.1$ seconds, allowing arrival measurements to be taken with sub-second precision making it easier to identify who should have priority. However the $\sim10\times$ increase in simulation time to resolve a problem that occurs rarely was not deemed a worthwhile tradeoff.
 
 \subsection{Weights}
 
@@ -565,7 +567,7 @@ Since the fixed-time control TLS will serve as the baseline against which we eva
 
 If we calculate the reward after each of the 1000 routes is run using the fixed-control TLS, we confirm that the average calculated reward is about 0.
 
-\textcolor{red}{\textbf{\emph{!!! RERUN EXPERIMENT TO GET CORRECT GRAPH !!!}}}
+The 3 visible spikes in the graph correspond to routes in which teleportations occurred incurring penalties. Although not ideal, they are indeed rare, and do not effect the final result to a significant degree. Penalties will be a useful feature which discourage actions by our traffic light agents that cause vehicles to wait inordinately long.
 
 \begin{figure}[H]
   \centering
