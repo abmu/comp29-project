@@ -7,8 +7,8 @@
 
     <input>
         <net-file value="networks/demo/main.net.xml"/>
-        <route-files value="routes/demo/bicycle.rou.xml,routes/demo/car.rou.xml,routes/demo/pedestrian.rou.xml"/>
-        <additional-files value="networks/demo/detectors.add.xml"/>
+        <!-- <route-files value="routes/demo/bicycle.rou.xml,routes/demo/car.rou.xml,routes/demo/pedestrian.rou.xml"/> -->
+        <!-- <additional-files value="networks/demo/detectors.add.xml"/> -->
     </input>
 
     <gui_only>

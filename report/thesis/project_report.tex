@@ -215,7 +215,26 @@ In Figure~\ref{fig:netedit_demo}, the red circles and intermediary maroon links 
 
 Though not visible in the road geometry, lane and junction priorities have also been set, consistent with rules 170--183 of The Highway Code \cite{HighwayCode159to203}. In the UK, `main' and `side' roads are relative terms, with the road with priority (e.g. no give-way markings, or priority road signs) functioning as the main road, while the road required to give way is the side road.
 
-\textcolor{red}{\textbf{\emph{!!! MENTION ERRORS IN CREATING SIMULATION AND HOW IT WAS FIXED -- BICYCLE LANES OVERLAPPING CAUSING DEADLOCK, PEDESTRIANS JAMMED ON EDGE !!!}}}
+Importantly, subtle issues such as bicycle lanes overlapping in such a way that `deadlocks' occasionally occurred in which bicycles indefinitely wait on the other to move, or pedestrians being `jammed' on narrow pavements due to there not being enough space were carefully resolved through a manual editing process.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/before_fix_demo.png}
+        \caption{Before manual fixing.}
+        \label{fig:demo_before_fix}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/after_fix_demo.png}
+        \caption{After manual fixing.}
+        \label{fig:demo_after_fix}
+    \end{subfigure}
+    \caption{Demo network fix example.}
+    \label{fig:demo_network_fix}
+\end{figure}
 
 \section{Route Generation}
 
@@ -480,10 +499,17 @@ At time step $t$, the reward $R_t$ can be expressed as a weighted sum of the fou
   w_{vd}(-z_{vd}) +
   w_{vt}(z_{vt}) +
   w_{pd}(-z_{pd}) +
-  w_{pt}(z_{pt})
+  w_{pt}(z_{pt}) +
+  P_t
 \end{equation}
 
-Where the coefficients, or weights rather, $w_{vd}$, $w_{vt}$, $w_{pd}$, and $w_{pt}$ determine the relative importance of each metric. Delay terms are negated since increased delay represents worse performance.
+Where the coefficients, or weights rather, $w_{vd}$, $w_{vt}$, $w_{pd}$, and $w_{pt}$ determine the relative importance of each metric. Delay terms are negated since increased delay represents worse performance. $P_t$ is a penalty applied.
+
+\subsection{Penalty}
+
+At any given step in our simulation, if a vehicle or pedestrian is \emph{teleported} out of the simulation, a penalty will be occurred of $-1000.0$ units. This was empirically chosen as it is a non-insignificant value relative to the average reward per step (when the step length is $1$ second as defined previously).
+
+Teleports are a useful feature of SUMO which ensure that any vehicle or pedestrian that is stuck -- due to a grid-lock or being jammed -- or simply waiting too long for the purposes of our simulation is removed to allow for other entities to progress normally. However, they may also occur when two vehicles are unable to decide who to prioritise, an artefact of setting the step length to a high value of $1$ second.
 
 \subsection{Weights}
 
