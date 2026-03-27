@@ -653,37 +653,36 @@ Recall Table~\ref{tab:phase_structure} in which we defined the fixed-time contro
 
 We will formally define an action to be one which switches -- or maintains -- the approach that is currently active. The three actions will be switching to phase 1, switching to phase 4, or switching to phase 7. The rest of the phases are \emph{not} viable switches that can be made directly by the agent. Rather, these will be considered \emph{phase switch} actions mapped to a particular action as shown.
 
-TODO
-
 \begin{table}[h]
   \centering
-  \begin{tabular}{c c l l}
+  \begin{tabular}{c c c c}
     \hline
-    \textbf{Phase} & \textbf{Duration (s)} & \textbf{Approach} & \textbf{State} \\
+    \textbf{Action Index} & \textbf{TLS Phase} & \textbf{Duration (s)} & \textbf{Phase Switch} \\
     \hline
-    1 & 30 & Northbound/Southbound & Green \\
-    2 & 3  & Northbound/Southbound & Amber \\
-    3 & 2  & All approaches & Red \\
+    0 & 1 & 30 & (2, 3 s) $\to$ (3, 2 s) \\
     \hline
-    4 & 30 & Eastbound/Westbound & Green \\
-    5 & 3  & Eastbound/Westbound & Amber \\
-    6 & 2  & All approaches & Red \\
+    1 & 4 & 30 & (5, 3 s) $\to$ (6, 2 s) \\
     \hline
-    7 & 10 & Pedestrians & Green \\
-    8 & 10 & All approaches & Red \\
-    \hline
-    \textbf{Total} & \textbf{90} & \\
+    2 & 7 & 10 & (8, 10 s) \\
     \hline
   \end{tabular}
-  \caption{Fixed-time control phase structure.}
-  \label{tab:phase_structure}
+  \caption{Traffic light system actions in the demo network.}
+  \label{tab:phase_actions}
 \end{table}
+
+A phase switch may contain more than one tuple of the format (\emph{phase}, \emph{duration (s)}). These phases are run sequentially when switching \emph{away} from the current TLS phase. For example, if the current phase is 1 (index 0), and the desired action is to switch to phase 4 (index 1), the phase switch is first run such that the phase is set to 2 for 3 seconds, followed by phase 3 for 2 seconds, and then finally phase 4 as intended.
+
+Phase switch allows for a smooth transition between traffic flow directions, giving a buffer of time in which vehicles or pedestrians can finish their travels safely (by transitioning the traffic lights to yellow then red). It is not applied if going from the current action index to itself.
 
 \subsection{Markov Decision Process}
 
 
 
 \section{Q-Learning}
+
+\subsection{Algorithm}
+
+\subsection{Decaying $\epsilon$-greedy policy}
 
 \section{Results}
 
