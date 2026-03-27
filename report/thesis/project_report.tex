@@ -670,15 +670,27 @@ We will formally define an action to be one which switches -- or maintains -- th
   \label{tab:phase_actions}
 \end{table}
 
-A phase switch may contain more than one tuple of the format (\emph{phase}, \emph{duration (s)}). These phases are run sequentially when switching \emph{away} from the current TLS phase. For example, if the current phase is 1 (index 0), and the desired action is to switch to phase 4 (index 1), the phase switch is first run such that the phase is set to 2 for 3 seconds, followed by phase 3 for 2 seconds, and then finally phase 4 as intended.
+A phase switch contains one or more tuples of the format (\emph{phase}, \emph{duration (s)}). These phases must be sequentially run when switching \emph{away} from the current TLS phase. For example, if the current phase is 1 (index 0), and the action taken is to switch to phase 4 (index 1), the phase switch (2, 3 s) $\to$ (3, 2 s) first executes. That is the phase is set to 2 for 3 seconds, followed by phase 3 for 2 seconds. Finally, phase 4 runs as intended for 30 seconds before the next action is selected.
 
-Phase switch allows for a smooth transition between traffic flow directions, giving a buffer of time in which vehicles or pedestrians can finish their travels safely (by transitioning the traffic lights to yellow then red). It is not applied if going from the current action index to itself.
+Phase switch allows for a smooth transition between traffic flow directions, giving a buffer of time in which vehicles or pedestrians can finish their travels safely (by transitioning the traffic lights to yellow then red). It is \emph{not} applied if going from the current action index to itself.
 
 \subsection{Markov Decision Process}
 
+A Markov Decision Process (MDP) is a mathematical model for sequential decision making when outcomes are uncertain. Formally, a MDP can be defined as a 5-tuple ($S$, $A$, $P_a$, $R_a$, $\gamma$), where:
 
+\begin{itemize}
+  \item $S$ is a set of \textbf{states} called the state space. In our demo network, it is every valid possible configuration of our $S_t$ tuple before and after an action is taken.
+  \item $A$ is a set of \textbf{actions} called the action space. This would be the 3 action indexes we defined previously.
+  \item $P_a(s,s')$ is the \textbf{probability} that action $a$ in state $s$ at time $t$ will lead to state $s'$ at time $t+1$. This will not be known or estimated by our agents since Q-learning is \emph{model-free}.
+  \item $R_a(s,s')$ is the \textbf{reward} received after action $a$ is taken to transition from state $s$ to $s'$. This is the cumulative sum of $R_t$ over the duration of the action.
+  \item $\gamma$ is the \textbf{discount factor} between $0 \leq \gamma \leq 1$ which determines how much future rewards matter.  
+\end{itemize}
+
+Pedantically, Semi markov decision process.
 
 \section{Q-Learning}
+
+Q-learning is a specific algorithm used to solve a Markov Decision Process.
 
 \subsection{Algorithm}
 
@@ -688,6 +700,8 @@ Phase switch allows for a smooth transition between traffic flow directions, giv
 
 Mention computer hardware specification -- mention GPU not strictly relevant
 
+Evaluation Framework
+
 \section{Summary}
 
 \chapter{Deep Q-Learning}
@@ -695,6 +709,8 @@ Mention computer hardware specification -- mention GPU not strictly relevant
 \chapter{Communicative Deep Q-Learning}
 
 \chapter{Supplementary Analysis}
+
+Compression Levels -- Q-learning becomes feasible.
 
 \chapter{Conclusions}
 \section{Achievements}

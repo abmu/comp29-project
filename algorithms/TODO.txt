@@ -6,7 +6,6 @@ Report
 
 Algorithms
 - Add offset to traffic light timers
-- Switch to libsumo instead of TraCI
 - Distributed data being sent -- rather than centralised -- compared to real life systems like SCOOT + MOVA + VA
 
 Implement evaluation framework
