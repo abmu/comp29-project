@@ -636,7 +636,7 @@ In Figure~\ref{fig:detectors_demo} above, the labels with prefix `\emph{N}' mean
 
 If the cardinal direction \emph{X} is followed by letter `\emph{B}', the label should be interpreted as \emph{X-bound}, e.g.\ `\emph{NB1}' should read as the number of vehicles in the \emph{first}, or rather, leftmost lane when travelling \emph{northbound}. In this instance, there are two lanes going northbound, with one being a dedicated bicycle lane. If \emph{X} is instead followed by letter `\emph{C}', the label should be interpreted as \emph{X-crossing-wait-area}, e.g.\ `\emph{SC2}' should read as the number of pedestrians in the \emph{second} of the two \emph{wait area} for the \emph{south} \emph{crossing} of the TLS. Finally, the `\emph{Phase}' label reflects the current traffic light phase of the TLS.
 
-For this particular TLS, the state is comprised of 15 parts, therefore it can be encoded as an $n$-tuple where $n$ is $15$. Generalising this idea, we can write the state $S$ at time $t$ for any TLS\footnotemark\footnotetext{In some TLS it may be hard to define a relative cardinal direction, e.g.\ for a single crossing in a two-way road, or for an exit lane in a roundabout with more than 4 exits. In such cases it would be desirable to use an alternative naming scheme for state variables.} as follows.
+For this particular TLS, the state is comprised of 15 parts, therefore it can be encoded as an $n$-tuple where $n$ is $15$. Generalising this idea, we can write the full uncompressed state $S$ at time $t$ for any TLS\footnotemark\footnotetext{In some TLS it may be hard to define a relative cardinal direction, e.g.\ for a single crossing in a two-way road, or for an exit lane in a roundabout with more than 4 exits. In such cases it would be desirable to use an alternative naming scheme for state variables.} as follows.
 
 \[
   Veh_t = (NB_1, ..., NB_a, WB_1, ..., WB_b, SB_1, ..., SB_c, EB_1, ..., EB_d)
@@ -684,7 +684,7 @@ A Markov Decision Process (MDP) is a mathematical model for sequential decision 
 \begin{itemize}
   \item $S$ is a set of \textbf{states} called the state space. In our demo network, it is every valid possible configuration of our $S_t$ tuple before and after an action is taken.
   \item $A$ is a set of \textbf{actions} called the action space. This would be the 3 action indexes we defined previously.
-  \item $P_a(s,s')$ is the \textbf{probability} that action $a$ in state $s$ at time $t$ will lead to state $s'$ at time $t+1$. This will not be known or estimated by our agents since Q-learning is \emph{model-free}.
+  \item $P_a(s,s')$ is the transition \textbf{probability} that action $a$ in state $s$ at time $t$ will lead to state $s'$ at time $t+1$. This will not be known or estimated by our agents since Q-learning is \emph{model-free}.
   \item $R_a(s,s')$ is the \textbf{reward} received after action $a$ is taken to transition from state $s$ to $s'$. This is the cumulative sum of $R_t$ over the duration of the action.
   \item $\gamma$ is the \textbf{discount factor} between $0 \leq \gamma \leq 1$ which determines how much future rewards matter.  
 \end{itemize}
@@ -716,9 +716,45 @@ Pedantically, we actually use a Semi-Markov Decision Process (SMDP). Unlike stan
 
 \section{Q-Learning}
 
-Q-learning is a specific algorithm used to solve a Markov Decision Process.
+Q-learning is a specific reinforcement learning algorithm used to find the optimal policy within a Markov Decision Process. It trains an agent to assign values to its possible actions based on its current state, without requiring a model of the environment (model-free -- the transition probabilities are not known).
 
-Try include a function F: A x B arrow Real.
+``\emph{Q}'' refers to the function that the algorithm computes: the quality -- that is, the expected reward -- of an action taken in a given state.
+
+\[
+Q: S \times A \to \mathbb{R}
+\]
+
+This function can be used to construct what is known as a Q-table, which enumerates every possible combination of state and action and maps it to a corresponding quality value, set to 0 initially.
+
+\begin{figure}[H]
+  \centering
+  \[
+  Q(s, a) =
+  \begin{array}{c|ccc}
+    \text{} & a=0 & a=1 & a=2 \\
+    \hline
+    s_1 & Q(s_1,0) & Q(s_1,1) & Q(s_1,2) \\
+    s_2 & Q(s_2,0) & Q(s_2,1) & Q(s_2,2) \\
+    s_3 & Q(s_3,0) & Q(s_3,1) & Q(s_3,2) \\
+    \vdots & \vdots & \vdots & \vdots \\
+    s_n & Q(s_n,0) & Q(s_n,1) & Q(s_n,2) \\
+    \vdots & \vdots & \vdots & \vdots \\
+  
+  \end{array}
+  \]
+  \caption{Example of Q-table with $n$ states and 3 actions.}
+  \label{arr:q_table_example}
+\end{figure}
+
+From this tabular visualisation, we see that it may take a long time to populate if there are many state-action pairs. Our state tuple consists of 15 entries. The first of which, the phase of the TLS before our agent takes an action, has 3 possible values: 1, 4, 7. The next six entries are lane detectors which count the number of vehicles. The remaining eight entries are our pseudo-detectors which count the number of pedestrians waiting to cross. This estimate leads there to being X combinations of states, which needs to converge...
+
+After running the Q-algorithm numerous times, the values in the Q-table should converge to specific values. The optimal policy $\pi^*$ can then be found as follows:
+
+In a given state, refer to the Q-table to find the action with the highest value.
+
+Take this action to go to a new state.
+
+Repeat from step 1.
 
 \subsection{Algorithm}
 
