@@ -633,7 +633,7 @@ In Figure~\ref{fig:detectors_demo} above, the labels with prefix `\emph{N}' mean
 
 If the cardinal direction \emph{X} is followed by letter `\emph{B}', the label should be interpreted as \emph{X-bound}, e.g.\ `\emph{NB1}' should read as the number of vehicles in the \emph{first}, or rather, leftmost lane when travelling \emph{northbound}. In this instance, there are two lanes going northbound, with one being a dedicated bicycle lane. If \emph{X} is instead followed by letter `\emph{C}', the label should be interpreted as \emph{X-crossing-wait-area}, e.g.\ `\emph{SC2}' should read as the number of pedestrians in the \emph{second} of the two \emph{wait area} for the \emph{south} \emph{crossing} of the TLS. Finally, the `\emph{Phase}' label reflects the current traffic light phase of the TLS.
 
-For this particular TLS, the state is comprised of 15 parts, therefore it can be encoded as an $n$-tuple where $n$ is $15$. Generalising this idea, we can write the state $S$ at time $t$ for any TLS\footnotemark\footnotetext{In some TLS it may be hard to define a relative cardinal direction, e.g.\ for a single crossing in a two-way road, or for an exit lane in a roundabout with more than 4 exits. In such cases it would be desirable to use an alternative naming scheme for the state variables.} as follows.
+For this particular TLS, the state is comprised of 15 parts, therefore it can be encoded as an $n$-tuple where $n$ is $15$. Generalising this idea, we can write the state $S$ at time $t$ for any TLS\footnotemark\footnotetext{In some TLS it may be hard to define a relative cardinal direction, e.g.\ for a single crossing in a two-way road, or for an exit lane in a roundabout with more than 4 exits. In such cases it would be desirable to use an alternative naming scheme for state variables.} as follows.
 
 \[
   Veh_t = (NB_1, ..., NB_a, WB_1, ..., WB_b, SB_1, ..., SB_c, EB_1, ..., EB_d)
@@ -686,11 +686,22 @@ A Markov Decision Process (MDP) is a mathematical model for sequential decision 
   \item $\gamma$ is the \textbf{discount factor} between $0 \leq \gamma \leq 1$ which determines how much future rewards matter.  
 \end{itemize}
 
-Pedantically, Semi markov decision process.
+The MDP is used to model the stochastic (i.e.\ involving random probability) process in which our intelligent agents try to find an optimal policy $\pi^*$, where a policy is some function $\pi$ which maps a state $s$ to an action $a$: $\pi(s)=a$. The optimal policy $\pi^*$ should maximise expected cumulative reward:
+
+\[
+E\left[\sum_{t=0}^{\infty}\gamma^t{R_a}_t(s_t,s_{t+1})\right]
+\]
+
+An summary overview of the MDP can be given as follows:
+
+
+Pedantically, we actually use a Semi-Markov Decision Process (SMDP). Unlike standard MDPs, SMDPs enable actions to have a variable duration as seen in Table~\ref{tab:phase_actions} as opposed to being instant -- occurring in a single step. This distinction is accommodated in our later equations.
 
 \section{Q-Learning}
 
 Q-learning is a specific algorithm used to solve a Markov Decision Process.
+
+Try include a function F: A x B arrow Real.
 
 \subsection{Algorithm}
 
@@ -701,6 +712,8 @@ Q-learning is a specific algorithm used to solve a Markov Decision Process.
 Mention computer hardware specification -- mention GPU not strictly relevant
 
 Evaluation Framework
+
+When evaluating, set evaluation step size to SMALLER value than train step size, to make less prone to collisions and penalties.
 
 \section{Summary}
 
