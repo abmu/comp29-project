@@ -14,6 +14,9 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
 \newtheorem{theorem}{THEOREM}
 \newtheorem{lemma}[theorem]{LEMMA}
 \newtheorem{corollary}[theorem]{COROLLARY}
@@ -381,7 +384,7 @@ In London, adaptive traffic light control systems are widely used enabling coord
 
 For the sake of simplicity, the TLS will use fixed-time control. The general practice is for the cycle length to be between 50 and 120 seconds, with 90 seconds often being considered optimum \cite{FHWA_SIIG04}. Below is a simple cycle striking a balance between safety and operational performance.
 
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \begin{tabular}{c c l l}
     \hline
@@ -437,7 +440,7 @@ In our baseline environment, the traffic densities for cars, bicycles, and pedes
 
 The \texttt{--insertion-density} parameter, which specifies the number of entities per hour per kilometer of road, was assigned for each entity type such that the traffic densities for road users, i.e.\ the cars and bicycles which use road lanes, had a combined density equivalent to pedestrians.
 
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \begin{tabular}{l l c c}
     \hline
@@ -539,7 +542,7 @@ This may be resolved by setting the step length to $0.1$ seconds, allowing arriv
 
 The four metric values $z_{vd}$, $z_{vt}$, $z_{pd}$, and $z_{pt}$ are calculated per each of the 3\,600\,000 simulation steps and then cached inside of a buffer with four columns. Once the final route has finished running, we can use the \texttt{numpy} Python module to calculate statistics regarding each metric stored within the buffer.
 
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \begin{tabular}{lrrrrr}
     \hline
@@ -653,7 +656,7 @@ Recall Table~\ref{tab:phase_structure} in which we defined the fixed-time contro
 
 We will formally define an action to be one which switches -- or maintains -- the approach that is currently active. The three actions will be switching to phase 1, switching to phase 4, or switching to phase 7. The rest of the phases are \emph{not} viable switches that can be made directly by the agent. Rather, these will be considered \emph{phase switch} actions mapped to a particular action as shown.
 
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \begin{tabular}{c c c c}
     \hline
@@ -694,6 +697,20 @@ E\left[\sum_{t=0}^{\infty}\gamma^t{R_a}_t(s_t,s_{t+1})\right]
 
 An summary overview of the MDP can be given as follows:
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance=3.5cm]
+    \tikzset{state/.style = {circle, draw=black, thick}}
+    \tikzset{arrow/.style = {>=stealth, thick}}
+    \node[state] (agent) {\emph{Agent}};
+    \node[state] (env) [below of=agent] {\emph{Environment}};
+    \draw[->, bend left=90, arrow] (agent) to node[right]{\emph{Action} $A_t$} (env);
+    \draw[<-, bend right=90, arrow] (agent) to node[left]{\emph{State} $S_t$} (env);
+    \draw[<-, arrow] (agent) to node[midway, fill=white]{\emph{Reward} $R_t$} (env);
+  \end{tikzpicture}
+  \caption{Markov Decision Process overview.}
+  \label{fig:markov_decision_process}
+\end{figure}
 
 Pedantically, we actually use a Semi-Markov Decision Process (SMDP). Unlike standard MDPs, SMDPs enable actions to have a variable duration as seen in Table~\ref{tab:phase_actions} as opposed to being instant -- occurring in a single step. This distinction is accommodated in our later equations.
 
