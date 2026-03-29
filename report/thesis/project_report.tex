@@ -21,6 +21,8 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
+\usepackage{makecell}
+
 \newtheorem{theorem}{THEOREM}
 \newtheorem{lemma}[theorem]{LEMMA}
 \newtheorem{corollary}[theorem]{COROLLARY}
@@ -795,7 +797,28 @@ $\underset{a'}{\max} Q(s',a')$ should read as an estimate of the optimal future 
 
 \subsection{Decaying $\epsilon$-greedy policy}
 
+At the start, our Q-table will not be populated with values such that trying to follow the optimal policy will lead to am optimal strategy. We need a way to initially \emph{explore} actions to discover what works best, before eventually choosing to \emph{exploit} the best actions found.
 
+Too much exploitation may result in our agent getting stuck with a suboptimal strategy. Too much exploration may result in our agent wasting time trying random actions and never settling on a good solution.
+
+The $\epsilon$-greedy (epsilon-greedy) policy strikes a balance. Whenever our Q-learning algorithm selects an action during training, with probability $\epsilon$ it will explore and choose uniformly at random one of the 3 actions, otherwise with probability $1-\epsilon$ it will exploit and choose the best action `greedily'.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c | l l l}
+    \textbf{} & a=0 (\emph{best}) & a=1 & a=2 \\
+    \hline
+    $\epsilon=0.1$ & \makecell[l]{0.9000 +\\0.3333 =\\0.9333} & 0.3333 & 0.3333 \\
+  \end{tabular}
+  \caption{Example action probability table, where $a=0$ is the best.}
+  \label{tab:action_probabilities}
+\end{table}
+
+To make the epsilon value lessen as the training goes on, we define a function for epsilon which exponentially decays with time.
+
+\[
+  
+\]
 
 \section{Results}
 
