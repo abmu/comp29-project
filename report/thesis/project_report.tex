@@ -17,6 +17,10 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta}
 
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
 \newtheorem{theorem}{THEOREM}
 \newtheorem{lemma}[theorem]{LEMMA}
 \newtheorem{corollary}[theorem]{COROLLARY}
@@ -724,7 +728,7 @@ Q-learning is a specific reinforcement learning algorithm used to find the optim
 Q: S \times A \to \mathbb{R}
 \]
 
-This function can be used to construct what is known as a Q-table, which enumerates every possible combination of state and action and maps it to a corresponding quality value, set to 0 initially.
+This function can be used to construct what is known as a Q-table, which enumerates every possible combination of state and action and maps it to a corresponding quality value, set to any arbitrary value initially (we choose 0).
 
 \begin{figure}[H]
   \centering
@@ -746,17 +750,48 @@ This function can be used to construct what is known as a Q-table, which enumera
   \label{arr:q_table_example}
 \end{figure}
 
-After running Q-learning -- explained below -- over many iterations, the values in the Q-table converge towards their optimal estimates. Once this happens, the optimal policy $\pi^*$ can be derived from the Q-table directly:
+After running Q-learning -- outlined below -- over many episodes, the values in the Q-table converge towards their optimal estimates. Once this happens, the optimal policy $\pi^*$ can be derived from the Q-table directly:
 
 \begin{enumerate}
-  \item For any given state, select the action with the highest Q-value. 
+  \item For any given state, select the action with the highest quality value.
   \item Execute this action to transition to the next state.
   \item Repeat this process at each subsequent state.
 \end{enumerate}
 
 \subsection{Algorithm}
 
+\begin{algorithm}[H]
+  \caption{Tabular Q-Learning}
+  \begin{algorithmic}[1]
+  \State Initialise $Q(s,a) = 0$ for all $s \in S, a \in A$
+  \For{each episode}
+      \State Observe state $s$ from environment
+      \For{each step in episode}
+          \State Choose action $a$ using policy $\pi$
+          \State Execute action $a$
+          \State Observe cumulative reward $R$, next state $s'$, and duration $d$
+          \State $Q(s,a) \leftarrow Q(s,a) + \alpha \Big(R + \gamma^d \underset{a'}{\max} Q(s',a') - Q(s,a)\Big)$
+          \State Set $s \leftarrow s'$
+      \EndFor
+  \EndFor
+  \end{algorithmic}
+\end{algorithm}
 
+In line 5, the training policy $\pi$ we will use to choose an action is called \emph{$\epsilon$-greedy}, explained later. This training policy is distinct from the optimal policy $\pi^*$ described earlier.
+
+When we execute the chosen action $a$ from state $s$ and observe the cumulative reward $R$, next state $s'$, and duration $d$ of the action, $Q(s,a)$ is updated as shown in line 8 as follows:
+
+\[
+  Q(s,a) + \alpha \Big(R + \gamma^d \underset{a'}{\max} Q(s',a') - Q(s,a)\Big)
+\]
+
+Where $\alpha$ is the learning rate, and $\gamma$ is the discount factor. Since this is a SMDP rather than a standard MDP, we add the exponent $d$ to the $\gamma$ term to account for duration.
+
+$\alpha$ determines to what extent new information overrides old. A factor of 0 makes the existing value not update at all, whereas a value of 1 makes the agent consider only the most recent information. The typical value used is $\alpha=0.1$, which is what we also use since the traffic environment is not fully deterministic.
+
+$\gamma$ determines the importance of future rewards. A factor of 0 makes the agent only consider current rewards, while a factor approaching 1 encourages long-term high reward. It may seem obvious to choose a factor very close or equal to 1, however action values may become unstable, diverge, and even become infinite. Hence, $\gamma=0.9$ was chosen.
+
+$\underset{a'}{\max} Q(s',a')$ should read as an estimate of the optimal future value. It returns the maximum quality value over all actions $a'$ possible from the next state $s'$.
 
 \subsection{Decaying $\epsilon$-greedy policy}
 
