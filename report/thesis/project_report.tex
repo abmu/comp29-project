@@ -716,7 +716,7 @@ Pedantically, we actually use a Semi-Markov Decision Process (SMDP). Unlike stan
 
 \section{Q-Learning}
 
-Q-learning is a specific reinforcement learning algorithm used to find the optimal policy within a Markov Decision Process. It trains an agent to assign values to its possible actions based on its current state, without requiring a model of the environment (model-free -- the transition probabilities are not known).
+Q-learning is a specific reinforcement learning algorithm used to find the optimal policy within a Markov Decision Process. It trains an agent to assign values to its possible actions based on its current state, without requiring a model of the environment (model-free, i.e.\ the transition probabilities are not known).
 
 ``\emph{Q}'' refers to the function that the algorithm computes: the quality -- that is, the expected reward -- of an action taken in a given state.
 
@@ -746,19 +746,21 @@ This function can be used to construct what is known as a Q-table, which enumera
   \label{arr:q_table_example}
 \end{figure}
 
-From this tabular visualisation, we see that it may take a long time to populate if there are many state-action pairs. Our state tuple consists of 15 entries. The first of which, the phase of the TLS before our agent takes an action, has 3 possible values: 1, 4, 7. The next six entries are lane detectors which count the number of vehicles. The remaining eight entries are our pseudo-detectors which count the number of pedestrians waiting to cross. This estimate leads there to being X combinations of states, which needs to converge...
+After running Q-learning -- explained below -- over many iterations, the values in the Q-table converge towards their optimal estimates. Once this happens, the optimal policy $\pi^*$ can be derived from the Q-table directly:
 
-After running the Q-algorithm numerous times, the values in the Q-table should converge to specific values. The optimal policy $\pi^*$ can then be found as follows:
-
-In a given state, refer to the Q-table to find the action with the highest value.
-
-Take this action to go to a new state.
-
-Repeat from step 1.
+\begin{enumerate}
+  \item For any given state, select the action with the highest Q-value. 
+  \item Execute this action to transition to the next state.
+  \item Repeat this process at each subsequent state.
+\end{enumerate}
 
 \subsection{Algorithm}
 
+
+
 \subsection{Decaying $\epsilon$-greedy policy}
+
+
 
 \section{Results}
 
@@ -767,6 +769,8 @@ Mention computer hardware specification -- mention GPU not strictly relevant
 Evaluation Framework
 
 When evaluating, set evaluation step size to SMALLER value than train step size, to make less prone to collisions and penalties.
+
+From this tabular visualisation, we see that it may take a long time to populate if there are many state-action pairs. Our state tuple consists of 15 entries. The first of which, the phase of the TLS before our agent takes an action, has 3 possible values: 1, 4, 7. The next six entries are lane detectors which count the number of vehicles. The remaining eight entries are our pseudo-detectors which count the number of pedestrians waiting to cross. This estimate leads there to being X combinations of states, which needs to converge...
 
 \section{Summary}
 

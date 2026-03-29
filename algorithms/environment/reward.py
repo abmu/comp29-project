@@ -14,12 +14,22 @@ def get_cache() -> list[list[float | int]]:
 def compute_stats(cache: list[list[float | int]]) -> dict[str, dict[str, float | int]]:
     # compute the mean and standard deviation of the cache values used when calculating the reward at each step
     arr = np.array(cache)  # shape: [N, 4]
-    veh_delay = arr[:,0]
-    veh_throughput = arr[:,1]
-    ped_delay = arr[:,2]
-    ped_throughput = arr[:,3]
+    veh_count = arr[:,0]
+    veh_delay = arr[:,1]
+    veh_throughput = arr[:,2]
+    ped_count = arr[:,3]
+    ped_delay = arr[:,4]
+    ped_throughput = arr[:,5]
 
     stats = {
+        'veh_count': {
+            'mean': float(veh_count.mean()),
+            'std': float(veh_count.std()),
+            'min': float(veh_count.min()),
+            'max': float(veh_count.max()),
+            'sum': float(veh_count.sum()),
+            'len': len(veh_count)
+        },
         'veh_delay': {
             'mean': float(veh_delay.mean()),
             'std': float(veh_delay.std()),
@@ -35,6 +45,14 @@ def compute_stats(cache: list[list[float | int]]) -> dict[str, dict[str, float |
             'max': float(veh_throughput.max()),
             'sum': float(veh_throughput.sum()),
             'len': len(veh_throughput)
+        },
+        'ped_count': {
+            'mean': float(ped_count.mean()),
+            'std': float(ped_count.std()),
+            'min': float(ped_count.min()),
+            'max': float(ped_count.max()),
+            'sum': float(ped_count.sum()),
+            'len': len(ped_count)
         },
         'ped_delay': {
             'mean': float(ped_delay.mean()),
@@ -61,12 +79,14 @@ def get_reward(waiting_vehicles: list[list[list[float]]], waiting_peds: list[lis
     # reward vehicle and pedestrian throughput, and penalise delays
     waiting_vehicles = [wait_time for vehicle_group in waiting_vehicles for vehicles in vehicle_group for wait_time in vehicles]
     veh_delay = sum(waiting_vehicles)
+    veh_count = 0 # len(waiting_vehicles)
 
     waiting_peds = [wait_time for ped_group in waiting_peds for peds in ped_group for wait_time in peds]
     ped_delay = sum(waiting_peds)
+    ped_count = 0 # len(waiting_peds)
 
     if stats_mode:
-        current_cache.append([veh_delay, veh_throughput, ped_delay, ped_throughput])
+        current_cache.append([veh_count, veh_delay, veh_throughput, ped_count, ped_delay, ped_throughput])
 
     # weights -- calculated from 'cache_stats.txt' file
     a = - (1.0 / 63.07)  # total current vehicle delay
