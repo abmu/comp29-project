@@ -799,9 +799,7 @@ $\underset{a'}{\max} Q(s',a')$ should read as an estimate of the optimal future 
 
 At the start, our Q-table will not be populated with values such that trying to follow the optimal policy will lead to am optimal strategy. We need a way to initially \emph{explore} actions to discover what works best, before eventually choosing to \emph{exploit} the best actions found.
 
-Too much exploitation may result in our agent getting stuck with a suboptimal strategy. Too much exploration may result in our agent wasting time trying random actions and never settling on a good solution.
-
-The $\epsilon$-greedy (epsilon-greedy) policy strikes a balance. Whenever our Q-learning algorithm selects an action during training, with probability $\epsilon$ it will explore and choose uniformly at random one of the 3 actions, otherwise with probability $1-\epsilon$ it will exploit and choose the best action `greedily'.
+The $\epsilon$-greedy (epsilon-greedy) policy works by generating a random number $r\in[0,1]$ at each time step during training. When our Q-learning algorithm then selects an action, with probability $\epsilon$ (i.e.\ if $r < \epsilon$) it will explore and choose uniformly at random one of the 3 actions, otherwise with probability $1-\epsilon$ it will exploit and choose the best action `greedily'.
 
 \begin{table}[H]
   \centering
@@ -814,11 +812,42 @@ The $\epsilon$-greedy (epsilon-greedy) policy strikes a balance. Whenever our Q-
   \label{tab:action_probabilities}
 \end{table}
 
-To make the epsilon value lessen as the training goes on, we define a function for epsilon which exponentially decays with time.
+Too much exploitation may result in our agent getting stuck with a suboptimal strategy. Too much exploration may result in our agent wasting time trying random actions and never settling on a good solution.
+
+To make the epsilon value start high and lessen as training goes on, we define epsilon $\epsilon$ to be a function which exponentially decays with every time step $t$.
 
 \[
-  
+  \epsilon(t) = \epsilon_{min} + (\epsilon_{max}-\epsilon_{min}) e^{-\lambda t} 
 \]
+
+\pgfmathsetmacro{\emin}{0.01}
+\pgfmathsetmacro{\emax}{1}
+\pgfmathsetmacro{\decay}{0.0000015}
+\pgfmathsetmacro{\episodes}{3600000}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        xlabel={$t$},
+        ylabel={$\epsilon(t)$},
+        domain=0:\episodes,
+        grid=both,
+    ]
+    \addplot[
+        black,
+        thick
+    ]
+    {\emin + (\emax - \emin)*exp(-\decay*x)};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Epsilon exponential decay graph.}
+  \label{fig:epsilon_decay}
+\end{figure}
+
+Where $\epsilon_{min}$ is the minimum epsilon value (set to $0.01$) to ensure randomness remains later on in the learning phase, $\epsilon_{max}$ is the starting epsilon value (set to $1$), and $\lambda$ is the decay rate constant (set to $1.5\times10^{-6}$).
+
+The constants were chosen empirically\footnotemark\footnotetext{Multiple parameters were tested using the \emph{Desmos} web-based graphing calculator \cite{DemosGraphingCalculator}.} such that the graph decays smoothly over time to about $0.01$ by the time step $3\,600\,000$ -- the total number of training steps across all episodes -- is reached.
 
 \section{Results}
 
@@ -945,7 +974,7 @@ P.~Stewart.
 
 \bibitem[Tr26]{TraCIProtocol26}
 German Aerospace Center (DLR).
-\newblock TraCI Protocol Specification
+\newblock TraCI Protocol Specification.
 \newblock {\em SUMO Documentation}, February 13, 2026.
 \newblock Available at:
   https://sumo.dlr.de/docs/TraCI/Protocol.html.
@@ -963,6 +992,13 @@ R.~S.~Sutton. and M.~L.~Littman.
 \newblock {\em Web page, University of Alberta}, ~1990.
 \newblock Available at:
   http://incompleteideas.net/rlai.cs.ualberta.ca/RLAI/rewardhypothesis.html.
+
+\bibitem[DGC]{DemosGraphingCalculator}
+Desmos Studio.
+\newblock Graphing Calculator.
+\newblock {\em Desmos}, 2011.
+\newblock Available at:
+  https://www.desmos.com/calculator.
 
 \end{thebibliography}
 
