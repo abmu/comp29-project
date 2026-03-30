@@ -2,22 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 NET_NAME = 'demo'
-MODE = 'train'
+MODE = 'eval'
 
 files = [
     # 'zebra.txt',
     'ft.txt',
-
-    # 'dqn_c0_1k.txt',
-    # 'dqn_c0_2.5k.txt',
-    # 'dqn_c0_10k.txt',
-    # 'cdqn_c0_1k.txt',
-    # 'cdqn_c0_2.5k.txt',
-    # 'cdqn_c0_10k.txt',
-
     # 'ql_c0.txt',
     # 'ql_c1.txt',
-    # 'ql_c2.txt',
+    'ql_c2.txt',
     # 'dqn_c0.txt',
     # 'dqn_c1.txt',
     # 'dqn_c2.txt',

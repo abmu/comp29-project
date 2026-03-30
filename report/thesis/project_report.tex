@@ -849,9 +849,45 @@ Where $\epsilon_{min}$ is the minimum epsilon value (set to $0.01$) to ensure ra
 
 The constants were chosen empirically\footnotemark\footnotetext{Multiple parameters were tested using the \emph{Desmos} web-based graphing calculator \cite{DemosGraphingCalculator}.} such that the graph decays smoothly over time to about $0.01$ by the time step $3\,600\,000$ -- the total number of training steps across all episodes -- is reached.
 
+\subsection{Implementation}
+
+Previously, we created a route generation script in Python enabling us to call the \texttt{randomTrips.py} tool many times automatically with varying traffic parameters to create 1000 baselines environment routes in our file system.
+
+Most of the other code up until now was placed within a custom \texttt{Environment} library which utilises a TraCI connection to the actual SUMO environment. This library has an \emph{exposed} interface including, but not limited to:
+
+\begin{itemize}
+  \item Setting the current road network and entity route files.
+  \item Getting the current full uncompressed state via the detectors.
+  \item Calculating the weighted reward formula.
+  \item A \texttt{Controller} for performing actions on a particular traffic light system.
+\end{itemize}
+
+Now we create an \texttt{Agent} library in which our algorithm implementations and code to train and evaluate will lie. Firstly, an abstract \texttt{Runner} class is created with a one-to-one mapping to a \texttt{Controller} which it runs. We then create two classes for now that implement the abstract class: a \texttt{DefaultRunner} class (representing the baseline fixed-time control), and a \texttt{QLearning} class that implements the Q-learning algorithm in an object-oriented manner.
+
+... diagram
+
+Although not possible to show in an overview, a few interesting implementation specific features include:
+
+\begin{itemize}
+  \item The use of workers and queues (multiprocessing) to run distinct environments in parallel for increased performance.
+  \item A robust system design with many ``quality of life'' additions such as comprehensive settings (e.g.\ to switch modes between training and evaluation, run in `stat' mode, change simulation details, etc.) and quick swapping of agent configurations.
+  \item A modern, modular Python programming approach with extensive documentation.
+  \item A utility suite including math, file handling, and statistics-related functions (recording, cleaning, and plotting).
+\end{itemize}
+
+Whilst we won't delve further into the implementation details since it will detract from the main goals of the dissertation, all code can be found in the appendix to be viewed at your discretion.
+
 \section{Results}
 
-Mention computer hardware specification -- mention GPU not strictly relevant
+\subsection{System Requirements}
+
+Software: SUMO, TraCI, Python, numpy, standard library
+
+Hardware: Intel i5-13600K 3.50GHz 14 Cores CPU, NVIDIA GeForce RTX 4070 Ti 12GB GDDR6X VRAM GPU, 16GB DDR5 6000MHz RAM, 2TB PCIe Gen4 NVMe SSD
+
+\subsection{Training}
+
+\subsection{Evaluation}
 
 Evaluation Framework
 
@@ -860,6 +896,8 @@ When evaluating, set evaluation step size to SMALLER value than train step size,
 From this tabular visualisation, we see that it may take a long time to populate if there are many state-action pairs. Our state tuple consists of 15 entries. The first of which, the phase of the TLS before our agent takes an action, has 3 possible values: 1, 4, 7. The next six entries are lane detectors which count the number of vehicles. The remaining eight entries are our pseudo-detectors which count the number of pedestrians waiting to cross. This estimate leads there to being X combinations of states, which needs to converge...
 
 \section{Summary}
+
+
 
 \chapter{Deep Q-Learning}
 
