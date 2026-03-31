@@ -853,8 +853,7 @@ The constants were chosen empirically\footnotemark\footnotetext{Multiple paramet
 
 Previously, we created a route generation script in Python to call the \texttt{randomTrips.py} tool with varying traffic parameters several times automatically, to create 1000 baselines environment routes in our file system.
 
-Most other code
- was placed within a custom \texttt{Environment} library which utilises a TraCI connection to the actual SUMO environment. This library has an \emph{exposed} interface including, but not limited to:
+Most of our other code was placed within a custom \texttt{Environment} library which utilises a TraCI connection to the actual SUMO environment. This library has an \emph{exposed} interface including, but not limited to:
 
 \begin{itemize}
   \item Setting the current road network and entity route files.
@@ -887,7 +886,7 @@ Whilst we won't delve further into the implementation details since it will detr
 
 \subsection{System Requirements}
 
-Software: SUMO, TraCI, Python, numpy, standard library
+All algorithms were implemented from scratch using Python, its standard library, as well as just the \texttt{numpy} module for now. As stated previously, we rely on SUMO and TraCI for running the simulated traffic environment itself.
 
 Hardware: Intel i5-13600K 3.50GHz 14 Cores CPU, NVIDIA GeForce RTX 4070 Ti 12GB GDDR6X VRAM GPU, 16GB DDR5 6000MHz RAM, 2TB PCIe Gen4 NVMe SSD
 
@@ -896,8 +895,6 @@ Hardware: Intel i5-13600K 3.50GHz 14 Cores CPU, NVIDIA GeForce RTX 4070 Ti 12GB 
 \subsection{Evaluation}
 
 Evaluation Framework
-
-When evaluating, set evaluation step size to SMALLER value than train step size, to make less prone to collisions and penalties.
 
 From this tabular visualisation, we see that it may take a long time to populate if there are many state-action pairs. Our state tuple consists of 15 entries. The first of which, the phase of the TLS before our agent takes an action, has 3 possible values: 1, 4, 7. The next six entries are lane detectors which count the number of vehicles. The remaining eight entries are our pseudo-detectors which count the number of pedestrians waiting to cross. This estimate leads there to being X combinations of states, which needs to converge...
 
