@@ -660,7 +660,7 @@ Where \emph{a}, \emph{b}, \emph{c}, and \emph{d} are the number of lanes going n
 
 Recall Table~\ref{tab:phase_structure} in which we defined the fixed-time control phase structure. Phases 1--3 of the TLS related to the northbound/southbound approaches, phases 4--6 related to the eastbound/westbound approaches, and finally phases 7--8 related to the collective pedestrian approaches of the TLS.
 
-We will formally define an action to be one which switches -- or maintains -- the approach that is currently active. The three actions will be switching to phase 1, switching to phase 4, or switching to phase 7. The rest of the phases are \emph{not} viable switches that can be made directly by the agent. Rather, these will be considered \emph{phase switch} actions mapped to a particular action as shown.
+We will formally define an action to be one which switches -- or maintains -- the approach that is currently active. The three actions will be switching to phase 1, switching to phase 4, or switching to phase 7. The rest of the phases are \emph{not} viable switches that can be made directly by the agent. Rather, these will be considered \emph{phase switch} actions mapped to a particular action.
 
 \begin{table}[H]
   \centering
@@ -789,15 +789,15 @@ When we execute the chosen action $a$ from state $s$ and observe the cumulative 
 
 Where $\alpha$ is the learning rate, and $\gamma$ is the discount factor. Since this is a SMDP rather than a standard MDP, we add the exponent $d$ to the $\gamma$ term to account for duration.
 
-$\alpha$ determines to what extent new information overrides old. A factor of 0 makes the existing value not update at all, whereas a value of 1 makes the agent consider only the most recent information. The typical value used is $\alpha=0.1$, which is what we also use since the traffic environment is not fully deterministic.
+$\alpha$ determines to what extent new information overrides old. A factor of 0 makes the existing value not update at all, whereas a value of 1 makes the agent consider only the most recent information. We use the standard value of $\alpha=0.1$ since actions in the traffic environment are not fully deterministic.
 
-$\gamma$ determines the importance of future rewards. A factor of 0 makes the agent only consider current rewards, while a factor approaching 1 encourages long-term high reward. It may seem obvious to choose a factor very close or equal to 1, however action values may become unstable, diverge, and even become infinite. Hence, $\gamma=0.9$ was chosen.
+$\gamma$ determines the importance of future rewards. A factor of 0 makes the agent only consider current rewards, while a factor approaching 1 encourages long-term high reward. It may seem obvious to choose a factor very close or equal to 1, however action values may become unstable, diverge, or become infinite. Hence, $\gamma=0.9$ was chosen.
 
 $\underset{a'}{\max} Q(s',a')$ should read as an estimate of the optimal future value. It returns the maximum quality value over all actions $a'$ possible from the next state $s'$.
 
 \subsection{Decaying $\epsilon$-greedy policy}
 
-At the start, our Q-table will not be populated with values such that trying to follow the optimal policy will lead to am optimal strategy. We need a way to initially \emph{explore} actions to discover what works best, before eventually choosing to \emph{exploit} the best actions found.
+At the start, our Q-table will not be populated with values such that trying to follow the optimal policy will lead to an optimal strategy. We need a way to initially \emph{explore} actions to discover what works best, before eventually choosing to \emph{exploit} the best actions found.
 
 The $\epsilon$-greedy (epsilon-greedy) policy works by generating a random number $r\in[0,1]$ at each time step during training. When our Q-learning algorithm then selects an action, with probability $\epsilon$ (i.e.\ if $r < \epsilon$) it will explore and choose uniformly at random one of the 3 actions, otherwise with probability $1-\epsilon$ it will exploit and choose the best action `greedily'.
 
@@ -887,6 +887,7 @@ Whilst we won't delve further into the implementation details since it will detr
 \subsection{System Requirements}
 
 All algorithms were implemented from scratch using Python, its standard library, as well as just the \texttt{numpy} module for now. As stated previously, we rely on SUMO and TraCI for running the simulated traffic environment itself.
+
 
 Hardware: Intel i5-13600K 3.50GHz 14 Cores CPU, NVIDIA GeForce RTX 4070 Ti 12GB GDDR6X VRAM GPU, 16GB DDR5 6000MHz RAM, 2TB PCIe Gen4 NVMe SSD
 
