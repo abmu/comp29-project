@@ -730,7 +730,7 @@ Q-learning is a specific reinforcement learning algorithm used to find the optim
 Q: S \times A \to \mathbb{R}
 \]
 
-This function can be used to construct what is known as a Q-table, which enumerates every possible combination of state and action and maps it to a corresponding quality value, set to any arbitrary value initially (we choose 0).
+This function can be used to construct a tabular representation known as a Q-table, which enumerates every possible combination of state and action and maps it to a corresponding quality value, set to any arbitrary value initially (we choose 0).
 
 \begin{figure}[H]
   \centering
@@ -934,15 +934,15 @@ We will train our agent, equipped with the Q-learning algorithm, inside the demo
   \label{fig:q_learning_demo_train}
 \end{figure}
 
-Uh oh, it looks like something has gone terribly wrong! Figure~\ref{fig:q_learning_demo_train}\footnotemark\footnotetext{The figure data has been cleaned -- i.e.\ extreme outliers removed and a moving average applied -- for the sake of clarity.} shows that our Q-learning agent has failed to learn an effective policy for controlling the TLS. Instead of improving over time, the rewards diverge significantly, reaching values as low as $-3\times10^5$ compared to the baseline performance of $\sim0$.
+Uh oh, it looks like something has gone terribly wrong! Figure~\ref{fig:q_learning_demo_train}\footnotemark\footnotetext{The figure data has been cleaned -- i.e.\ extreme outliers removed and a moving average applied -- for the sake of clarity.} shows that our Q-learning agent has failed to learn an effective policy for controlling the TLS. Instead of improving over time, the rewards diverge significantly, reaching values as low as $-3\times10^5$ compared to the baseline performance of $\sim0$ units.
 
-This behaviour is explained by the size of the state space. From the tabular representation in Figure~\ref{arr:q_table_example}, it is clear that convergence may be extremely slow when the number of state-action pairs is large. Recall our state tuple $S$, consisting of 15 parts.
+This behaviour is explained by the size of the state space. Recall our state tuple $S$, consisting of 15 parts. The first element encodes the current TLS phase which can take one of three values: 1, 4, or 7. The next 6 elements correspond to the vehicle detectors each with a count in the range 0--8 on average. The remaining 8 elements correspond to our pedestrian detectors each with a count in the range of 0--6 on average.  
 
-From this tabular visualisation, we see that it may take a long time to populate if there are many state-action pairs. Our state tuple consists of 15 entries. The first of which, the phase of the TLS before our agent takes an action, has 3 possible values: 1, 4, 7. The next six entries are lane detectors which count the number of vehicles. The remaining eight entries are our pseudo-detectors which count the number of pedestrians waiting to cross. This estimate leads there to being X combinations of states, which needs to converge...
+This results in a combinatorially large number of possible states ($3\times9^6\times7^8\approx9\times10^{12}$) that must be explored and learned. The agent struggles to sufficiently visit and update all state-action pairs enough times such that a good optimal policy is reached within the training period.
 
 \subsection{Evaluation}
 
-Evaluation Framework...
+
 
 \section{Summary}
 
