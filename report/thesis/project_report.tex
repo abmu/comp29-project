@@ -907,6 +907,7 @@ We will train our agent, equipped with the Q-learning algorithm, inside the demo
       ylabel={Reward},
       title={Demo network reward per epoch},
       grid=both,
+      legend pos=south west
   ]
 
   \addplot[
@@ -930,13 +931,18 @@ We will train our agent, equipped with the Q-learning algorithm, inside the demo
   \end{axis}
   \end{tikzpicture}
   \caption{Reward per route using a fixed-time control TLS.}
+  \label{fig:q_learning_demo_train}
 \end{figure}
+
+Uh oh, it looks like something has gone terribly wrong! Figure~\ref{fig:q_learning_demo_train}\footnotemark\footnotetext{The figure data has been cleaned -- i.e.\ extreme outliers removed and a moving average applied -- for the sake of clarity.} shows that our Q-learning agent has failed to learn an effective policy for controlling the TLS. Instead of improving over time, the rewards diverge significantly, reaching values as low as $-3\times10^5$ compared to the baseline performance of $\sim0$.
+
+This behaviour is explained by the size of the state space. From the tabular representation in Figure~\ref{arr:q_table_example}, it is clear that convergence may be extremely slow when the number of state-action pairs is large. Recall our state tuple $S$, consisting of 15 parts.
+
+From this tabular visualisation, we see that it may take a long time to populate if there are many state-action pairs. Our state tuple consists of 15 entries. The first of which, the phase of the TLS before our agent takes an action, has 3 possible values: 1, 4, 7. The next six entries are lane detectors which count the number of vehicles. The remaining eight entries are our pseudo-detectors which count the number of pedestrians waiting to cross. This estimate leads there to being X combinations of states, which needs to converge...
 
 \subsection{Evaluation}
 
-Evaluation Framework
-
-From this tabular visualisation, we see that it may take a long time to populate if there are many state-action pairs. Our state tuple consists of 15 entries. The first of which, the phase of the TLS before our agent takes an action, has 3 possible values: 1, 4, 7. The next six entries are lane detectors which count the number of vehicles. The remaining eight entries are our pseudo-detectors which count the number of pedestrians waiting to cross. This estimate leads there to being X combinations of states, which needs to converge...
+Evaluation Framework...
 
 \section{Summary}
 

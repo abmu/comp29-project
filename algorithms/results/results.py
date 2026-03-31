@@ -69,7 +69,6 @@ def to_float_array(lst: list[float | None]) -> np.ndarray:
 def pretty_list(lst: list[float | None], mode: str = MODE) -> np.ndarray:
     # clean up list data
     lst = to_float_array(lst)
-    print(mode)
     if mode == 'train':
         lst = remove_outliers_rolling(lst)
         lst = moving_average(lst)
