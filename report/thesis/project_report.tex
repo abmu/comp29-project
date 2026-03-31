@@ -640,7 +640,7 @@ Consider our demo network created previously. We can annotate the TLS with the d
 
 In Figure~\ref{fig:detectors_demo} above, the labels with prefix `\emph{N}' means \emph{north}, `\emph{E}' means \emph{east}, `\emph{S}' means \emph{south} and `\emph{W}' means \emph{west}.
 
-If the cardinal direction \emph{X} is followed by letter `\emph{B}', the label should be interpreted as \emph{X-bound}, e.g.\ `\emph{NB1}' should read as the number of vehicles in the \emph{first}, or rather, leftmost lane when travelling \emph{northbound}. In this instance, there are two lanes going northbound, with one being a dedicated bicycle lane. If \emph{X} is instead followed by letter `\emph{C}', the label should be interpreted as \emph{X-crossing-wait-area}, e.g.\ `\emph{SC2}' should read as the number of pedestrians in the \emph{second} of the two \emph{wait area} for the \emph{south} \emph{crossing} of the TLS. Finally, the `\emph{Phase}' label reflects the current traffic light phase of the TLS.
+If the cardinal direction \emph{X} is followed by letter `\emph{B}', the label should be interpreted as \emph{X-bound}, e.g.\ `\emph{NB1}' should read as the number of vehicles in the \emph{first}, or rather, leftmost lane travelling \emph{northbound}. In this instance, there are two lanes going northbound, one being a dedicated bicycle lane. If \emph{X} is instead followed by letter `\emph{C}', the label should be interpreted as \emph{X-crossing-wait-area}, e.g.\ `\emph{SC2}' should read as the number of pedestrians in the \emph{second} of the two \emph{wait area} for the \emph{south} \emph{crossing}. Finally, the `\emph{Phase}' label reflects the current traffic light phase of the TLS.
 
 For this particular TLS, the state is comprised of 15 parts, therefore it can be encoded as an $n$-tuple where $n$ is $15$. Generalising this idea, we can write the full uncompressed state $S$ at time $t$ for any TLS\footnotemark\footnotetext{In some TLS it may be hard to define a relative cardinal direction, e.g.\ for a single crossing in a two-way road, or for an exit lane in a roundabout with more than 4 exits. In such cases it would be desirable to use an alternative naming scheme for state variables.} as follows.
 
@@ -658,7 +658,7 @@ Where \emph{a}, \emph{b}, \emph{c}, and \emph{d} are the number of lanes going n
 
 \subsection{Actions}
 
-Recall Table~\ref{tab:phase_structure} in which we defined the fixed-time control phase structure. Phases 1--3 of the TLS related to the northbound/southbound approaches, phases 4--6 related to the eastbound/westbound approaches, and finally phases 7--8 related to the collective pedestrian approaches of the TLS.
+Recall Table~\ref{tab:phase_structure} in which we defined the fixed-time control phase structure. Phases 1--3 of the TLS related to the northbound/southbound approaches, phases 4--6 related to the eastbound/westbound approaches, and phases 7--8 related to the collective pedestrian approaches of the TLS.
 
 We will formally define an action to be one which switches -- or maintains -- the approach that is currently active. The three actions will be switching to phase 1, switching to phase 4, or switching to phase 7. The rest of the phases are \emph{not} viable switches that can be made directly by the agent. Rather, these will be considered \emph{phase switch} actions mapped to a particular action.
 
@@ -679,7 +679,7 @@ We will formally define an action to be one which switches -- or maintains -- th
   \label{tab:phase_actions}
 \end{table}
 
-A phase switch contains one or more tuples of the format (\emph{phase}, \emph{duration (s)}). These phases must be sequentially run when switching \emph{away} from the current TLS phase. For example, if the current phase is 1 (index 0), and the action taken is to switch to phase 4 (index 1), the phase switch (2, 3 s) $\to$ (3, 2 s) first executes. That is the phase is set to 2 for 3 seconds, followed by phase 3 for 2 seconds. Finally, phase 4 runs as intended for 30 seconds before the next action is selected.
+A phase switch contains one or more tuples of the format (\emph{phase}, \emph{duration (s)}). These phases must be sequentially run when switching \emph{away} from the current TLS phase. Suppose the current phase is 1 (index 0) which has finished execution. If the next action taken is to switch to phase 4 (index 1), the phase switch (2, 3 s) $\to$ (3, 2 s) first executes. That is the phase is set to 2 for 3 seconds, followed by phase 3 for 2 seconds. Finally, phase 4 runs as intended.
 
 Phase switch allows for a smooth transition between traffic flow directions, giving a buffer of time in which vehicles or pedestrians can finish their travels safely (by transitioning the traffic lights to yellow then red). It is \emph{not} applied if going from the current action index to itself.
 
@@ -791,7 +791,7 @@ Where $\alpha$ is the learning rate, and $\gamma$ is the discount factor. Since 
 
 $\alpha$ determines to what extent new information overrides old. A factor of 0 makes the existing value not update at all, whereas a value of 1 makes the agent consider only the most recent information. We use the standard value of $\alpha=0.1$ since actions in the traffic environment are not fully deterministic.
 
-$\gamma$ determines the importance of future rewards. A factor of 0 makes the agent only consider current rewards, while a factor approaching 1 encourages long-term high reward. It may seem obvious to choose a factor very close or equal to 1, however action values may become unstable, diverge, or become infinite. Hence, $\gamma=0.9$ was chosen.
+$\gamma$ determines the importance of future rewards. A factor of 0 makes the agent only consider current rewards, while a factor approaching 1 encourages long-term high reward. It may seem obvious to choose a factor very close or equal to 1, however action values may become unstable or diverge to infinity. Ergo, $\gamma=0.9$ was chosen.
 
 $\underset{a'}{\max} Q(s',a')$ should read as an estimate of the optimal future value. It returns the maximum quality value over all actions $a'$ possible from the next state $s'$.
 
@@ -851,7 +851,7 @@ The constants were chosen empirically\footnotemark\footnotetext{Multiple paramet
 
 \subsection{Implementation}
 
-Previously, we created a route generation script in Python to call the \texttt{randomTrips.py} tool with varying traffic parameters several times automatically, to create 1000 baselines environment routes in our file system.
+Previously, we created a route generation script in Python to call the \texttt{randomTrips.py} tool with varying traffic parameters several times automatically, to create 1000 baseline environment routes in our file system.
 
 Most of our other code was placed within a custom \texttt{Environment} library which utilises a TraCI connection to the actual SUMO environment. This library has an \emph{exposed} interface including, but not limited to:
 
@@ -875,12 +875,27 @@ Now we establish an \texttt{Agents} library in which our algorithm implementatio
 
 \subsection{System Requirements}
 
-All algorithms were implemented from scratch using Python, its standard library, as well as just the \texttt{numpy} module for now. As stated previously, we rely on SUMO and TraCI for running the simulated traffic environment itself.
+The fixed-time control and Q-learning algorithms were implemented from scratch using Python, its standard library, and the \texttt{numpy} module. As stated previously, we rely on SUMO tooling and TraCI for creating and running the simulated traffic environment itself.
 
+All code was developed and run locally, fortunately on performant hardware comparable to that which may be found in modern computer labs at a university. It was important to have easy, unrestricted access to diagnose and fix issues as soon as possible, and to train continuously for long hours, over multiple days in some cases.
 
-Hardware: Intel i5-13600K 3.50GHz 14 Cores CPU, NVIDIA GeForce RTX 4070 Ti 12GB GDDR6X VRAM GPU, 16GB DDR5 6000MHz RAM, 2TB PCIe Gen4 NVMe SSD
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|l}
+    \textbf{Component} & \textbf{Specification} \\
+    \hline
+    CPU & Intel i5-13600K (3.50\,GHz, 14 cores) \\
+    GPU & NVIDIA GeForce RTX 4070 Ti (12\,GB GDDR6X) \\
+    RAM & 32\,GB DDR5 (6000\,MHz) \\
+    Storage & 2\,TB PCIe 4.0 NVMe SSD \\
+  \end{tabular}
+  \caption{Local desktop machine specifications.}
+  \label{fig:machine_specifications}
+\end{table}
 
 \subsection{Training}
+
+We will train our Q-learning algorithm inside the demo network, using the 1000 traffic routes previously generated (each following the baseline traffic parameters). Each route corresponds to a single training episode -- or epoch -- that has a duration of 3600 steps. The route is first set before running the agent for a single episode. Once complete, the results are logged and then the next route is set.
 
 \subsection{Evaluation}
 
