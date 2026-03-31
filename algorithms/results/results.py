@@ -2,14 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 NET_NAME = 'demo'
-MODE = 'eval'
+MODE = 'train'
 
 files = [
     # 'zebra.txt',
     'ft.txt',
-    # 'ql_c0.txt',
+    'ql_c0.txt',
     # 'ql_c1.txt',
-    'ql_c2.txt',
+    # 'ql_c2.txt',
     # 'dqn_c0.txt',
     # 'dqn_c1.txt',
     # 'dqn_c2.txt',
@@ -66,34 +66,35 @@ def to_float_array(lst: list[float | None]) -> np.ndarray:
     return np.array([np.nan if x is None else x for x in lst], dtype=float)
 
 
-def pretty_list(lst: list[float | None]) -> np.ndarray:
+def pretty_list(lst: list[float | None], mode: str = MODE) -> np.ndarray:
     # clean up list data
     lst = to_float_array(lst)
-    if MODE == 'train':
-        return lst
+    print(mode)
+    if mode == 'train':
         lst = remove_outliers_rolling(lst)
         lst = moving_average(lst)
     return lst
 
 
-lists = []
-# read python-style lists from text files
-for file in files:    
-    with open(f'{NET_NAME}/{MODE}/' + file, 'r') as f:
-        lst = eval(f.readlines()[0])
-        # lst[10:20] = [0] * 7
-        lists.append(pretty_list(lst))
-
-
-epochs = np.arange(1, len(lists[0]) + 1)
-
-# plot both lists
-plt.figure()
-for i, file in enumerate(files):
-    plt.plot(epochs, lists[i], label=f'{file}')
-plt.xlabel('Epoch')
-plt.ylabel('Reward')
-plt.title('TLS methods')
-# plt.grid(True)
-plt.legend()
-plt.show()
+if __name__ == "__main__":
+    lists = []
+    # read python-style lists from text files
+    for file in files:    
+        with open(f'{NET_NAME}/{MODE}/' + file, 'r') as f:
+            lst = eval(f.readlines()[0])
+            # lst[10:20] = [0] * 7
+            lists.append(pretty_list(lst))
+    
+    
+    epochs = np.arange(1, len(lists[0]) + 1)
+    
+    # plot both lists
+    plt.figure()
+    for i, file in enumerate(files):
+        plt.plot(epochs, lists[i], label=f'{file}')
+    plt.xlabel('Epoch')
+    plt.ylabel('Reward')
+    plt.title('TLS methods')
+    # plt.grid(True)
+    plt.legend()
+    plt.show()
