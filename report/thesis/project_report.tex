@@ -851,9 +851,10 @@ The constants were chosen empirically\footnotemark\footnotetext{Multiple paramet
 
 \subsection{Implementation}
 
-Previously, we created a route generation script in Python enabling us to call the \texttt{randomTrips.py} tool many times automatically with varying traffic parameters to create 1000 baselines environment routes in our file system.
+Previously, we created a route generation script in Python to call the \texttt{randomTrips.py} tool with varying traffic parameters several times automatically, to create 1000 baselines environment routes in our file system.
 
-Most of the other code up until now was placed within a custom \texttt{Environment} library which utilises a TraCI connection to the actual SUMO environment. This library has an \emph{exposed} interface including, but not limited to:
+Most other code
+ was placed within a custom \texttt{Environment} library which utilises a TraCI connection to the actual SUMO environment. This library has an \emph{exposed} interface including, but not limited to:
 
 \begin{itemize}
   \item Setting the current road network and entity route files.
@@ -862,17 +863,22 @@ Most of the other code up until now was placed within a custom \texttt{Environme
   \item A \texttt{Controller} for performing actions on a particular traffic light system.
 \end{itemize}
 
-Now we create an \texttt{Agent} library in which our algorithm implementations and code to train and evaluate will lie. Firstly, an abstract \texttt{Runner} class is created with a one-to-one mapping to a \texttt{Controller} which it runs. We then create two classes for now that implement the abstract class: a \texttt{DefaultRunner} class (representing the baseline fixed-time control), and a \texttt{QLearning} class that implements the Q-learning algorithm in an object-oriented manner.
+Now we establish an \texttt{Agents} library in which our algorithm implementations and code for setting up agents and training will lie. Firstly, an abstract \texttt{Runner} class is created with a one-to-one mapping to a \texttt{Controller} which it runs. We then create two classes for now that implement the abstract class: a \texttt{DefaultRunner} class (representing the baseline fixed-time control), and a \texttt{QLearning} class that implements the Q-learning algorithm in an object-oriented manner.
 
-... diagram
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.64\textwidth]{images/implementation_demo.png}
+    \caption{Library interactions overview.}
+    \label{fig:implementation_demo}
+\end{figure}
 
-Although not possible to show in an overview, a few interesting implementation specific features include:
+Although not shown, a few interesting implementation specific features include:
 
 \begin{itemize}
   \item The use of workers and queues (multiprocessing) to run distinct environments in parallel for increased performance.
-  \item A robust system design with many ``quality of life'' additions such as comprehensive settings (e.g.\ to switch modes between training and evaluation, run in `stat' mode, change simulation details, etc.) and quick swapping of agent configurations.
-  \item A modern, modular Python programming approach with extensive documentation.
-  \item A utility suite including math, file handling, and statistics-related functions (recording, cleaning, and plotting).
+  \item A robust system design with ``quality of life'' additions such as comprehensive easy-to-use settings (e.g.\ to switch modes between training and evaluation) and quick swapping of agent configs.
+  \item A modular Python programming approach with documentation.
+  \item A utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
 \end{itemize}
 
 Whilst we won't delve further into the implementation details since it will detract from the main goals of the dissertation, all code can be found in the appendix to be viewed at your discretion.
