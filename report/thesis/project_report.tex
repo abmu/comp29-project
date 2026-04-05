@@ -926,12 +926,12 @@ We will train our agent, equipped with the Q-learning algorithm, inside the demo
   ] table[
       x expr=\coordindex+1,
       y index=0
-  ] {data/demo_train_ql_c0_cleaned.txt};
+  ] {data/demo_train_ql_c0.txt};
   \addlegendentry{Q-learning}
 
   \end{axis}
   \end{tikzpicture}
-  \caption{Reward per route using a fixed-time control TLS.}
+  \caption{Reward per training route in the demo environment.}
   \label{fig:q_learning_demo_train}
 \end{figure}
 
@@ -943,7 +943,7 @@ This results in a combinatorially large number of possible states ($3\times9^6\t
 
 \subsection{Evaluation}
 
-To evaluate the robustness and generalisability of the agent, we evaluate its performance in a set of evaluation routes with varied traffic conditions. We generate a total of 20 routes per evaluation configuration, and then take the median value per set allowing us to disregard outliers where there may have been teleportation penalties for example.
+To evaluate the robustness and generalisability of the agent, we evaluate its performance in a set of evaluation routes with varied, unforeseen traffic conditions. We generate a total of 20 routes per evaluation configuration, and then take the median value per set allowing us to disregard outliers where there may have been teleportation penalties.
 
 The evaluation configurations are defined as multiplicative scalars applied to the baseline insertion densities for cars, bicycles, and pedestrians defined in Table~\ref{tab:insertion_density_comparison}, which was $100$, $100$, and $200$ per hr/km respectively.
 
@@ -966,9 +966,47 @@ The evaluation configurations are defined as multiplicative scalars applied to t
 
 Where each tuple in the scale column corresponds to (\emph{car}, \emph{bicycle}, \emph{pedestrian}). For example (0.5, 1.0, 1.5) means the \texttt{--insertion-density} for cars should be 0.5$\times$ the relevant baseline insertion density (50 per hr/km), for bicycles it should be 1.0$\times$ (100 per hr/km), and for pedestrians it should be 1.5$\times$ (300 per hr/km).
 
-All other parameters passed to the \texttt{randomTrips.py} script besides \texttt{--insertion-density} remains unchanged. After generating the $20\times5=100$ evaluation scenarios, and taking the median for each of the 5 sets, we get the following comparison as expected.
+All other parameters passed to the \texttt{randomTrips.py} script besides \texttt{--insertion-density} remains unchanged. After generating the $20\times5=100$ evaluation scenarios, and taking the median value for each of the 5 sets, we get the following comparison as expected.
 
-data...
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Epoch},
+      ylabel={Reward},
+      title={Demo network reward per epoch},
+      grid=both,
+      legend style={at={(0.03,0.5)},anchor=west},
+      xtick=data
+  ]
+
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ft.txt};
+  \addlegendentry{Fixed-time control}
+
+  \addplot[
+      orange,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ql_c0.txt};
+  \addlegendentry{Q-learning}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Median reward for evaluation routes in the demo environment.}
+  \label{fig:q_learning_demo_eval}
+\end{figure}
+
+This motivates our next algorithm, which will use neural networks trained from scratched to deal with the issue of large state space.
 
 \section{Summary}
 

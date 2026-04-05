@@ -2,14 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 NET_NAME = 'demo'
-MODE = 'train'
+MODE = 'eval'
 
 files = [
     # 'zebra.txt',
     'ft.txt',
     'ql_c0.txt',
-    # 'ql_c1.txt',
-    # 'ql_c2.txt',
+    'ql_c1.txt',
+    'ql_c2.txt',
     # 'dqn_c0.txt',
     # 'dqn_c1.txt',
     # 'dqn_c2.txt',
@@ -72,6 +72,25 @@ def pretty_list(lst: list[float | None], mode: str = MODE) -> np.ndarray:
     if mode == 'train':
         lst = remove_outliers_rolling(lst)
         lst = moving_average(lst)
+    elif mode == 'eval':
+        EVAL_CONFIGS = 5
+        EVAL_ROUTES_PER = 20
+
+        lst = np.array(lst)
+
+        # sanity check (optional but recommended)
+        assert len(lst) == EVAL_CONFIGS * EVAL_ROUTES_PER, \
+            f"Expected {EVAL_CONFIGS * EVAL_ROUTES_PER} elements, got {len(lst)}"
+
+        # reshape into (5, 20)
+        chunks = lst.reshape(EVAL_CONFIGS, EVAL_ROUTES_PER)
+
+        # sort each row
+        chunks_sorted = np.sort(chunks, axis=1)
+
+        # take median of each row
+        lst = np.median(chunks_sorted, axis=1)
+
     return lst
 
 

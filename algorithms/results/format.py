@@ -2,8 +2,8 @@ import numpy as np
 from results import pretty_list
 
 NET_NAME = 'demo'
-MODE = 'train'
-file = 'ft.txt'
+MODE = 'eval'
+file = 'ql_c0.txt'
 
 results_file = f'{NET_NAME}/{MODE}/' + file
 

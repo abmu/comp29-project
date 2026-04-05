@@ -9,7 +9,7 @@ NET_NAMES = [
 ROUTES = 1000
 TRAIN_ROUTE = {'car_density': 1.0, 'bicycle_density': 1.0, 'pedestrian_density': 1.0}
 
-EVAL_ROUTES_PER = 10
+EVAL_ROUTES_PER = 20
 EVAL_ROUTES = [
     TRAIN_ROUTE,
     {'car_density': 1.5, 'bicycle_density': 1.5, 'pedestrian_density': 1.5},
