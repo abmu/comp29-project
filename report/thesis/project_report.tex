@@ -1016,11 +1016,32 @@ Finally, we trained the agent and evaluated its performance in different scenari
 
 \chapter{Deep Q-Learning}
 
-Tabular Q-learning struggles to learn an effective policy in environments with large state space, so we will extend the algorithm to Deep Q-learning. The state and actions that our agent observes and performs will be identical to before, however rather than having to explicitly explore and update the quality value for each state-action pair, a neural network will be trained to approximate values.
+Tabular Q-learning struggles to learn an effective policy in environments with large state space, so we will extend the algorithm to Deep Q-learning. Rather than having to explicitly explore and update the quality value for each state-action pair, a neural network will be trained to approximate values. We will then train and evaluate the new agent, before considering next steps.
 
 \section{Deep Q-Network}
 
-% \subsection{Function Approximation}
+As demonstrated in the previous chapter, Q-learning struggled to learn an effective policy. In our case, the state representation for the single traffic light system yields about $9\times10^{12}$ possible configurations, making it infeasible to sufficiently explore and update the Q-table within a training period of $1000$ epochs.
+
+Addressing this limitation, we train and utilise Deep Q-Networks (DQN). This replaces the tabular representation of the Q-function in Figure~\ref{arr:q_table_example} with a parameterised function \emph{approximator}. Specifically, the neural network is used to estimate the optimal quality function $Q^*$.
+
+$$Q(s, a; \theta) \approx Q^*(s, a)$$
+
+Where $\theta$ represents the parameters (weights and biases) of the neural network.
+
+A neural network consists of interconnected layers of nodes -- or neurons -- that learn patterns from data. It is used to solve complex problems where traditional rule-based approaches falls short. By adjusting connections based on example data, they automatically identify features and make decisions without being explicitly programmed for every scenario.
+
+The input layer of our DQN consists of $m$ nodes corresponding to the $m$-tuple state $s$. The output layer is a vector of quality values for each of the $n$ possible actions $a$:
+
+$$Q(s,\cdot;\theta)=[Q(s,a_1),Q(s,a_2),...,Q(s,a_n)]$$
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/neural_network.png}
+    \caption{Example neural network with two hidden layers.}
+    \label{fig:neural_network_example}
+\end{figure}
+
+The `best' action can be determined by choosing the action in the output vector with the highest quality value. By representing the Q-function this way, the agent can generalize its knowledge. If it encounters a never-before-seen state, the neural network can interpolate based on similar states it has already learned from.
 
 \subsection{Experience Replay}
 
