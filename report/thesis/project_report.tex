@@ -949,15 +949,15 @@ The evaluation configurations are defined as multiplicative scalars applied to t
 
 \begin{table}[H]
   \centering
-  \begin{tabular}{l l l}
+  \begin{tabular}{c l l l}
     \hline
-    \textbf{Configuration} & \textbf{Scale ($\times$)} & \textbf{Description} \\
+    & \textbf{Configuration} & \textbf{Scale ($\times$)} & \textbf{Description} \\
     \hline
-    Baseline & (1.0, 1.0, 1.0) & Identical to the training environment parameters. \\
-    High Density & (1.5, 1.5, 1.5) & Uniformly increased traffic across all entity types. \\
-    Low Density & (0.5, 0.5, 0.5) & Uniformly reduced traffic across all entity types. \\
-    Vehicle-Heavy & (1.5, 1.5, 0.5) & Increased road users, with fewer pedestrians. \\
-    Pedestrian-Heavy & (0.5, 0.5, 1.5) & Increased pedestrians, with fewer road users. \\
+    \textbf{1} & Baseline & (1.0, 1.0, 1.0) & Identical to the training environment parameters. \\
+    \textbf{2} & High Density & (1.5, 1.5, 1.5) & Uniformly increased traffic across all entity types. \\
+    \textbf{3} & Low Density & (0.5, 0.5, 0.5) & Uniformly reduced traffic across all entity types. \\
+    \textbf{4} & Vehicle-Heavy & (1.5, 1.5, 0.5) & Increased road users, with fewer pedestrians. \\
+    \textbf{5} & Pedestrian-Heavy & (0.5, 0.5, 1.5) & Increased pedestrians, with fewer road users. \\
     \hline
   \end{tabular}
   \caption{Comparison of the 5 evaluation configurations.}
@@ -974,9 +974,9 @@ All other parameters passed to the \texttt{randomTrips.py} script besides \textt
   \begin{axis}[
       width=14cm,
       height=8cm,
-      xlabel={Epoch},
+      xlabel={Evaluation},
       ylabel={Reward},
-      title={Demo network reward per epoch},
+      title={Demo network reward per evaluation scenario},
       grid=both,
       legend style={at={(0.03,0.5)},anchor=west},
       xtick=data
@@ -1006,11 +1006,13 @@ All other parameters passed to the \texttt{randomTrips.py} script besides \textt
   \label{fig:q_learning_demo_eval}
 \end{figure}
 
-This motivates our next algorithm, which will use neural networks trained from scratched to deal with the issue of large state space.
+For each of the evaluation scenarios, our agent performed categorically worse than the fixed-time control TLS. This motivates our next algorithm which will use neural networks trained from scratch to deal with the issue of large state space that has lead to Q-learning performing so poorly.
 
 \section{Summary}
 
+This chapter explored the background of reinforcement learning, the state and actions relevant to our agent, and the Markov Decision Process. We then detailed the Q-learning algorithm which our agent uses, as well as the libraries which were implemented to facilitate the training of our agents.
 
+Finally, we trained the agent and evaluated its performance in different scenarios against the standard fixed-time control algorithm. We conclude that our agent has performed substantially worse due to the large state space in the traffic light system, motivating the development of a smarter algorithm to resolve this. 
 
 \chapter{Deep Q-Learning}
 
