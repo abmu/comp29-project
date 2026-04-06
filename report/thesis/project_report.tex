@@ -1037,7 +1037,7 @@ $$Q(s,\cdot;\theta)=[Q(s,a_1),Q(s,a_2),...,Q(s,a_n)]$$
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{images/neural_network.png}
-    \caption{Example neural network with two hidden layers.}
+    \caption{Example neural network with two hidden layers \cite{Mi18}.}
     \label{fig:neural_network_example}
 \end{figure}
 
@@ -1045,7 +1045,19 @@ The `best' action can be determined by choosing the action in the output vector 
 
 \subsection{Experience Replay}
 
+Reinforcement learning is known to be unstable or even to diverge when a neural network is used to represent the Q function, stemming from the correlations present in a sequence of observations \cite{SLi2023}. Training data samples are not independent -- the state at time $t+1$ is dependent on the state at time $t$.
+
+To mitigate this temporal correlation, we introduce a mechanism called \emph{experience replay}. As the agent explores the environment, it stores its experiences in a replay memory buffer $D$. Each experience $e_t$ is stored as a tuple:
+
+$$e_t=(s_t,a_t,R_t,s_{t+1},d_t,T_t)$$
+
+Where $s$ is the state, $a$ is the action, $R$ is the reward, $d$ (`done') is a boolean flag to say if the action was the final action, and $T$ is the duration of the action (since we are using a Semi-Markov Decision Process).
+
+During training, instead of training on the most recent experience as with before, the agent samples a randomised batch of experiences from $D$. This ensures the neural network updates using a diverse set of uncorrelated transition, leading to more stable learning.
+
 \subsection{Target Network}
+
+
 
 \subsection{Algorithm}
 
@@ -1131,6 +1143,8 @@ Evaluation of the work (this may be in a separate chapter if there is substantia
 \section{Future Work}
 How the project might be continued, but don't give the impression you ran out of time!
 
+Q-learning variants
+
 Continue with communicative deep q-learning, make it so traffic light timings can be dynamic. That would enable even smarter behaviour, can make traffic light systems perhaps line up in time.
 
 Make a much larger scale network, this was too small perhaps. But it would take a bit long.
@@ -1206,7 +1220,8 @@ Institute for Transport Studies, University of Leeds.
 \newblock Urban traffic control systems: Evidence on performance.
 \newblock {\em Institute for Transport Studies, University of Leeds}, archived October 19, 2012.
 \newblock Available at:
-  https://web.archive.org/web/20121019152217/http://www.konsult.leeds.ac.uk/private/level2/instruments/instrument014/l2\_014c.htm.
+  https://web.archive.org/web/20121019152217/
+  http://www.konsult.leeds.ac.uk/private/level2/instruments/instrument014/l2\_014c.htm.
 
 \bibitem[CU21]{CesmeUrbanikII2021}
 B.~Cesme and T.~Urbanik~II.
@@ -1256,6 +1271,22 @@ Desmos Studio.
 \newblock {\em Desmos}, 2011.
 \newblock Available at:
   https://www.desmos.com/calculator.
+
+\bibitem[Mi18]{MismarChoiEvans2018}
+F.~B.~Mismar, J.~Choi and B.~L.~Evans.
+\newblock A framework for automated cellular network tuning with reinforcement learning.
+\newblock {\em arXiv preprint arXiv:1808.05140}, 2018.
+\newblock doi:10.48550/arXiv.1808.05140.
+\newblock Available at:
+  https://arxiv.org/abs/1808.05140.
+\newblock Accessed: 6 April 2026.
+
+\bibitem[SLi23]{SLi2023}
+S.~E.~Li.
+\newblock Reinforcement Learning for Sequential Decision and Optimal Control.
+\newblock {\em First ed., Springer Verlag, Singapore}, 1--460, 2023.
+\newblock doi:10.1007/978-981-19-7784-8.
+\newblock Accessed: 6 April 2026.
 
 \end{thebibliography}
 
