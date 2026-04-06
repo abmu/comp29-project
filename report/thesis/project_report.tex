@@ -1016,13 +1016,77 @@ Finally, we trained the agent and evaluated its performance in different scenari
 
 \chapter{Deep Q-Learning}
 
+Tabular Q-learning struggles to learn an effective policy in environments with large state space, so we will extend the algorithm to Deep Q-learning. The state and actions that our agent observes and performs will be identical to before, however rather than having to explicitly explore and update the quality value for each state-action pair, a neural network will be trained to approximate values.
+
+\section{Deep Q-Network}
+
+% \subsection{Function Approximation}
+
+\subsection{Experience Replay}
+
+\subsection{Target Network}
+
+\subsection{Algorithm}
+
+\subsection{Implementation}
+
+Largely the same, excluding the Deep Q-Network specific stuff. Show different runners currently. 
+
+\section{Crossing Network}
+
+Created a new network which has a zebra crossing. Same actions, slightly different state. In the results, compare the demo network results first and then also the crossing network.
+
+\section{Results}
+
+\subsection{System Requirements}
+
+Pytorch added, CUDA support on GPU to speed up training, SUMO is still CPU bound.
+
+\subsection{Training}
+
+\subsection{Evaluation}
+
+\section{Summary}
+
 \chapter{Communicative Deep Q-Learning}
+
+\section{Network Layer}
+
+\subsection{Communication Bus}
+
+\subsection{Algorithm}
+
+\subsection{Implementation}
+
+This required significant rework of the code. Not explored in the dissertation, but since each agent previously directly controlled a traffic light and caused a step directly, we had to change it such that it was decoupled. THe agent still controls a traffic light, but it doesn't actually perform the step -- that is reserved for the network layer (which runs all other agents).
+
+Show updated diagram.
+
+\section{Extended Network}
+
+Created extended network, since this algorithm requires the use of multiple traffic light systems to be effective.
+
+\section{Results}
+
+\subsection{System Requirements}
+
+No change to system requirements.
+
+\subsection{Training}
+
+\subsection{Evaluation}
+
+Might be the same, but try find learned behaviour such as `green wave' where traffic lights preemptively update themselves in anticipation of a vehicle.
+
+\section{Summary}
 
 \chapter{Supplementary Analysis}
 
+\section{State Compression}
+
 Compression Levels -- Q-learning becomes feasible.
 
-\section{Misc}
+\section{Miscellaneous}
 
 Although not shown, a few interesting implementation specific features include:
 
@@ -1035,6 +1099,8 @@ Although not shown, a few interesting implementation specific features include:
 
 Whilst we won't delve further into the implementation details since it will detract from the main goals of the dissertation, all code can be found in the appendix to be viewed at your discretion.
 
+\section{Summary}
+
 \chapter{Conclusions}
 \section{Achievements}
 Summarise the achievements to confirm the project goals have been met.
@@ -1043,6 +1109,10 @@ Evaluation of the work (this may be in a separate chapter if there is substantia
 
 \section{Future Work}
 How the project might be continued, but don't give the impression you ran out of time!
+
+Continue with communicative deep q-learning, make it so traffic light timings can be dynamic. That would enable even smarter behaviour, can make traffic light systems perhaps line up in time.
+
+Make a much larger scale network, this was too small perhaps. But it would take a bit long.
 
 \appendix
 
