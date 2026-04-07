@@ -1016,11 +1016,11 @@ Finally, we trained the agent and evaluated its performance in different scenari
 
 \chapter{Deep Q-Learning}
 
-Tabular Q-learning struggles to learn an effective policy in environments with large state space, so we will extend the algorithm to Deep Q-learning. Rather than having to explicitly explore and update the quality value for each state-action pair, a neural network will be trained to approximate values. We will then train and evaluate the new agent, before considering next steps.
+Tabular Q-learning struggles to learn an effective policy in environments with a large state space, so we will extend the algorithm to Deep Q-learning. Rather than having to explicitly explore and update the quality value for each state-action pair, a neural network will be trained to approximate values. We will then train and evaluate the new agent, before considering next steps.
 
 \section{Deep Q-Network}
 
-As demonstrated in the previous chapter, Q-learning struggled to learn an effective policy. In our case, the state representation for the single traffic light system yields about $9\times10^{12}$ possible configurations, making it infeasible to sufficiently explore and update the Q-table within a training period of $1000$ epochs.
+As demonstrated in the previous chapter, an agent equipped with Q-learning alone is not sufficient for our needs. In our case, the state representation for the single traffic light system yields about $9\times10^{12}$ possible configurations, making it infeasible to sufficiently explore and update the Q-table within a training period of $1000$ epochs.
 
 Addressing this limitation, we train and utilise Deep Q-Networks (DQN). This replaces the tabular representation of the Q-function in Figure~\ref{arr:q_table_example} with a parameterised function \emph{approximator}. Specifically, the neural network is used to estimate the optimal quality function $Q^*$.
 
@@ -1049,17 +1049,71 @@ Reinforcement learning is known to be unstable or even to diverge when a neural 
 
 To mitigate this temporal correlation, we introduce a mechanism called \emph{experience replay}. As the agent explores the environment, it stores its experiences in a replay memory buffer $D$. Each experience $e_t$ is stored as a tuple:
 
-$$e_t=(s_t,a_t,R_t,s_{t+1},d_t,T_t)$$
+$$e_t=(s_t,a_t,R_t,s_{t+1},\delta_t,d_t)$$
 
-Where $s$ is the state, $a$ is the action, $R$ is the reward, $d$ (`done') is a boolean flag to say if the action was the final action, and $T$ is the duration of the action (since we are using a Semi-Markov Decision Process).
+Where $s$ is the state, $a$ is the action, $R$ is the reward, $\delta$ (`done') is a boolean flag to say if the action was the final action, and $d$ is the duration of the action (included since we are using a Semi-Markov Decision Process).
 
 During training, instead of training on the most recent experience as with before, the agent samples a randomised batch of experiences from $D$. This ensures the neural network updates using a diverse set of uncorrelated transition, leading to more stable learning.
 
 \subsection{Target Network}
 
+In tabular Q-learning, the quality value was updated toward a target value calculated using the maximum estimated quality value of the next state. In a neural network, using the same network weights $\theta$ to calculate both the predicted quality value and the target quality value may lead to instability, as the target constantly shifts during every training step -- recall that it generalises rather than having distinct isolated Q-table entries.
 
+Therefore our DQN employs a \emph{target network}. This is a second neural network with an identical architecture to the main \emph{policy network}, but with its own set of weights $\theta^-$ which is a delayed copy of the main network, used to compute the target quality value during training.
+
+$$\theta^- \leftarrow \theta$$
+
+The loss function $L$ for the policy neural network which we aim to minimise is the Mean Squared Error (MSE) between our current prediction and the target network's quality value $y$:
+
+$$y=R + \gamma^d \max_{a'} Q(s', a'; \theta^-)$$
+
+$$L(\theta) = \mathbb{E}\left[\left(y - Q(s, a; \theta)\right)^2\right]$$
+
+The weights $\theta^-$ are updated only periodically to $\theta$, kept frozen to provide a stable target -- unlike the constantly changing main policy network.
 
 \subsection{Algorithm}
+
+\begin{algorithm}[H]
+  \caption{Deep Q-Learning}
+  \begin{algorithmic}[1]
+  \State Initialise replay buffer $D$
+  \State Initialise policy DQN with weights $\theta$, an optimiser, and learning rate $\alpha$
+  \State Initialise target network with weights $\theta^- \leftarrow \theta$
+  \For{each episode}
+    \State Observe initial state $s$
+    \For{each step in episode}
+      \State Choose action $a$ using $\epsilon$-greedy policy
+      \State Execute action $a$
+      \State Observe reward $R$, next state $s'$, and duration $d$
+      \State Store $(s,a,R,s',\delta,d)$ in buffer $D$
+      \State Sample random batch of size $b$ from $D$
+      \For{each sample $(s_i,a_i,R_i,s'_i,\delta_i,d_i)$}
+        \State $y_i \leftarrow R_i + \gamma^{d_i} \underset{a'}\max Q(s'_i,a';\theta^-)$
+      \EndFor
+      \State Perform gradient descent on $L(\theta) = \frac{1}{b} \sum_{i=1}^{b} \left(y_i - Q(s_i, a_i; \theta)\right)^2$
+      \State Update state $s \leftarrow s'$
+      \State Periodically update $\theta^- \leftarrow \theta$ every $T$ steps
+    \EndFor
+  \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+The overall algorithm follows a very similar structure to Tabular Q-Learning. We begin with setting up the replay buffer $D$ -- the `memory' -- and the two neural networks: the main policy DQN and the target DQN. A learning rate $\alpha$ and optimiser is not set for the latter since it is a target only to be used in evaluation mode.
+
+The learning rate $\alpha$ controls the magnitude that the policy network updates its weights based on the gradient in line 14, whereas the optimiser is an algorithm which determines how the model updates its weights. $\alpha=0.0005$ was chosen alongside the \texttt{Adam} optimiser since they are the de facto standard for neural networks.
+
+The gradient descent (i.e.\ the algorithm used to minimise the loss function) is performed on the average MSE loss for the $b$ samples in the batch taken from $D$.
+
+$$L(\theta) = \frac{1}{b} \sum_{i=1}^{b} \left(y_i - Q(s_i, a_i; \theta)\right)^2$$
+
+% Batch size = 64
+% A common trade-off: small enough to update frequently (good for stability) but large enough to reduce gradient variance. 64 is a standard value in DQN literature (Mnih et al., 2015) and works well for many environments.
+
+% Buffer size = 16,384
+% Large enough to store diverse experiences (breaking correlations between consecutive samples) but not so large that the network learns from very outdated transitions. This size is typical for many DQN implementations.
+
+% Target update = 72,000 steps
+% Delaying the target network update stabilises training by keeping the target Q-values fixed for many steps. 72,000 is quite long (~several episodes), chosen here likely because your episode durations are short, so this prevents the target from drifting too quickly. Standard DQN often uses 10,000–20,000 steps, but longer periods can help in noisy or sparse reward settings.
 
 \subsection{Implementation}
 
