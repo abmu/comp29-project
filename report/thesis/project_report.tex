@@ -1106,22 +1106,30 @@ The gradient descent (i.e.\ the algorithm used to minimise the loss function) is
 
 $$L(\theta) = \frac{1}{b} \sum_{i=1}^{b} \left(y_i - Q(s_i, a_i; \theta)\right)^2$$
 
-% Batch size = 64
-% A common trade-off: small enough to update frequently (good for stability) but large enough to reduce gradient variance. 64 is a standard value in DQN literature (Mnih et al., 2015) and works well for many environments.
+The size of the buffer $D$ was set to $2^{14}=16\,384$ and the batch size $b$ to $64$. The size of $D$ was chosen such it could store a wide range of experiences but not so large that we introduce duplicate data, or keep data that is now redundant. Whilst there isn't a single agreed upon universal batch size in DQN literature, $64$ was chosen since it struck a balance between being small enough that updates were quick, and large enough that there was learning stability.
 
-% Buffer size = 16,384
-% Large enough to store diverse experiences (breaking correlations between consecutive samples) but not so large that the network learns from very outdated transitions. This size is typical for many DQN implementations.
-
-% Target update = 72,000 steps
-% Delaying the target network update stabilises training by keeping the target Q-values fixed for many steps. 72,000 is quite long (~several episodes), chosen here likely because your episode durations are short, so this prevents the target from drifting too quickly. Standard DQN often uses 10,000–20,000 steps, but longer periods can help in noisy or sparse reward settings.
+The target network is set to update every $T=72\,000$ steps (or 20 epochs). Delaying the target network update stabilises training by keeping the target quality values fixed for many steps. However, it is important to not set it too high lest the target becomes severely outdated.
 
 \subsection{Implementation}
 
-Largely the same, excluding the Deep Q-Network specific stuff. Show different runners currently. 
+The overall system design remains unchanged from the previous chapters. In the same \texttt{Agents} library, we create a new \texttt{DeepQLearning} class that implements the abstract \texttt{Runner} class, as well as a subordinate class \texttt{ReplayBuffer} for experience replay. fortunately, the code was designed such that adding new algorithms for our agent to use would not require extensive remodelling of the existing codebase.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.64\textwidth]{images/implementation_crossing.png}
+    \caption{Updated Agents library overview.}
+    \label{fig:implementation_crossing}
+\end{figure}
 
 \section{Crossing Network}
 
-Created a new network which has a zebra crossing. Same actions, slightly different state. In the results, compare the demo network results first and then also the crossing network.
+Before we train and evaluate the Deep Q-learning algorithm, we will create a new environment -- in addition to the demo network -- for us to test the agent in. Our new network will be a trimmed down version consisting of the single zebra crossing as shown in OpenStreetMap. The netedit graphical network editor was used to ensure the crossings were true to the 
+
+The detectors and state obviously differs slightly from before.
+
+Route generation parameters remain the same. Conveniently, since the parameters were defined in units per km road, it applies
+
+The action space for our agent also remains the same. Though this may not always be the case, and it would need to be handled differently in reality.
 
 \section{Results}
 
