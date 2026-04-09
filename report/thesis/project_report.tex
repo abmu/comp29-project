@@ -1220,7 +1220,7 @@ There are two distinct agents we train, both utilising the deep Q-learning algor
   \label{fig:deep_q_learning_demo_train}
 \end{figure}
 
-Looking at the data in Figure~\ref{fig:deep_q_learning_demo_train}, we can see that our Deep Q-learning agent has successfully learned an effective policy for controlling the TLS. It steadily improves over time, before the rewards converge to around $\approx$. This verifies that the issue of state space size has been overcome.
+Looking at the data in Figure~\ref{fig:deep_q_learning_demo_train}, we can see that our Deep Q-learning agent has successfully learned an effective policy for controlling the TLS. It steadily improves over time, before the rewards converge to around $\sim4\,000$ units. This confirms that the issue of state space size has been overcome.
 
 \begin{figure}[H]
   \centering
@@ -1268,13 +1268,98 @@ Looking at the data in Figure~\ref{fig:deep_q_learning_demo_train}, we can see t
   \label{fig:deep_q_learning_crossing_train}
 \end{figure}
 
+In Figure~\ref{fig:deep_q_learning_crossing_train}, the fixed-time control has an average reward of around $50$ units (the reward is normalised to the demo environment, \emph{not} crossing), compared to the zebra crossing which performs much better at around $900$ units. We observe that our deep Q-learning gets very close to the zebra crossing in terms of performance as it trains, but not quite there.
+
 \subsection{Evaluation}
 
-Now we evaluate both of the agents in their respective network using the same evaluation configurations defined in Table~\ref{tab:evaluation_configs}. After generate the 100 evaluation scenarios, and taking the median values, we get the following results.
+Now we evaluate both of the agents in their respective network using the same evaluation configurations defined in the previous chapter in Table~\ref{tab:evaluation_configs}. After generating the 100 evaluation scenarios, and taking the median values, we get the following results.
 
-...
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Evaluation},
+      ylabel={Reward},
+      title={Demo network reward per evaluation scenario},
+      grid=both,
+      legend style={at={(0.03,0.5)},anchor=west},
+      xtick=data
+  ]
 
-...
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ft.txt};
+  \addlegendentry{Fixed-time control}
+
+  \addplot[
+      orange,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_dqn_c0.txt};
+  \addlegendentry{Deep Q-learning}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Median reward for evaluation routes in the demo environment.}
+  \label{fig:deep_q_learning_demo_eval}
+\end{figure}
+
+For each of the evaluation scenarios, our Deep Q-learning agent performed better than the fixed-time control TLS, vindicating our efforts in building a reinforcement learning agent to control traffic lights.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Evaluation},
+      ylabel={Reward},
+      title={Crossing network reward per evaluation scenario},
+      grid=both,
+      legend style={at={(0.97,0.97)},anchor=north east},
+      xtick=data
+  ]
+
+  \addplot[
+      green,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/crossing_eval_zebra.txt};
+  \addlegendentry{Zebra}
+
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/crossing_eval_ft.txt};
+  \addlegendentry{Fixed-time control}
+
+  \addplot[
+      orange,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/crossing_eval_dqn_c0.txt};
+  \addlegendentry{Deep Q-learning}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Median reward for evaluation routes in the crossing environment.}
+  \label{fig:deep_q_learning_crossing_eval}
+\end{figure}
 
 \section{Summary}
 

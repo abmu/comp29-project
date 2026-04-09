@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-NET_NAME = 'demo'
+NET_NAME = 'extended'
 MODE = 'train'
 
 files = [
