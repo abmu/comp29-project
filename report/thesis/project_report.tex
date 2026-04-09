@@ -1147,6 +1147,8 @@ Before we train and evaluate the Deep Q-learning algorithm, we will create a new
     \label{fig:crossing_simulation}
 \end{figure}
 
+As seen in Figure~\ref{fig:sumo_crossing}, the scope is substantially smaller than before. The motivation behind this decision is twofold: firstly, we want to evaluate our agent in diverse settings, and secondly it would be interesting to observe how our agent fares in comparison to a zebra crossing -- not just traditional fixed-time control TLS.
+
 Since this is a different traffic light system, the lane configurations and therefore number of detectors and state differs from before. We still use yellow-coloured induction loops placed on departure lanes, aqua-coloured lane area detectors placed on the approaches, and pseudo-detectors for the two pedestrian crossings.
 
 \begin{figure}[H]
@@ -1156,20 +1158,18 @@ Since this is a different traffic light system, the lane configurations and ther
     \label{fig:detectors_crossing}
 \end{figure}
 
-Evidently a zebra crossing is not something that can be controlled by our agent. So to evaluate the performance of our agent compared to a standard crossing, we will create an alternative network which is the exact same except there is instead a traffic light system that controls the lane approaches and crossings. Our agent will receive a state tuple consisting of 7 elements using the general formula defined in \eqref{state_formula}, annotated below.
+Evidently a zebra crossing is not something that can be controlled by our agent. So to evaluate the performance of our agent compared to a standard zebra crossing, we will create an alternative network which is the exact same except there is instead a traffic light system that controls the lane approaches and crossings, which our agent \emph{can} control. The state tuple consists of 9 elements using the general formula defined in formula \eqref{state_formula}, annotated below.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.64\textwidth]{images/state_crossing.png}
-    \caption{Annotated state in the crossing network.}
+    \caption{Annotated state in the crossing network (with a traffic light system).}
     \label{fig:state_crossing}
 \end{figure}
 
-Route generation parameters remain the same. Conveniently, since the parameters were defined in units per km road, it applies
+The action space -- 3 actions -- will remain the same as before. We have maintained a notion of \emph{northbound}/\emph{southbound} and \emph{eastbound}/\emph{westbound} lane approaches in our crossing network, therefore the same exact traffic light system phase structure defined in Table~\ref{tab:phase_structure}, as well as the agent actions defined in Table~\ref{tab:phase_actions}, can be reused. 
 
-The action space for our agent also remains the same. Though this may not always be the case, and it would need to be handled differently in reality.
-
-The motivation for this was to test if...
+Fortunately the route generation parameters also remain exactly as before. Recalling the baseline traffic parameter definitions, we used the \texttt{--insertion-density} parameter to control how many cars, bicycles, and pedestrians there were. Since it is given in units of $per\ hr/km$, the total magnitude of traffic scales uniformly with the road network size (whilst maintaining traffic density).
 
 \section{Results}
 
