@@ -1375,7 +1375,13 @@ Finally, we trained the agent in the two distinct networks and evaluated its ove
 
 \chapter{Communicative Deep Q-Learning}
 
+We conclude our algorithms with an extension of Deep Q-learning that enables communication with other agents. Previously, our agents were confined to a single traffic light system without a way of knowing adjacent states, so we will develop a way for agents to exchange messages in a distributed manner via a communication bus. We will then train and evaluate the multi-agent system.
+
 \section{Network Layer}
+
+Although our single agent system performed excellently, it does not 
+
+Novel algorithm create by myself
 
 \subsection{Communication Bus}
 
@@ -1440,6 +1446,8 @@ Q-learning variants
 Continue with communicative deep q-learning, make it so traffic light timings can be dynamic. That would enable even smarter behaviour, can make traffic light systems perhaps line up in time.
 
 Make a much larger scale network, this was too small perhaps. But it would take a bit long.
+
+Not perfect, possibility that it gets stuck in a scenario where one traffic flow completely dominates, and there is only one pedestrian/vehicle waiting to use the other direction.
 
 \appendix
 
