@@ -1361,11 +1361,17 @@ For each of the evaluation scenarios, our Deep Q-learning agent performed better
   \label{fig:deep_q_learning_crossing_eval}
 \end{figure}
 
+For each scenario, the standard zebra crossing performs the best, followed closely by our Deep Q-learning agent, then finally the fixed-time control TLS which performs the worst by a significant margin. Taking these results at face value, it would be easy to conclude that zebra crossings are the definite right choice, and that traffic light systems -- especially one that is \emph{not} intelligent -- should not be used.
+
+However, as mentioned in the problem statement, traffic lights were introduced to control flow for safety and better traffic regulation. Zebra crossings are about as efficient as you can get in cases where urban traffic is sparse, but they generally have less safety guarantees compared to a standard TLS. It relies on vehicle compliance and giving way to pedestrians, which vehicles may unfortunately not always adhere to -- particularly during periods of large pedestrian influx. Furthermore, they become significantly more dangerous when vehicles exceed $30$\ mph \cite{ActiveTravel25}.
+
+The Deep Q-learning agent, though not as good in terms of raw performance, performs decently well whilst providing the innate safety features of a standard traffic light system which are explicitly designed to prevent vehicles and pedestrians from occupying the same road area at the same time.
+
 \section{Summary}
 
-This chapter explored the motivation for introducing Deep Q-learning in the first place, the theory behind how it works, a detailed description of the algorithm, and an implementation overview. In addition, we created a new crossing network in addition to the old demo network to evaluate our agent in.
+This chapter explored the motivation for introducing Deep Q-learning in the first place, the theory behind how it works, a detailed description of the algorithm, and an implementation overview. In addition, we covered the creation of a new crossing network alongside the old demo network, enabling us to evaluate the performance of zebra crossings.
 
-Finally, we trained the agent in the two distinct networks and evaluated its performance. We conclude that our agent...   
+Finally, we trained the agent in the two distinct networks and evaluated its overall performance. We conclude that our agent performs significantly better than a standard fixed-time control traffic light system, but not quite as good as a zebra crossing in all five of the evaluation scenarios.
 
 \chapter{Communicative Deep Q-Learning}
 
@@ -1573,6 +1579,14 @@ S.~E.~Li.
 \newblock {\em First ed., Springer Verlag, Singapore}, 1--460, 2023.
 \newblock doi:10.1007/978-981-19-7784-8.
 \newblock Accessed: 6 April 2026.
+
+\bibitem[ATE25]{ActiveTravel25}
+Active Travel England.
+\newblock Critical safety issues for walking, wheeling and cycling.
+\newblock {\em GOV.UK}, 6 November 2025.
+\newblock Available at:
+  https://www.gov.uk/government/publications/critical-safety-issues-for-walking-wheeling-and-cycling/critical-safety-issues-for-walking-wheeling-and-cycling.
+\newblock Accessed: 9 April 2026.
 
 \end{thebibliography}
 
