@@ -1175,13 +1175,23 @@ Fortunately the route generation parameters also remain exactly as before. Recal
 
 \subsection{System Requirements}
 
-Pytorch added, CUDA support on GPU to speed up training, SUMO is still CPU bound.
+The Deep Q-learning algorithm was implemented from scratch using Python and the same libraries as before. In addition, we also now use the \texttt{PyTorch} module to build, train, and run the neural networks which we use, and it also comes with the \texttt{Adam} optimiser, MSE loss function, and utilities such as saving and loading models to and from disk.
+
+Training was optimised by configuring \texttt{PyTorch} to offload the tensor operations and neural network backpropagation to the NVIDIA GeForce RTX 4070 Ti GPU, utilising CUDA. It is important to note that the SUMO environment simulation does not support GPU acceleration, remaining CPU-bound.
 
 \subsection{Training}
 
+There are two distinct agents we train, both utilising the deep Q-learning algorithm. One will be trained for the TLS in the demo network, and the other will be trained for the TLS in the crossing network. Both will be trained using 1000 traffic routes which follow the baseline traffic parameters. Each training episode has a duration of 3600 steps as with the Q-learning agent.
+
 \subsection{Evaluation}
 
+Now we evaluate both of the agents in their respective network using the same evaluation configurations defined in Table~\ref{tab:evaluation_configs}. After generate the 100 evaluation scenarios, and taking the median values, we get the following results.
+
 \section{Summary}
+
+This chapter explored the motivation for introducing Deep Q-learning in the first place, the theory behind how it works, a detailed description of the algorithm, and an implementation overview. In addition, we created a new crossing network in addition to the old demo network to evaluate our agent in.
+
+Finally, we trained the agent in the two distinct networks and evaluated its performance. We conclude that our agent...   
 
 \chapter{Communicative Deep Q-Learning}
 
@@ -1227,7 +1237,7 @@ Although not shown, a few interesting implementation specific features include:
 
 \begin{itemize}
   \item The use of workers and queues (multiprocessing) to run distinct environments in parallel for increased performance.
-  \item A robust system design with ``quality of life'' additions such as comprehensive easy-to-use settings (e.g.\ to switch modes between training and evaluation) and quick swapping of agent configs.
+  \item A robust system design with a hierarchical structure enabling straight-forward extensions. Supported with ``quality of life'' additions such as comprehensive easy-to-use settings (e.g.\ to switch modes between training and evaluation) and quick swapping of agent configs.
   \item A modular Python programming approach with documentation.
   \item A utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
 \end{itemize}

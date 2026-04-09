@@ -60,7 +60,7 @@ class DeepQLearning(Runner):
         self.batch_size = 64
         self.target_update = 72000  # steps
         self.gamma = 0.9  # discount factor
-        self.epsilon_decay = 1.5e-7  #1.5e-6
+        self.epsilon_decay = 1.5e-6 #1.5e-7
         self.epsilon_max = 1.0
         self.epsilon_min = 0.01
 
@@ -77,14 +77,17 @@ class DeepQLearning(Runner):
         state_size = self.get_state_size()
         action_size = len(ACTION_SPACE)
 
-        self.policy_net = DQN(state_size, action_size)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = device
+
+        self.policy_net = DQN(state_size, action_size).to(device)
         if not self.train_mode:
-            self.policy_net.load_state_dict(torch.load(self.save_dir + self.model_name))
+            self.policy_net.load_state_dict(torch.load(self.save_dir + self.model_name, map_location=self.device))
             self.policy_net.eval()
             self.t = float('inf')
             self.epsilon_min = 0
 
-        self.target_net = DQN(state_size, action_size)
+        self.target_net = DQN(state_size, action_size).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
         self.optimiser = optim.Adam(self.policy_net.parameters(), lr=self.learning_rate)
@@ -112,7 +115,7 @@ class DeepQLearning(Runner):
             return self.rng.choice(actions)
         else:
             # exploitation - using DQN
-            state_tensor = torch.FloatTensor(state).unsqueeze(0)
+            state_tensor = torch.FloatTensor(state).unsqueeze(0).to(self.device)
             with torch.no_grad():
                 q_values = self.policy_net(state_tensor)
             nn_index = torch.argmax(q_values).item()
@@ -126,12 +129,12 @@ class DeepQLearning(Runner):
 
         states, actions, rewards, next_states, durations, dones = self.memory.sample(self.batch_size, self.rng)
 
-        states = torch.FloatTensor(states)
-        actions = torch.LongTensor(actions).unsqueeze(1)
-        rewards = torch.FloatTensor(rewards).unsqueeze(1)
-        next_states = torch.FloatTensor(next_states)
-        durations = torch.FloatTensor(durations).unsqueeze(1)
-        dones = torch.FloatTensor(dones.astype(np.float32)).unsqueeze(1)
+        states = torch.FloatTensor(states).to(self.device)
+        actions = torch.LongTensor(actions).unsqueeze(1).to(self.device)
+        rewards = torch.FloatTensor(rewards).unsqueeze(1).to(self.device)
+        next_states = torch.FloatTensor(next_states).to(self.device)
+        durations = torch.FloatTensor(durations).unsqueeze(1).to(self.device)
+        dones = torch.FloatTensor(dones.astype(np.float32)).unsqueeze(1).to(self.device)
 
         # Q(s,a)
         q_values = self.policy_net(states).gather(1, actions)
