@@ -3,7 +3,7 @@ from results import pretty_list
 
 NET_NAME = 'demo'
 MODE = 'eval'
-file = 'ql_c0.txt'
+file = 'dqn_c0.txt'
 
 results_file = f'{NET_NAME}/{MODE}/' + file
 
