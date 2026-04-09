@@ -636,10 +636,10 @@ Consider our demo network created previously. We can annotate the TLS with the d
     \centering
     \includegraphics[width=0.48\textwidth]{images/state_demo.png}
     \caption{Annotated state in the demo network.}
-    \label{fig:detectors_demo}
+    \label{fig:state_demo}
 \end{figure}
 
-In Figure~\ref{fig:detectors_demo} above, the labels with prefix `\emph{N}' means \emph{north}, `\emph{E}' means \emph{east}, `\emph{S}' means \emph{south} and `\emph{W}' means \emph{west}.
+In Figure~\ref{fig:state_demo} above, the labels with prefix `\emph{N}' means \emph{north}, `\emph{E}' means \emph{east}, `\emph{S}' means \emph{south} and `\emph{W}' means \emph{west}.
 
 If the cardinal direction \emph{X} is followed by letter `\emph{B}', the label should be interpreted as \emph{X-bound}, e.g.\ `\emph{NB1}' should read as the number of vehicles in the \emph{first}, or rather, leftmost lane travelling \emph{northbound}. In this instance, there are two lanes going northbound, one being a dedicated bicycle lane. If \emph{X} is instead followed by letter `\emph{C}', the label should be interpreted as \emph{X-crossing-wait-area}, e.g.\ `\emph{SC2}' should read as the number of pedestrians in the \emph{second} of the two \emph{wait area} for the \emph{south} \emph{crossing}. Finally, the `\emph{Phase}' label reflects the current traffic light phase of the TLS.
 
@@ -651,9 +651,10 @@ For this particular TLS, the state is comprised of 15 parts, therefore it can be
 \[
   Ped_t = (SC_1, SC_2, WC_1, WC_2, NC_1, NC_2, EC_1, EC_2)
 \]
-\[
+\begin{equation}
+  \label{state_formula}
   S_t = (Phase_t,) + Veh_t + Ped_t
-\]
+\end{equation}
 
 Where \emph{a}, \emph{b}, \emph{c}, and \emph{d} are the number of lanes going northbound, westbound, southbound, and eastbound respectively. Note that in some cases, the $Veh_t$ (vehicles) and $Ped_t$ (pedestrians) tuples may not contain an entry for some lanes or crossings listed depending on the TLS topology.
 
@@ -1106,13 +1107,13 @@ The gradient descent (i.e.\ the algorithm used to minimise the loss function) is
 
 $$L(\theta) = \frac{1}{b} \sum_{i=1}^{b} \left(y_i - Q(s_i, a_i; \theta)\right)^2$$
 
-The size of the buffer $D$ was set to $2^{14}=16\,384$ and the batch size $b$ to $64$. The size of $D$ was chosen such it could store a wide range of experiences but not so large that we introduce duplicate data, or keep data that is now redundant. Whilst there isn't a single agreed upon universal batch size in DQN literature, $64$ was chosen since it struck a balance between being small enough that updates were quick, and large enough that there was learning stability.
+The size of the buffer $D$ was set to $2^{14}=16\,384$ and the batch size $b$ to $64$. The size of $D$ was chosen such it could store a wide range of experiences but not so large that we introduce duplicate data, or keep data that is now redundant. Whilst there isn't an agreed upon universal batch size in DQN literature, $64$ was chosen since it was small enough that updates were quick, but large enough that there was learning stability.
 
 The target network is set to update every $T=72\,000$ steps (or 20 epochs). Delaying the target network update stabilises training by keeping the target quality values fixed for many steps. However, it is important to not set it too high lest the target becomes severely outdated.
 
 \subsection{Implementation}
 
-The overall system design remains unchanged from the previous chapters. In the same \texttt{Agents} library, we create a new \texttt{DeepQLearning} class that implements the abstract \texttt{Runner} class, as well as a subordinate class \texttt{ReplayBuffer} for experience replay. fortunately, the code was designed such that adding new algorithms for our agent to use would not require extensive remodelling of the existing codebase.
+The overall system design remains unchanged from the previous chapters. In the same \texttt{Agents} library, we create a new \texttt{DeepQLearning} class that implements the abstract \texttt{Runner} class, as well two subordinate classes: \texttt{ReplayBuffer} for experience replay, and \texttt{DQN} for the neural networks themselves. fortunately, the code was designed such that adding new algorithms for our agent to use would not require extensive remodelling of the existing codebase.
 
 \begin{figure}[H]
     \centering
@@ -1121,15 +1122,54 @@ The overall system design remains unchanged from the previous chapters. In the s
     \label{fig:implementation_crossing}
 \end{figure}
 
+The DQN architecture varies based on the state tuple size and available actions for a TLS. For example, the TLS in the demo network will have an input layer of 15 nodes since the state tuple has 15 elements, and the output layer will have 3 nodes since we defined 3 actions. We choose a single intermediary hidden layer of 64 nodes for no particular reason besides it being a simple architecture to train.
+
 \section{Crossing Network}
 
-Before we train and evaluate the Deep Q-learning algorithm, we will create a new environment -- in addition to the demo network -- for us to test the agent in. Our new network will be a trimmed down version consisting of the single zebra crossing as shown in OpenStreetMap. The netedit graphical network editor was used to ensure the crossings were true to the 
+Before we train and evaluate the Deep Q-learning algorithm, we will create a new environment for us to test the agent in in addition to the demo network. Our new network -- `crossing network' -- will be a trimmed down version consisting of the single zebra crossing in \emph{Torrington Place} shown in OpenStreetMap. The netedit network editor was used to ensure the positioning of the crossings\footnotemark\footnotetext{\emph{Jaywalking} is strictly not allowed by default in SUMO.} were accurate.
 
-The detectors and state obviously differs slightly from before.
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/netedit_crossing.png}
+        \caption{Road network in netedit.}
+        \label{fig:netedit_crossing}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/sumo_crossing.png}
+        \caption{Simulation view in SUMO.}
+        \label{fig:sumo_crossing}
+    \end{subfigure}
+    \caption{Crossing simulation environment.}
+    \label{fig:crossing_simulation}
+\end{figure}
+
+Since this is a different traffic light system, the lane configurations and therefore number of detectors and state differs from before. We still use yellow-coloured induction loops placed on departure lanes, aqua-coloured lane area detectors placed on the approaches, and pseudo-detectors for the two pedestrian crossings.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/zebra_crossing.png}
+    \caption{Detectors in the crossing network.}
+    \label{fig:detectors_crossing}
+\end{figure}
+
+Evidently a zebra crossing is not something that can be controlled by our agent. So to evaluate the performance of our agent compared to a standard crossing, we will create an alternative network which is the exact same except there is instead a traffic light system that controls the lane approaches and crossings. Our agent will receive a state tuple consisting of 7 elements using the general formula defined in \eqref{state_formula}, annotated below.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.64\textwidth]{images/state_crossing.png}
+    \caption{Annotated state in the crossing network.}
+    \label{fig:state_crossing}
+\end{figure}
 
 Route generation parameters remain the same. Conveniently, since the parameters were defined in units per km road, it applies
 
 The action space for our agent also remains the same. Though this may not always be the case, and it would need to be handled differently in reality.
+
+The motivation for this was to test if...
 
 \section{Results}
 
