@@ -19,7 +19,7 @@ class QLearning(Runner):
         # Q-learning hyperparameters
         self.alpha = 0.1 # learning rate
         self.gamma = 0.9 # discount factor
-        self.epsilon_decay = 1.5e-6
+        self.epsilon_decay = 1.5e-7 # 1.5e-6
         self.epsilon_max = 1.0
         self.epsilon_min = 0.01
 

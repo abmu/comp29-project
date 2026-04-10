@@ -51,14 +51,17 @@ class CommunicativeDeepQLearning(DeepQLearning):
         state_size, neighbour_size = self.get_state_size()
         action_size = len(ACTION_SPACE)
 
-        self.policy_net = CDQN(state_size, neighbour_size, action_size)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = device
+
+        self.policy_net = CDQN(state_size, neighbour_size, action_size).to(device)
         if not self.train_mode:
-            self.policy_net.load_state_dict(torch.load(self.save_dir + self.model_name))
+            self.policy_net.load_state_dict(torch.load(self.save_dir + self.model_name, map_location=self.device))
             self.policy_net.eval()
             self.t = float('inf')
             self.epsilon_min = 0
 
-        self.target_net = CDQN(state_size, neighbour_size, action_size)
+        self.target_net = CDQN(state_size, neighbour_size, action_size).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
         self.optimiser = optim.Adam(self.policy_net.parameters(), lr=self.learning_rate)
