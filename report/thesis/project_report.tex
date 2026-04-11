@@ -1038,7 +1038,7 @@ $$Q(s,\cdot;\theta)=[Q(s,a_1),Q(s,a_2),...,Q(s,a_n)]$$
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{images/neural_network.png}
-    \caption{Example neural network with two hidden layers \cite{Mi18}.}
+    \caption{Example neural network with two hidden layers \cite{MismarChoiEvans2018}.}
     \label{fig:neural_network_example}
 \end{figure}
 
@@ -1379,11 +1379,53 @@ We conclude our algorithms with an extension of Deep Q-learning that enables com
 
 \section{Network Layer}
 
-Although our single agent system performed well when equipped with Deep Q-learning, it does not have the ability to 
+Although our single agent system performed well when equipped with Deep Q-learning, it was not able to accommodate interactions between multiple traffic light systems (TLS). Intuitively, adjacent traffic light junctions should be highly interdependent, since the decision made at one junction directly influences traffic conditions at neighbouring junctions.
 
-Novel algorithm create by myself
+To evaluate the benefit of agent communication, we first introduce a \emph{network layer} $N$ which enables multiple agents to operate their own TLS simultaneously in a given environment in the first place. This builds upon our previous Deep Q-learning implementation with SUMO which only enabled \emph{one} agent-controlled TLS in an environment even if there were multiple TLS.
+
+$$
+N_n=
+\left\{
+  \begin{array}{cc}
+    Q(s_1, a_1; \theta_1) & (1)\\
+    Q(s_2, a_2; \theta_2) & (2)\\
+    \vdots & \vdots\\
+    Q(s_n, a_n; \theta_n) & (n)\\
+  \end{array}
+\right.
+$$
+
+Where $n$ is the number of agent controlled traffic lights. As we can see, for each agent, there is a distinct state $s$, action $a$, and set of weight and biases $\theta$. 
+
+Note that the network layer simply enables multiple agents to operate simultaneously. Although we have listed the agents as using the Deep Q-learning algorithm $Q(s, a; \theta)$, they could as well use the standard Q-learning algorithm $Q(s, a)$, or just a basic fixed-time control algorithm.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/network_layer.png}
+    \caption{Example agents connected to a network layer.}
+    \label{fig:network_layer_example}
+\end{figure}
+
+Therefore, each agent still trains independently, and selecting the optimal policy $\pi^*$, or rather, action depends on the algorithm used by each agent. The network layer provides the foundations from which we can develop novel algorithms that utilise information from other agents.
 
 \subsection{Communication Bus}
+
+The key idea is to allow agents to communicate their local state information to neighbouring agents. This enables each agent to make decisions not only based on its own state, but also on the state of surrounding junctions.
+
+To facilitate communication between agents, we introduce a shared data structure we refer to as a \emph{communication bus}, available to all agents that use the new algorithm. Each agent publishes its local state to the bus at every time step in the simulation, and can read the most recent states of other agents.
+
+Let $s_{n_t}$ denote the standard local state of agent $n$ at time step $t$. Let $\mathcal{N}(n)$ denote the set of neighbouring agents to agent $n$. The new communicative state ${s_{n_t}}^{comm}$ used by agent $n$ in their Deep Q-learning algorithm is defined as:
+
+\[
+{s_{n_t}}^{comm} = (s_{n_t},) +  (s_{j_{1_t}}, s_{j_{2_t}}, \dots, s_{j_{k_t}}) \quad \text{where } j \in \mathcal{N}(n)
+\]
+
+As shown, the communicative state is limited to the local state of agent concatenated with the local state tuples of the neighbouring agents. This approach remains fully decentralised:
+\begin{itemize}
+  \item There is no central controller making decisions.
+  \item Each agent independently selects its own action.
+  \item Communication is limited to state sharing only.
+\end{itemize}
 
 \subsection{Algorithm}
 
@@ -1602,5 +1644,9 @@ Active Travel England.
 
 \chapter{Other appendices, e.g., code listing}
 Put your appendix sections here
+
+Code
+
+System manual
 
 \end{document}
