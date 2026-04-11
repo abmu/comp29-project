@@ -1433,6 +1433,59 @@ In the abstracted example, you can imagine that the agents which are connected t
 
 \subsection{Algorithm}
 
+\begin{algorithm}[H]
+  \caption{Communicative Deep Q-Learning}
+  \begin{algorithmic}[1]
+  \State Initialise communication bus $B$
+  \For{each agent $n$}
+    \State Initialise replay buffer $D_n$
+    \State Initialise policy DQN with weights $\theta_n$
+    \State Initialise target network with weights $\theta_n^- \leftarrow \theta_n$
+  \EndFor
+  \For{each episode}
+    \For{each agent $n$}
+        \State Observe initial local state $s_n$
+        \State Publish $s_n$ to bus $B$
+    \EndFor
+    \For{each step in episode}
+      \For{each agent $n$}
+        \State Read neighbour states $\{s_j \mid j \in \mathcal{N}(n)\}$ from $B$
+        \State Construct communicative state: $s_n^{comm} = (s_n, s_{j_1}, s_{j_2}, \dots, s_{j_k})$
+        \State Select action $a_n$ using $\epsilon$-greedy policy on $Q(s_n^{comm}, \cdot; \theta_n)$
+        \State Set action $a_n$ using traffic light controller $\text{TLS}_n$
+      \EndFor
+
+      \State Execute one step in the environment simulation
+
+      \For{each agent $n$}
+        \State Observe reward $R_n$, next state $s'_n$, duration $d_n$
+        \State Publish $s'_n$ to bus $B$
+        \State Read neighbour next states $\{s'_j\}$ from $B$
+        \State Construct next communicative state: ${s'_n}^{comm} = (s'_n, s'_{j_1}, \dots, s'_{j_k})$
+        \State Store transition: $(s_n^{comm}, a_n, R_n, {s'_n}^{comm}, d_n, \delta_n) \in D$
+        \State Sample minibatch from $D$
+        \For{each sample $(s_i, a_i, R_i, s'_i, \delta_i, d_i)$}
+          \State $y_i \leftarrow R_i + (1 - \delta_i)\,\gamma^{d_i} \underset{a'}\max Q(s'_i, a'; \theta_n^-)$
+        \EndFor
+        \State Perform gradient descent on: $L(\theta_n) = \frac{1}{b} \sum_{i=1}^{b} \left(y_i - Q(s_i, a_i; \theta_n)\right)^2$
+        \State Update state $s_n \leftarrow s'_n$
+        \State Periodically update target network: $\theta_n^- \leftarrow \theta_n$
+      \EndFor
+    \EndFor
+  \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+The algorithm is almost identical to the Deep Q-Learning algorithm, except that rather than setting up and running a single agent, we set up and iterate through an indefinite number. Although not shown here explicitly, the \emph{network layer} we mentioned previously is \emph{where} this algorithm code exists. In other words, the agents exist on top of the layer.
+
+We first set up the communication bus $B$. The bus maintains a map of key-value pairs, where the key is the agent's ID, and the value is the agent's most recent local state observation. We manually define the set of neighbours $\mathcal{N}$ for each agent ID (based on the topology of the road network in SUMO), therefore when the agent retrieves the neighbouring states from the bus it only receives as appropriate -- not just every other state that was published.
+
+Set up agents, everything is identical to before, does it independently
+
+Main change is to the architecture of the neural networks -- the state input
+
+In practice the compute should be distributed -- this is a centralised script.
+
 \subsection{Implementation}
 
 This required significant rework of the code. Not explored in the dissertation, but since each agent previously directly controlled a traffic light and caused a step directly, we had to change it such that it was decoupled. THe agent still controls a traffic light, but it doesn't actually perform the step -- that is reserved for the network layer (which runs all other agents).
