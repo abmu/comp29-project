@@ -6,9 +6,9 @@
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="networks/crossing/tls.net.xml"/>
-        <route-files value="routes/crossing/bicycle.rou.xml,routes/crossing/car.rou.xml,routes/crossing/pedestrian.rou.xml"/>
-        <additional-files value="networks/crossing/detectors.add.xml"/>
+        <net-file value="networks/extended/main.net.xml"/>
+        <route-files value="routes/extended/bicycle.rou.xml,routes/extended/car.rou.xml,routes/extended/pedestrian.rou.xml"/>
+        <additional-files value="networks/extended/detectors.add.xml"/>
     </input>
 
     <gui_only>
