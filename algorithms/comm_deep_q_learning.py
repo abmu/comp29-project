@@ -15,11 +15,11 @@ class CDQN(nn.Module):
         self.model = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
             nn.Linear(hidden_dim, max(int(hidden_dim/2), action_dim)),
             nn.ReLU(),
-            nn.Linear(max(int(hidden_dim/2), action_dim), action_dim)
+            nn.Linear(max(int(hidden_dim/2), action_dim), max(int(hidden_dim/4), action_dim)),
+            nn.ReLU(),
+            nn.Linear(max(int(hidden_dim/4), action_dim), action_dim)
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

@@ -1122,7 +1122,7 @@ The overall system design remains unchanged from the previous chapters. In the s
     \label{fig:implementation_crossing}
 \end{figure}
 
-The DQN architecture varies based on the state tuple size and available actions for a TLS. For example, the TLS in the demo network will have an input layer of 15 nodes since the state tuple has 15 elements, and the output layer will have 3 nodes since we defined 3 actions. We choose a single intermediary hidden layer of 64 nodes for no particular reason besides it being a simple architecture to train.
+The DQN architecture varies based on the state tuple size and available actions for a TLS. For example, the TLS in the demo network will have an input layer of 15 nodes since the state tuple has 15 elements, and the output layer will have 3 nodes since we defined 3 actions. We choose two intermediary hidden layers of 64 nodes each for no particular reason besides it being a simple architecture to train.
 
 \section{Crossing Network}
 
@@ -1401,7 +1401,7 @@ Note that the network layer simply enables multiple agents to operate simultaneo
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/network_layer.png}
+    \includegraphics[width=0.50\textwidth]{images/network_layer.png}
     \caption{Example agents connected to a network layer.}
     \label{fig:network_layer_example}
 \end{figure}
@@ -1424,7 +1424,7 @@ As shown, the communicative state is limited to the state of the agent concatena
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/communication_example.png}
+    \includegraphics[width=0.50\textwidth]{images/communication_example.png}
     \caption{Abstracted example of agents communicating in a decentralised manner.}
     \label{fig:communication_example}
 \end{figure}
@@ -1476,23 +1476,32 @@ In the abstracted example, you can imagine that the agents which are connected t
   \end{algorithmic}
 \end{algorithm}
 
-The algorithm is almost identical to the Deep Q-Learning algorithm, except that rather than setting up and running a single agent, we set up and iterate through an indefinite number. Although not shown here explicitly, the \emph{network layer} we mentioned previously is \emph{where} this algorithm code exists. In other words, the agents exist on top of the layer.
+The algorithm\footnotemark\footnotetext{This pseudocode has some simplifications, namely agents complete \emph{multi-step} actions that can finish at \emph{differing} times, therefore additional code is needed to monitor an action's progress.} extends the Deep Q-Learning algorithm. Rather than only running a single agent, we now iterate through and run an indefinite number. The \emph{network layer} we mentioned previously is \emph{where} this algorithm code exists. In other words, the set of agents exist on top of the network layer.
 
-We first set up the communication bus $B$. The bus maintains a map of key-value pairs, where the key is the agent's ID, and the value is the agent's most recent local state observation. We manually define the set of neighbours $\mathcal{N}$ for each agent ID (based on the topology of the road network in SUMO), therefore when the agent retrieves the neighbouring states from the bus it only receives as appropriate -- not just every other state that was published.
+We first set up the communication bus $B$, which maintains a map of key-value pairs, where the keys are the agent IDs and the values are the most recent local state observation $s$ for each agent. We manually define the set of neighbours $\mathcal{N}$ for each agent ID (based on the topology of the traffic lights in the SUMO environment) such that agents can only retrieve their neighbours' state from the bus.
 
-Set up agents, everything is identical to before, does it independently
+The agents are set up with similar parameters to before, except the input to the neural network for each agent is now $s^{comm}$ as opposed to $s$. At each step, the agents retrieve neighbouring state information from the bus to construct $s^{comm}$, and publish their own state $s$ so neighbours can do the same.
 
-Main change is to the architecture of the neural networks -- the state input
-
-In practice the compute should be distributed -- this is a centralised script.
+In a tangible implementation, a main benefit of Communicative Deep Q-learning comes from it being decentralised. Although necessary for the code, in practice, a network layer and the centralised communication bus $B$ our agents interface with wouldn't exist. Instead, the bus interface would be replaced with physical (e.g.\ copper) cables connected only with nearby adjacent agents.
 
 \subsection{Implementation}
 
-This required significant rework of the code. Not explored in the dissertation, but since each agent previously directly controlled a traffic light and caused a step directly, we had to change it such that it was decoupled. THe agent still controls a traffic light, but it doesn't actually perform the step -- that is reserved for the network layer (which runs all other agents).
+Enabling communication between agents required a very significant rework of the code. Some of the changes below were retroactively added to the previous algorithm implementations since it makes for easier understanding.
 
-Show updated diagram.
+Initially only one agent was explicitly allowed since there was no agent encapsulation. In essence the single agent was the primary driver of the SUMO simulation -- it directly made \texttt{simulationStep()} interface calls to advance the simulation forward. Multiple agents was not possible for there was no boundary or class to delimit what an agent was.
 
-Extended the architecture
+This necessitated the \texttt{Controller} class in the \texttt{Environment} package, which has a one-to-one mapping with each agent, represented now by a \texttt{Runner} class. Each \texttt{Controller} keeps track of an agent's action and sets the corresponding TLS phase via a \texttt{setPhase()} interface call to SUMO, but it does \emph{not} step the simulation.
+
+Simulation stepping was decoupled into a separate function exposed by the \texttt{Environment}. This is reserved and called solely by the \texttt{Network} layer class that is responsible for setting up multiple \texttt{Runner} classes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.64\textwidth]{images/implementation_extended.png}
+    \caption{Library interactions and hierarchy of classes.}
+    \label{fig:implementation_extended}
+\end{figure}
+
+The internal DQN architecture agents use was expanded, since the state for each agent -- and therefore the DQN input layers -- now included extra information from neighbouring agents. Rather than just two intermediary hidden layers of 64 nodes each, we replace this with three intermediary layers which progressively decrease in size: 256 nodes, 128 nodes, 64 nodes. The final output layer of $a$ actions remains as before.
 
 \section{Extended Network}
 
@@ -1509,27 +1518,6 @@ No change to system requirements.
 \subsection{Evaluation}
 
 Might be the same, but try find learned behaviour such as `green wave' where traffic lights preemptively update themselves in anticipation of a vehicle.
-
-\section{Summary}
-
-\chapter{Supplementary Analysis}
-
-\section{State Compression}
-
-Compression Levels -- Q-learning becomes feasible.
-
-\section{Miscellaneous}
-
-Although not shown, a few interesting implementation specific features include:
-
-\begin{itemize}
-  \item The use of workers and queues (multiprocessing) to run distinct environments in parallel for increased performance.
-  \item A robust system design with a hierarchical structure enabling straight-forward extensions. Supported with ``quality of life'' additions such as comprehensive easy-to-use settings (e.g.\ to switch modes between training and evaluation) and quick swapping of agent configs.
-  \item A modular Python programming approach with documentation.
-  \item A utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
-\end{itemize}
-
-Whilst we won't delve further into the implementation details since it will detract from the main goals of the dissertation, all code can be found in the appendix to be viewed at your discretion.
 
 \section{Summary}
 
@@ -1551,7 +1539,6 @@ Make a much larger scale network, this was too small perhaps. But it would take 
 Not perfect, possibility that it gets stuck in a scenario where one traffic flow completely dominates, and there is only one pedestrian/vehicle waiting to use the other direction.
 
 \appendix
-
 
 \begin{thebibliography}{HHM99}
 
@@ -1699,11 +1686,29 @@ Active Travel England.
 
 \end{thebibliography}
 
-\chapter{Other appendices, e.g., code listing}
-Put your appendix sections here
+\chapter{Supplementary Analysis}
 
-Code
+\section{State Compression}
 
-System manual
+Compression Levels -- Q-learning becomes feasible.
+
+\section{Miscellaneous}
+
+Although not shown, a few interesting implementation specific features include:
+
+\begin{itemize}
+  \item The use of workers and queues (multiprocessing) to run distinct environments in parallel for increased performance.
+  \item A utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
+  \item A hierarchical system design enabling straight-forward extensions. Supported with ``quality of life'' additions such as comprehensive easy-to-use settings (e.g.\ to switch modes between training and evaluation) and quick swapping of agent configs.
+  \item A robust, modular Python programming approach with documentation.
+\end{itemize}
+
+Whilst we won't delve further into the implementation details since it will detract from the main goals of the dissertation, all code can be found in the appendix to be viewed at your discretion.
+
+\section{Summary}
+
+\chapter{Code Listing}
+
+\chapter{System Manual}
 
 \end{document}
