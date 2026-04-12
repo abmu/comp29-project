@@ -11,10 +11,10 @@ class Runner(ABC):
         self.controller = None
 
 
-    def start_episode(self, conn) -> None:
+    def start_episode(self, conn, offset: float = 0) -> None:
         # run at the start of every episode
         self.conn = conn
-        self.controller = Controller(conn, self.tls_id)
+        self.controller = Controller(conn, self.tls_id, offset=offset)
 
 
     @abstractmethod

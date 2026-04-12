@@ -1610,7 +1610,53 @@ The Communicative Deep Q-learning algorithm was implemented as an extension to D
 
 \subsection{Training}
 
-There are three agents trained together in the extended network using $10\,000$ generated traffic routes this time which follow the baseline traffic parameters. Each training episode has a duration of $3\,600$ steps.
+We will train the three agents using the previous Deep Q-learning algorithm and -- in a separate training instance -- the Communicative Deep Q-learning algorithm. The three agents are trained together in the extended network using $10\,000$ generated traffic routes this time which follow the baseline traffic parameters. Each training episode has a duration of $3\,600$ steps.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Epoch},
+      ylabel={Reward},
+      title={Extended network reward per epoch},
+      grid=both,
+      legend pos=south east
+  ]
+
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_ft_cleaned.txt};
+  \addlegendentry{Fixed-time control}
+
+  \addplot[
+      orange,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_dqn_c0.txt};
+  \addlegendentry{Deep Q-learning}
+
+  \addplot[
+      green,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/crossing_eval_zebra.txt};
+  \addlegendentry{Zebra}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Reward per training route in the extended environment (runtime: 13:41:12).}
+  \label{fig:communicative_deep_q_learning_extended_train}
+\end{figure}
 
 \subsection{Evaluation}
 

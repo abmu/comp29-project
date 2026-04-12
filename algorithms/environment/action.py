@@ -56,7 +56,7 @@ def simulation_step(conn) -> float:
 
 
 class Controller:
-    def __init__(self, conn, tls_id: str, stats_mode: bool = False) -> None:
+    def __init__(self, conn, tls_id: str, stats_mode: bool = False, offset: float = 0) -> None:
         self.conn = conn
         self.tls_id = tls_id
         self.stats_mode = stats_mode
@@ -70,7 +70,7 @@ class Controller:
             self._controlled_lanes = set()
         else:
             self._controlled_lanes = set(self.conn.trafficlight.getControlledLanes(self.tls_id))
-    
+        self.set_offset(offset)
 
     def __str__(self) -> str:
         return f'Current action: {self.curr_action}\nDuration left (in steps): {self.curr_dur}\nNext actions: {self.next}\nSteps since last action set: {self.total_steps}\n'
@@ -94,6 +94,14 @@ class Controller:
 
         self.curr_action = action
         self.curr_dur = _duration_to_steps(duration)
+
+
+    def set_offset(self, offset_duration: float) -> None:
+        if offset_duration:
+            self.next = [(7, offset_duration)]  # set to phase 7 - all red
+            self.total_steps = 0
+            self._update_tls()
+            self.initialised = True
 
 
     def set_action(self, new_action: int) -> None:
