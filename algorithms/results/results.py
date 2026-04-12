@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 NET_NAME = 'extended'
-MODE = 'train'
+MODE = 'eval'
 
 files = [
     # 'zebra.txt',

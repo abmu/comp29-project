@@ -52,7 +52,7 @@ $\Box$ \end{quotation}}
 
 
 \title{{\vspace{-14em} \includegraphics[scale=0.4]{images/ucl_logo.png}}\\
-{{\Huge Investigating the use of Reinforcement Learning Algorithms in Traffic Environments}}\\
+{{\Huge Investigating the use of Decentralised Reinforcement Learning Algorithms in Traffic Environments}}\\
 % {\large Optional Subtitle}\\
 }
 \date{Submission date: Day Month Year}
@@ -91,7 +91,7 @@ In an endeavour to improve upon this, advanced traffic light systems equipped wi
 
 \section{Aim and Objectives}
 
-The overall aim of this dissertation will be to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. Rather than explicitly defining behaviour in different traffic scenarios as before, we will observe how optimal decision-making policies may be learnt independently through the use of reinforcement learning algorithms.
+The overall aim of this dissertation will be to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. Rather than explicitly defining behaviour in different traffic scenarios as before, we will observe how optimal decision-making policies may be learnt independently through the use of reinforcement learning algorithms. These algorithms will be decentralised, with each agent running the algorithm using data only that is local to them. 
 
 Based on this aim, the following objectives are defined:
 
@@ -169,11 +169,13 @@ Finally, implementation and maintenance costs are non-trivial. These systems req
 
 \section{Motivation for Reinforcement Learning}
 
-\textcolor{red}{\textbf{\emph{!!! ADD SHORT SECTION ABOUT EXISTING REINFORCEMENT LEARNING + TRAFFIC LIGHT !!!}}}
-
 Reinforcement learning offers an alternative method of traffic signal control. Control policies are not explicitly programmed, but instead emerge through intelligent agents interacting with a traffic environment. An intelligent agent can observe current traffic state, select a signal phase action, and receive feedback in the form of a reward from the environment.
 
 Over time, behaviour gradually improves and a control strategy emerges through experience, as opposed to encoding behaviour manually for every possible scenario. The ability to learn makes this very powerful; most limitations discovered above are mitigated by learning -- though perhaps not the infrastructure costs. Ergo, this will be explored for the remainder of this dissertation.
+
+\section{Existing Traffic Signal Control Literature}
+
+https://traffic-signal-control.github.io/
 
 \section{Summary}
 
@@ -618,7 +620,7 @@ Using the TraCI interface, a way for controlling and observing the simulation en
 
 \chapter{Q-Learning}
 
-Having created a baseline environment with a traffic light system which can be observed and controlled, as well as creating a reward system, we now create the first of our intelligent agents. Reinforcement learning and the Markov decision process will first be briefly explained before implementing the Q-learning algorithm. The performance and possible improvements will then be considered.
+Having created a baseline environment with a traffic light system which can be observed and controlled, as well as creating a reward system, we now create the first of our intelligent agents. These agents are \emph{decentralised}, relying only on data from the local traffic light system. Reinforcement learning and the Markov decision process will first be briefly explained before implementing the Q-learning algorithm. The performance and possible improvements will then be considered.
 
 \section{Background}
 
@@ -1644,13 +1646,13 @@ We will train the three agents using the previous Deep Q-learning algorithm and 
   \addlegendentry{Deep Q-learning}
 
   \addplot[
-      green,
+      magenta,
       mark=none
   ] table[
       x expr=\coordindex+1,
       y index=0
-  ] {data/crossing_eval_zebra.txt};
-  \addlegendentry{Zebra}
+  ] {data/crossing_train_zebra.txt};
+  \addlegendentry{Comm. Deep Q-learning}
 
   \end{axis}
   \end{tikzpicture}
@@ -1658,7 +1660,15 @@ We will train the three agents using the previous Deep Q-learning algorithm and 
   \label{fig:communicative_deep_q_learning_extended_train}
 \end{figure}
 
+Looking at the data in Figure~\ref{fig:communicative_deep_q_learning_extended_train}
+
 \subsection{Evaluation}
+
+Now we evaluate the sets of Deep Q-learning agents and Communicative Deep Q-learning agents using the evaluation configurations defined previously in Table~\ref{tab:evaluation_configs}. After generating the 100 evaluation scenarios, and taking the median values, we get the following results.
+
+For each scenario, the
+
+Even though we see this result, we observe interesting behaviour in particular scenarios.
 
 Might be the same, but try find learned behaviour such as `green wave' where traffic lights preemptively update themselves in anticipation of a vehicle.
 

@@ -15,11 +15,12 @@ class QLearning(Runner):
         self.rng = random.Random(seed)
         self.table_name = f'q_table__c{compression_level}__{tls_id}.txt'
         self.t = 0
+        self.reward = 0
 
         # Q-learning hyperparameters
         self.alpha = 0.1 # learning rate
         self.gamma = 0.9 # discount factor
-        self.epsilon_decay = 1.5e-7 # 1.5e-6
+        self.epsilon_decay = 1.5e-6 # 1.5e-7
         self.epsilon_max = 1.0
         self.epsilon_min = 0.01
 
@@ -83,7 +84,7 @@ class QLearning(Runner):
 
 
     def finish_step(self, done: bool):
-        if self.train_mode and self.controller.finished():
+        if self.train_mode and self.controller.finished() and self.controller.initialised:
             next_state = get_state(self.conn, self.tls_id, self.compression_level)
             duration = self.controller.get_total_duration()
             self.update_q(self.state, self.action, self.reward, next_state, duration)

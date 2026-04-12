@@ -13,9 +13,9 @@ class FixedTimer(Runner):
         self.action_loop = [0,0,0,3,3,3,6]
 
 
-    def start_episode(self, conn):
+    def start_episode(self, conn, offset: float = 0):
         self.conn = conn
-        self.controller = Controller(conn, self.tls_id, self.stats_mode)
+        self.controller = Controller(conn, self.tls_id, self.stats_mode, offset=offset)
         self.curr_idx = 0
         
 

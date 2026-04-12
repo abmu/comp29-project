@@ -104,7 +104,7 @@ class CommunicativeDeepQLearning(DeepQLearning):
 
 
     def finish_step(self, done: bool):
-        if self.train_mode and self.controller.finished():
+        if self.train_mode and self.controller.finished() and self.controller.initialised:
             next_state = self.get_comm_state()
             duration = self.controller.get_total_duration()
 

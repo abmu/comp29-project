@@ -97,11 +97,12 @@ class Controller:
 
 
     def set_offset(self, offset_duration: float) -> None:
+        self.offset = False
         if offset_duration:
-            self.next = [(7, offset_duration)]  # set to phase 7 - all red
+            self.next = [(0, offset_duration)]  # set to phase 0 by default
             self.total_steps = 0
             self._update_tls()
-            self.initialised = True
+            self.offset = True
 
 
     def set_action(self, new_action: int) -> None:
@@ -134,12 +135,17 @@ class Controller:
 
     def run(self, skip_reward=False) -> float:
         # run the controller and return the reward
-        if self.initialised and not self.finished():
+        if self.offset:
             self.curr_dur -= 1
-            self.total_steps += 1
-
-            if not self.curr_dur and self.next:
-                self._update_tls()
+            if not self.curr_dur:
+                self.offset = False
+        else:
+            if self.initialised and not self.finished():
+                self.curr_dur -= 1
+                self.total_steps += 1
+    
+                if not self.curr_dur and self.next:
+                    self._update_tls()
         
         if skip_reward:
             return 0.0

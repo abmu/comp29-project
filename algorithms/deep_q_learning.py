@@ -55,12 +55,13 @@ class DeepQLearning(Runner):
         self.rng = random.Random(seed)
         self.model_name = f'dqn_model__c{compression_level}__{tls_id}.pt'
         self.t = 0
+        self.reward = 0
 
         self.learning_rate = 0.0005
         self.batch_size = 64
         self.target_update = 72000  # steps
         self.gamma = 0.9  # discount factor
-        self.epsilon_decay = 1.5e-7 #1.5e-6
+        self.epsilon_decay = 1.5e-6 #1.5e-7
         self.epsilon_max = 1.0
         self.epsilon_min = 0.01
 
@@ -151,8 +152,8 @@ class DeepQLearning(Runner):
         self.optimiser.step()
 
 
-    def start_episode(self, conn) -> None:
-        super().start_episode(conn)
+    def start_episode(self, conn, offset) -> None:
+        super().start_episode(conn, offset)
         if not self.initialised:
             self.initialise()
 
@@ -176,7 +177,7 @@ class DeepQLearning(Runner):
 
 
     def finish_step(self, done: bool):
-        if self.train_mode and self.controller.finished():
+        if self.train_mode and self.controller.finished() and self.controller.initialised:
             next_state = get_state(self.conn, self.tls_id, self.compression_level)
             duration = self.controller.get_total_duration()
 
