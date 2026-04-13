@@ -1,5 +1,5 @@
 # SUMO simulation settings
-GUI = False
+GUI = True
 SIMULATION_TIME = 3600
 STEP_LENGTH = 0.10 * 10
 TOTAL_STEPS = int(SIMULATION_TIME / STEP_LENGTH)

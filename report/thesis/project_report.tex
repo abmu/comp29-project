@@ -1633,7 +1633,7 @@ We will train the three agents using the previous Deep Q-learning algorithm and 
   ] table[
       x expr=\coordindex+1,
       y index=0
-  ] {data/demo_train_ft_cleaned.txt};
+  ] {data/extended_train_ft.txt};
   \addlegendentry{Fixed-time control}
 
   \addplot[
@@ -1642,7 +1642,7 @@ We will train the three agents using the previous Deep Q-learning algorithm and 
   ] table[
       x expr=\coordindex+1,
       y index=0
-  ] {data/demo_train_dqn_c0.txt};
+  ] {data/extended_train_dqn_c0.txt};
   \addlegendentry{Deep Q-learning}
 
   \addplot[
@@ -1651,7 +1651,7 @@ We will train the three agents using the previous Deep Q-learning algorithm and 
   ] table[
       x expr=\coordindex+1,
       y index=0
-  ] {data/crossing_train_zebra.txt};
+  ] {data/extended_train_cdqn_c0.txt};
   \addlegendentry{Comm. Deep Q-learning}
 
   \end{axis}
@@ -1660,17 +1660,78 @@ We will train the three agents using the previous Deep Q-learning algorithm and 
   \label{fig:communicative_deep_q_learning_extended_train}
 \end{figure}
 
-Looking at the data in Figure~\ref{fig:communicative_deep_q_learning_extended_train}
+As we can see, Deep Q-learning and Communicative Deep Q-learning perform significantly better than standard fixed-time control, both reaching a reward of \textgreater $8\,000$ units, compared to $1\,000$ units of the latter. Looking closer, Deep Q-learning reaches a final training reward of $\sim9\,000$ whereas Communicative Deep Q-learning reaches $\sim8\,000$.
+
+We see that the rewards between the two are about equivalent up until epoch $\sim600$ where the two algorithms begin to diverge slightly. Although we expect Communicative Deep Q-learning to perform at least as well, if not better, than Deep Q-learning, this may be attributed to it having a much larger input state for each of the agents' neural networks. Therefore, it would require a longer training period to reach the same given reward.
+
+The spikes observed are the penalties we discussed previously, and are an artefact of the SUMO simulation software -- not the algorithms themselves.
 
 \subsection{Evaluation}
 
 Now we evaluate the sets of Deep Q-learning agents and Communicative Deep Q-learning agents using the evaluation configurations defined previously in Table~\ref{tab:evaluation_configs}. After generating the 100 evaluation scenarios, and taking the median values, we get the following results.
 
-For each scenario, the
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Evaluation},
+      ylabel={Reward},
+      title={Extended network reward per evaluation scenario},
+      grid=both,
+      legend style={at={(0.03,0.5)},anchor=west},
+      xtick=data
+  ]
 
-Even though we see this result, we observe interesting behaviour in particular scenarios.
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/extended_eval_ft.txt};
+  \addlegendentry{Fixed-time control}
 
-Might be the same, but try find learned behaviour such as `green wave' where traffic lights preemptively update themselves in anticipation of a vehicle.
+  \addplot[
+      orange,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/extended_eval_dqn_c0.txt};
+  \addlegendentry{Deep Q-learning}
+
+  \addplot[
+      magenta,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/extended_eval_cdqn_c0.txt};
+  \addlegendentry{Comm. Deep Q-learning}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Median reward for evaluation routes in the extended environment.}
+  \label{fig:communicative_deep_q_learning_extended_eval}
+\end{figure}
+
+For each scenario, the Deep Q-learning agents surprisingly perform the best, followed by the Communicative Deep Q-learning agents, and then finally the fixed-time control TLS as expected. The difference between the prior two is narrow, and we have conjectured that this is due to the training time not being as sufficient for Communicative Deep Q-learning since it has a larger neural network architecture.
+
+Regardless, it appears that Communicative Deep Q-learning has failed to make any meaningful improvement. Although our agents gain extra information, they do not necessarily make different decisions. This is due to one of the fundamental flaws of Q-learning itself that our actions are discrete with no way for our agent to adaptively adjust the timings based on adjacent states.
+
+One possible further extension is Parametrised Deep Q-Networks (PDQN)\cite{XiongWanYangEtAl2018} in which we could replace the previous DQN model whilst maintaining the Communicative infrastructure we have developed. PDQN enables our discrete actions -- switching traffic light phase -- to have a duration that is varied dynamically by the agent (e.g.\ switch the traffic light phase for a continuous range of time values rather than fixed). This would enable agents to carry out smarter, more flexible behaviour based on the state communicated to them.
+
+\subsection{Emergent Behaviour}
+
+In our literature review, we noted that centralised systems such as SCOOT group signals into regions and make dynamic adjustments to improve coordination between traffic lights. This helps promote ``green waves'' where vehicles encounter consecutive green lights without having to stop.
+
+Unlike these systems, our agents are decentralised. This has the benefit that any compute required can be limited to a traffic light system itself without having to connect it to a larger centralised system. The only connections it would need is to adjacent traffic light systems in the case of Communicative Deep Q-learning.
+
+Despite Communicative Deep Q-learning not performing better in the evaluation routes which tested continuous traffic in all directions of varying congestion levels, we do observe interesting learned behaviour (\emph{not} explicitly programmed) that is not present with the standard Deep Q-learning agents.
+
+With that said, we do observe interesting learned behaviour with the current Communicative Deep Q-learning agents which is not present with the standard Deep Q-learning agents. Might be the same, but try find learned behaviour such as `green wave' where traffic lights preemptively update themselves in anticipation of a vehicle.
 
 \section{Summary}
 
@@ -1836,6 +1897,15 @@ Active Travel England.
 \newblock Available at:
   https://www.gov.uk/government/publications/critical-safety-issues-for-walking-wheeling-and-cycling/critical-safety-issues-for-walking-wheeling-and-cycling.
 \newblock Accessed: 9 April 2026.
+
+\bibitem[JXi18]{XiongWanYangEtAl2018}
+J.~Xiong, Q.~Wang, Z.~Yang, P.~Sun, L.~Han, Y.~Zheng, H.~Fu, T.~Zhang, J.~Liu, H.~Liu.
+\newblock Parametrized Deep Q-Networks Learning: Reinforcement Learning with Discrete-Continuous Hybrid Action Space.
+\newblock {\em arXiv preprint arXiv:1810.06394}, 2018.
+\newblock doi:10.48550/arXiv.1810.06394.
+\newblock Available at:
+  https://arxiv.org/abs/1810.06394.
+\newblock Accessed: 13 April 2026.
 
 \end{thebibliography}
 
