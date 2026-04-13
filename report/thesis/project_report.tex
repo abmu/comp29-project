@@ -173,9 +173,13 @@ Reinforcement learning offers an alternative method of traffic signal control. C
 
 Over time, behaviour gradually improves and a control strategy emerges through experience, as opposed to encoding behaviour manually for every possible scenario. The ability to learn makes this very powerful; most limitations discovered above are mitigated by learning -- though perhaps not the infrastructure costs. Ergo, this will be explored for the remainder of this dissertation.
 
-\section{Existing Traffic Signal Control Literature}
+\section{Existing Reinforcement Learning Implementations}
 
-https://traffic-signal-control.github.io/
+A comprehensive set of publications and resources relating to reinforcement learning for traffic light control was kindly collated by the Intelligent Transportation Systems Society (ITSS) of Pennsylvania State University \cite{ITSS2020}. There were a breadth of reinforcement learning algorithms explored to solve the problem of optimising traffic light signals.
+
+The core idea common amongst the publications was to implement a centralised controller which has access to all traffic light systems in an environment, as opposed to each traffic light system being independently controlled by decentralised agents. This will be the key point which will differentiate our agents.
+
+We will cover the implementation of reinforcement learning algorithms from first principles, and incrementally justify and build to more complex algorithms. Existing publications tend to curvet over the foundations and use powerful pre-existing libraries. Whilst they serve as excellent resources, we will not be referring to these; our environment and agents will be built orthogonally from the ground up.
 
 \section{Summary}
 
@@ -1748,14 +1752,14 @@ Our Communicative Deep Q-learning agents learn to synchronise the lights such th
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/green_wave_dqn.png}
-        \caption{Congestion with Deep Q-learning (reward: 19725).}
+        \caption{Congestion with Deep Q-learning\\(reward: $19\,725$).}
         \label{fig:green_wave_dqn}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/green_wave_cdqn.png}
-        \caption{Communicative Deep Q-learning (reward: 21006).}
+        \caption{Green wave with Communicative Deep Q-learning\\(reward: $21\,006$).}
         \label{fig:green_wave_cdqn}
     \end{subfigure}
     \caption{Example of learnt green wave behaviour via communication.}
@@ -1803,6 +1807,13 @@ Federal Highway Administration.
 \newblock Available at:
   https://www.fhwa.dot.gov/innovation/everydaycounts/edc-1/asct.cfm.
 
+\bibitem[ITSS20]{ITSS2020}
+Intelligent Transportation Systems Society, Pennsylvania State University.
+\newblock Reinforcement Learning for Traffic Signal Control.
+\newblock {\em Intelligent Transportation Systems Society, Pennsylvania State University}, September 20, 2020.
+\newblock Available at:
+  https://traffic-signal-control.github.io/.
+
 \bibitem[HW08]{HaklayWeberOSM08}
 M.~Haklay and P.~Weber.
 \newblock OpenStreetMap: User-generated street maps.
@@ -1815,7 +1826,6 @@ Department for Transport.
 \newblock {\em GOV.UK}.
 \newblock Available at:
   https://www.gov.uk/guidance/the-highway-code/using-the-road-159-to-203.
-\newblock Accessed: 20 February 2026.
 
 \bibitem[GS55]{GerloughSchuhl1955}
 D.~L.~Gerlough and A.~Schuhl.
@@ -1823,7 +1833,6 @@ D.~L.~Gerlough and A.~Schuhl.
 \newblock {\em Research Paper, Eno Foundation for Highway Traffic Control}, 1955.
 \newblock Available at:
   https://rosap.ntl.bts.gov/view/dot/16299.
-\newblock Accessed: 26 February 2026.
 
 \bibitem[GBG]{GoelBusGershenson}
 S.~Goel, S.~F.~Bus and C.~Gershenson.
@@ -1831,7 +1840,6 @@ S.~Goel, S.~F.~Bus and C.~Gershenson.
 \newblock {\em Research Paper, University at Albany}.
 \newblock Available at:
   https://arxiv.org/pdf/1708.07188.
-\newblock Accessed: 1 March 2026.
 
 \bibitem[DfT23]{PedestrianCrossings23}
 Department for Transport.
@@ -1839,7 +1847,6 @@ Department for Transport.
 \newblock {\em GOV.UK}, 5 December 2023.
 \newblock Available at:
   https://www.gov.uk/government/publications/know-your-traffic-signs/pedestrian-cycle-and-equestrian-crossings.
-\newblock Accessed: 1 March 2026.
 
 \bibitem[Li23]{LiPengHouEtAl2023}
 J.~Li, L.~Peng, K.~Hou, Y.~Tian, Y.~Ma, S.~Xu and T.~Z.~Qiu.
@@ -1848,7 +1855,6 @@ J.~Li, L.~Peng, K.~Hou, Y.~Tian, Y.~Ma, S.~Xu and T.~Z.~Qiu.
 \newblock doi:10.48130/DTS-2023-0008.
 \newblock Available at:
   https://maxapress.com/article/doi/10.48130/DTS-2023-0008.
-\newblock Accessed: 1 March 2026.
 
 \bibitem[ITS12]{ITS2012}
 Institute for Transport Studies, University of Leeds.
@@ -1914,14 +1920,12 @@ F.~B.~Mismar, J.~Choi and B.~L.~Evans.
 \newblock doi:10.48550/arXiv.1808.05140.
 \newblock Available at:
   https://arxiv.org/abs/1808.05140.
-\newblock Accessed: 6 April 2026.
 
 \bibitem[SLi23]{SLi2023}
 S.~E.~Li.
 \newblock Reinforcement Learning for Sequential Decision and Optimal Control.
 \newblock {\em First ed., Springer Verlag, Singapore}, 1--460, 2023.
 \newblock doi:10.1007/978-981-19-7784-8.
-\newblock Accessed: 6 April 2026.
 
 \bibitem[ATE25]{ActiveTravel25}
 Active Travel England.
@@ -1929,7 +1933,6 @@ Active Travel England.
 \newblock {\em GOV.UK}, 6 November 2025.
 \newblock Available at:
   https://www.gov.uk/government/publications/critical-safety-issues-for-walking-wheeling-and-cycling/critical-safety-issues-for-walking-wheeling-and-cycling.
-\newblock Accessed: 9 April 2026.
 
 \bibitem[JXi18]{XiongWanYangEtAl2018}
 J.~Xiong, Q.~Wang, Z.~Yang, P.~Sun, L.~Han, Y.~Zheng, H.~Fu, T.~Zhang, J.~Liu, H.~Liu.
@@ -1938,7 +1941,6 @@ J.~Xiong, Q.~Wang, Z.~Yang, P.~Sun, L.~Han, Y.~Zheng, H.~Fu, T.~Zhang, J.~Liu, H
 \newblock doi:10.48550/arXiv.1810.06394.
 \newblock Available at:
   https://arxiv.org/abs/1810.06394.
-\newblock Accessed: 13 April 2026.
 
 \end{thebibliography}
 
@@ -1954,14 +1956,11 @@ Although not shown, a few interesting implementation specific features include:
 
 \begin{itemize}
   \item The use of workers and queues (multiprocessing) to run distinct environments in parallel for increased performance.
-  \item A utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
-  \item A hierarchical system design enabling straight-forward extensions. Supported with ``quality of life'' additions such as comprehensive easy-to-use settings (e.g.\ to switch modes between training and evaluation) and quick swapping of agent configs.
-  \item A robust, modular Python programming approach with documentation.
+  \item Comprehensive easy-to-use settings for switching between agents and modes, and a utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
+  \item A robust, hierarchical system design enabling straight-forward extensions, using a modern Python programming approach with documentation.
 \end{itemize}
 
-Whilst we won't delve further into the implementation details since it will detract from the main goals of the dissertation, all code can be found in the appendix to be viewed at your discretion.
-
-\section{Summary}
+Whilst we won't delve into the implementation details since it will detract from the main goals of the dissertation, all code can be found in Appendix B to be viewed at your discretion.
 
 \chapter{Code Listing}
 
