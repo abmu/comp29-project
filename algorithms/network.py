@@ -36,7 +36,6 @@ class Network:
         offset_duration = 0
         for agent in self.agents:
             agent.start_episode(conn, offset=offset_duration)
-            offset_duration += 5
 
         try:
             while step < TOTAL_STEPS:

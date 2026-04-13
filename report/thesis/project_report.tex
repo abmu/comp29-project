@@ -1525,7 +1525,7 @@ To train the Communicative Deep Q-learning algorithm, we will construct a new en
         \label{fig:sumo_extended}
     \end{subfigure}
     \caption{Extended simulation environment.}
-    \label{fig:crossing_extended}
+    \label{fig:extended_simulation}
 \end{figure}
 
 As seen in Figure~\ref{fig:sumo_extended}, the network now includes three traffic light systems. This means that we will have three respective agents that will be publishing to the communication bus $B$. Although it would be ideal to have a much larger network, we will limit the scope for the sake of this dissertation and evaluate in a smaller environment.
@@ -1614,6 +1614,8 @@ The Communicative Deep Q-learning algorithm was implemented as an extension to D
 
 We will train the three agents using the previous Deep Q-learning algorithm and -- in a separate training instance -- the Communicative Deep Q-learning algorithm. The three agents are trained together in the extended network using $10\,000$ generated traffic routes this time which follow the baseline traffic parameters. Each training episode has a duration of $3\,600$ steps.
 
+As shown below, Deep Q-learning and Communicative Deep Q-learning perform significantly better than standard fixed-time control, both reaching a reward of \textgreater $8\,000$ units, compared to $1\,000$ units of the latter. Looking closer, Deep Q-learning reaches a final training reward of $\sim9\,000$ whereas Communicative Deep Q-learning reaches $\sim8\,000$.
+
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
@@ -1660,8 +1662,6 @@ We will train the three agents using the previous Deep Q-learning algorithm and 
   \label{fig:communicative_deep_q_learning_extended_train}
 \end{figure}
 
-As we can see, Deep Q-learning and Communicative Deep Q-learning perform significantly better than standard fixed-time control, both reaching a reward of \textgreater $8\,000$ units, compared to $1\,000$ units of the latter. Looking closer, Deep Q-learning reaches a final training reward of $\sim9\,000$ whereas Communicative Deep Q-learning reaches $\sim8\,000$.
-
 We see that the rewards between the two are about equivalent up until epoch $\sim600$ where the two algorithms begin to diverge slightly. Although we expect Communicative Deep Q-learning to perform at least as well, if not better, than Deep Q-learning, this may be attributed to it having a much larger input state for each of the agents' neural networks. Therefore, it would require a longer training period to reach the same given reward.
 
 The spikes observed are the penalties we discussed previously, and are an artefact of the SUMO simulation software -- not the algorithms themselves.
@@ -1669,6 +1669,8 @@ The spikes observed are the penalties we discussed previously, and are an artefa
 \subsection{Evaluation}
 
 Now we evaluate the sets of Deep Q-learning agents and Communicative Deep Q-learning agents using the evaluation configurations defined previously in Table~\ref{tab:evaluation_configs}. After generating the 100 evaluation scenarios, and taking the median values, we get the following results.
+
+For each scenario, the Deep Q-learning agents perform the best, followed by the Communicative Deep Q-learning agents, and then finally the fixed-time control TLS. The difference between the prior two is narrow, and we have conjectured that this is due to the training time not being as sufficient for Communicative Deep Q-learning since it has a larger neural network.
 
 \begin{figure}[H]
   \centering
@@ -1717,23 +1719,54 @@ Now we evaluate the sets of Deep Q-learning agents and Communicative Deep Q-lear
   \label{fig:communicative_deep_q_learning_extended_eval}
 \end{figure}
 
-For each scenario, the Deep Q-learning agents surprisingly perform the best, followed by the Communicative Deep Q-learning agents, and then finally the fixed-time control TLS as expected. The difference between the prior two is narrow, and we have conjectured that this is due to the training time not being as sufficient for Communicative Deep Q-learning since it has a larger neural network architecture.
 
-Regardless, it appears that Communicative Deep Q-learning has failed to make any meaningful improvement. Although our agents gain extra information, they do not necessarily make different decisions. This is due to one of the fundamental flaws of Q-learning itself that our actions are discrete with no way for our agent to adaptively adjust the timings based on adjacent states.
+Unexpectedly, it appears that Communicative Deep Q-learning has failed to make a meaningful improvement. Although our agents gain extra information, they do not necessarily make better decisions. This is due to one of the fundamental flaws of Q-learning itself that our actions are discrete with no way for our agent to adaptively adjust the timings based on adjacent states.
 
-One possible further extension is Parametrised Deep Q-Networks (PDQN)\cite{XiongWanYangEtAl2018} in which we could replace the previous DQN model whilst maintaining the Communicative infrastructure we have developed. PDQN enables our discrete actions -- switching traffic light phase -- to have a duration that is varied dynamically by the agent (e.g.\ switch the traffic light phase for a continuous range of time values rather than fixed). This would enable agents to carry out smarter, more flexible behaviour based on the state communicated to them.
+One possible extension is Parametrised Deep Q-Networks (PDQN)\cite{XiongWanYangEtAl2018} in which we could replace the internal DQN model whilst maintaining the Communicative infrastructure we have developed. PDQN enables our discrete actions -- switching traffic light phase -- to have a duration that is varied dynamically by the agent (e.g.\ switch the traffic light phase for a continuous range of time values, not fixed). Thus enabling agents to carry out smarter, more flexible behaviour based on state communicated to them.
 
 \subsection{Emergent Behaviour}
 
 In our literature review, we noted that centralised systems such as SCOOT group signals into regions and make dynamic adjustments to improve coordination between traffic lights. This helps promote ``green waves'' where vehicles encounter consecutive green lights without having to stop.
 
-Unlike these systems, our agents are decentralised. This has the benefit that any compute required can be limited to a traffic light system itself without having to connect it to a larger centralised system. The only connections it would need is to adjacent traffic light systems in the case of Communicative Deep Q-learning.
+Unlike these systems, our Communicative Deep Q-learning agents are decentralised. This has the benefit that hardware can be limited to the traffic light system itself without requiring a larger centralised system. The only connections it would need is to adjacent agents, enabling easy extensions.
 
-Despite Communicative Deep Q-learning not performing better in the evaluation routes which tested continuous traffic in all directions of varying congestion levels, we do observe interesting learned behaviour (\emph{not} explicitly programmed) that is not present with the standard Deep Q-learning agents.
+Despite Communicative Deep Q-learning not performing better in the evaluation routes which tested traffic in all directions of varying congestion levels, we observe that it may learn to create green waves (which was \emph{not} explicitly programmed) which is not possible with standard Deep Q-learning agents.
 
-With that said, we do observe interesting learned behaviour with the current Communicative Deep Q-learning agents which is not present with the standard Deep Q-learning agents. Might be the same, but try find learned behaviour such as `green wave' where traffic lights preemptively update themselves in anticipation of a vehicle.
+Consider the synthetic traffic route in which a continuous flow of vehicles travel from A to B. We insert a new car into the simulation at an expected rate of $0.25$ / s following the Poisson distribution, and run the simulation for $3\,600$ steps.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/green_wave_route.png}
+    \caption{Single traffic route from A to B.}
+    \label{fig:green_wave_route}
+\end{figure}
+
+Our Communicative Deep Q-learning agents learn to synchronise the lights such that the vehicles continue to pass through with minimal disruption. The Deep Q-learning agents were unable to do the same, leading it to build up slight congestion in some cases.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/green_wave_dqn.png}
+        \caption{Congestion with Deep Q-learning (reward: 19725).}
+        \label{fig:green_wave_dqn}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/green_wave_cdqn.png}
+        \caption{Communicative Deep Q-learning (reward: 21006).}
+        \label{fig:green_wave_cdqn}
+    \end{subfigure}
+    \caption{Example of learnt green wave behaviour via communication.}
+    \label{fig:green_wave_simulation}
+\end{figure}
 
 \section{Summary}
+
+This chapter explored the motivation for implementing Communicative Deep Q-learning, and the novel features we added to enable communication between the agents. In addition, we developed a new extended network consisting of multiple traffic lights, to enable a multi-agent system.
+
+Finally, we trained and compared Deep Q-learning agents to Communicative Deep Q-learning agents in a diverse set of scenarios. We conclude that whilst a communication bus provides agents with more information, and may lead to additional emergent behaviours, the internal DQN architecture bottlenecks what can be done with the communication abilities.
 
 \chapter{Conclusions}
 \section{Achievements}
