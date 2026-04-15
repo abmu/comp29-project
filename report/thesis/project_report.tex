@@ -1726,7 +1726,7 @@ For each scenario, the Deep Q-learning agents perform the best, followed by the 
 
 Unexpectedly, it appears that Communicative Deep Q-learning has failed to make a meaningful improvement. Although our agents gain extra information, they do not necessarily make better decisions. This is due to one of the fundamental flaws of Q-learning itself that our actions are discrete with no way for our agent to adaptively adjust the timings based on adjacent states.
 
-One possible extension is Parametrised Deep Q-Networks (PDQN)\cite{XiongWanYangEtAl2018} in which we could replace the internal DQN model whilst maintaining the Communicative infrastructure we have developed. PDQN enables our discrete actions -- switching traffic light phase -- to have a duration that is varied dynamically by the agent (e.g.\ switch the traffic light phase for a continuous range of time values, not fixed). Thus enabling agents to carry out smarter, more flexible behaviour based on state communicated to them.
+One possible extension is Parametrised Deep Q-Networks (PDQN)\cite{XiongWanYangEtAl2018} in which we could replace the internal DQN model whilst maintaining the Communicative infrastructure we have developed. PDQN enables our discrete actions -- switching traffic light phase -- to have a duration that is varied dynamically by the agent (e.g.\ the traffic light phase duration could be chosen from a continuous interval instead of being fixed at a single value). Thus enabling agents to carry out smarter, more flexible behaviour based on state communicated to them.
 
 \subsection{Emergent Behaviour}
 
@@ -1745,7 +1745,7 @@ Consider the synthetic traffic route in which a continuous flow of vehicles trav
     \label{fig:green_wave_route}
 \end{figure}
 
-Our Communicative Deep Q-learning agents learn to synchronise the lights such that the vehicles continue to pass through with minimal disruption. The Deep Q-learning agents were unable to do the same, leading it to build up slight congestion in some cases.
+Our Communicative Deep Q-learning agents learn to synchronise the lights such that the vehicles continue to pass through with minimal disruption. The Deep Q-learning agents were unable to do the same, leading to occasional congestion, reducing overall reward.
 
 \begin{figure}[H]
     \centering
@@ -1759,7 +1759,7 @@ Our Communicative Deep Q-learning agents learn to synchronise the lights such th
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/green_wave_cdqn.png}
-        \caption{Green wave with Communicative Deep Q-learning\\(reward: $21\,006$).}
+        \caption{Green wave with Comm. Deep Q-learning\\(reward: $21\,006$).}
         \label{fig:green_wave_cdqn}
     \end{subfigure}
     \caption{Example of learnt green wave behaviour via communication.}
@@ -1957,7 +1957,7 @@ Although not shown, a few interesting implementation specific features include:
 \begin{itemize}
   \item The use of workers and queues (multiprocessing) to run distinct environments in parallel for increased performance.
   \item Comprehensive easy-to-use settings for switching between agents and modes, and a utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
-  \item A robust, hierarchical system design enabling straight-forward extensions, using a modern Python programming approach with documentation.
+  \item A robust, hierarchical system design enabling straight-forward extensions, using a modern documented programming approach.
 \end{itemize}
 
 Whilst we won't delve into the implementation details since it will detract from the main goals of the dissertation, all code can be found in Appendix B to be viewed at your discretion.
