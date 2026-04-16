@@ -73,6 +73,8 @@ Supervisor: Prof. Graham Roberts}
  
 \onehalfspacing
 \maketitle
+\chapter*{Acknowledgements}
+I would like to thank...
 \begin{abstract}
 Summarise your report concisely.
 \end{abstract}
@@ -80,7 +82,7 @@ Summarise your report concisely.
 \setcounter{page}{1}
 
 
-\chapter{Introduction}
+\chapter{Introduction} \label{chapter:introduction}
 
 \section{The Problem}
 Traffic lights are ubiquitous signalling devices used to control the flow of vehicle and pedestrian traffic, primarily for safety and better regulation of traffic. First introduced in 1868 on Parliament Square in London \cite{ThamesLeisureFacts2017}, there have been a wide range of designs created with the most common being a three-colour design -- that is green, amber, and red.
@@ -91,29 +93,48 @@ In an endeavour to improve upon this, advanced traffic light systems equipped wi
 
 \section{Aim and Objectives}
 
-The overall aim of this dissertation will be to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. Rather than explicitly defining behaviour in different traffic scenarios as before, we will observe how optimal decision-making policies may be learnt independently through the use of reinforcement learning algorithms. These algorithms will be decentralised, with each agent running the algorithm using data only that is local to them. 
+The overall aim of this dissertation will be to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. Rather than explicitly defining behaviour in different traffic scenarios, we will observe how optimal decision-making policies may be learnt independently through the use of decentralised reinforcement learning algorithms.
 
 Based on this aim, the following objectives are defined:
 
 \begin{enumerate}
-  \item Define an environment in which our simulations and experiments will be conducted.
-  
-  \item Build an abstracted computer representation of the area.
-  
-  \item Review the traffic light systems currently in use.
-  
-  \item Develop our own intelligent agents progressively, going through various reinforcement learning algorithms to see what improvements are made.
-  
-  \item Consider the impact on both pedestrians and vehicles, and the effects of changing the road design in itself as a means of making improvements.
-  
-  \item Evaluate the performance of our intelligent agents.
-  
-  \item Finally, assess the feasibility of our agents and what factors would need to be considered in a tangible implementation.
+  \item Construct an environment in which our experiments will be conducted.
+  \begin{enumerate}
+    \item Define the boundaries of the environment.
+    \item Research and understand available tools for traffic simulation.
+    \item Build the abstracted computer representation.
+  \end{enumerate}
+  \item Develop our own intelligent agents in a progressive manner.
+  \begin{enumerate}
+    \item Review current traffic light systems in use.
+    \item Explore the foundations of intelligent agents.
+    \item Develop our reinforcement learning algorithms from first principles.
+    \item Incrementally improve the algorithms with justifications.
+  \end{enumerate}
+  \item Evaluate the intelligent agents in the simulated environment.
+  \begin{enumerate}
+    \item Train and evaluate the agents in diverse scenarios.
+    \item Consider the impact on both pedestrians and vehicles (i.e.\ via a reward system).
+    \item Assess the feasibility of our agents and considerations in reality.
+  \end{enumerate}
 \end{enumerate}
 
 Time is a currency that once spent cannot be regained. Traffic lights govern our lives to the extent that saving mere fractions of a second at the individual level can compound to an indescribable amount saved when considering the aggregate. By leveraging intelligent agents, this research hopes to take traffic lights a step further -- regardless of how big that step may be.
 
 \section{Report Overview}
+
+The main content of the report is structured as shown below, with the goal of each chapter flowing naturally from the previous, rather than in a way that is jarring. It should be noted that the objectives above are not necessarily reached in the report in the order they were defined in.
+
+\begin{description}
+    \item[Chapter \ref{chapter:introduction}] \textbf{-- Introduction} \\ This chapter. Gives an overview of the project.
+    \item[Chapter \ref{chapter:literature_review}] \textbf{--} \\ .
+    \item[Chapter \ref{chapter:simulated_environment}] \textbf{--} \\ .
+    \item[Chapter \ref{chapter:reward_system}] \textbf{--} \\ .
+    \item[Chapter \ref{chapter:q_learning}] \textbf{--} \\ .
+    \item[Chapter \ref{chapter:deep_q_learning}] \textbf{--} \\ .
+    \item[Chapter \ref{chapter:communicative_deep_q_learning}] \textbf{--} \\ .
+    \item[Chapter \ref{chapter:conclusions}] \textbf{--} \\ .
+\end{description}
 
 \textcolor{red}{\textbf{\emph{!!! MUST REDO SINCE THE STRUCTURE HAS CHANGED !!!}}}
 
@@ -129,7 +150,7 @@ Continuing from this, a novel approach in which multiple intelligent agents inte
 
 Finally, after testing and evaluating the different approaches in unforeseen traffic scenarios, we will draw our overall conclusions. Feasibility of such a project will be discussed, as well as interesting technical challenges that were encountered. Future work and limitations to consider will then be commented on.
 
-\chapter{Literature Review}
+\chapter{Literature Review} \label{chapter:literature_review}
 
 Modern traffic light control has changed significantly over the years, ranging from simple fixed-time mechanisms to complex adaptive and coordinated systems. Broadly speaking, systems can be categorised into three main types: fixed-time control, vehicle-actuated control, or adaptive traffic control. These will explored in this chapter, as well as the motivations for introducing intelligent agents.
 
@@ -185,7 +206,7 @@ We will cover the implementation of reinforcement learning algorithms from first
 
 This chapter described the fixed-time control, vehicle-actuated control, and adaptive traffic control systems in detail, mentioning the benefits and drawbacks of each. The fundamental limitations of these systems as a whole were also explored, motivating why a novel approach which uses reinforcement learning is desirable.
 
-\chapter{Simulated Environment}
+\chapter{Simulated Environment} \label{chapter:simulated_environment}
 
 % The main chapters should start with a brief summary -- this chapter is about, or introduces, some aspect of the work.
 Before we get to our intelligent agents, we must first construct an environment where the agent can receive input -- or state, rather -- and perform actions. For the sake of simplicity this environment will be constrained to the streets surrounding University College London's (UCL) Bloomsbury Campus. This area provides scope sufficient for the agents to train well and generalise to other situations.
@@ -373,7 +394,7 @@ This chapter described the creation of a simulated environment based on the stre
 
 Using SUMO's \texttt{randomTrips.py} tool, there is a way for scalable creation of diverse traffic scenarios. Stochastic vehicle insertions is used to better approximate real-world traffic variability. Overall, these components establish a way in which we can train and evaluate intelligent agents.
 
-\chapter{Reward System}
+\chapter{Reward System} \label{chapter:reward_system}
 
 Now that we have seen how an environment -- composed of a network and traffic routes -- is constructed, we will develop a numerical reward system used to evaluate the performance of different intelligent agents. This reward system will use a contemporary traffic light system algorithm as a baseline; a good reward system is paramount to training intelligent agents effectively.
 
@@ -622,7 +643,7 @@ This chapter explored the creation of a baseline environment that incorporates a
 
 Using the TraCI interface, a way for controlling and observing the simulation environment was created. This also enabled a weighted reward formula to be defined and calculated. Both of which will be crucial for our following intelligent agents.
 
-\chapter{Q-Learning}
+\chapter{Q-Learning} \label{chapter:q_learning}
 
 Having created a baseline environment with a traffic light system which can be observed and controlled, as well as creating a reward system, we now create the first of our intelligent agents. These agents are \emph{decentralised}, relying only on data from the local traffic light system. Reinforcement learning and the Markov decision process will first be briefly explained before implementing the Q-learning algorithm. The performance and possible improvements will then be considered.
 
@@ -1021,7 +1042,7 @@ This chapter explored the background of reinforcement learning, the state and ac
 
 Finally, we trained the agent and evaluated its performance in different scenarios against the standard fixed-time control algorithm. We conclude that our agent has performed substantially worse due to the large state space in the traffic light system, motivating the development of a smarter algorithm to resolve this. 
 
-\chapter{Deep Q-Learning}
+\chapter{Deep Q-Learning} \label{chapter:deep_q_learning}
 
 Tabular Q-learning struggles to learn an effective policy in environments with a large state space, so we will extend the algorithm to Deep Q-learning. Rather than having to explicitly explore and update the quality value for each state-action pair, a neural network will be trained to approximate values. We will then train and evaluate the new agent, before considering next steps.
 
@@ -1379,7 +1400,7 @@ This chapter explored the motivation for introducing Deep Q-learning in the firs
 
 Finally, we trained the agent in the two distinct networks and evaluated its overall performance. We conclude that our agent performs significantly better than a standard fixed-time control traffic light system, but not quite as good as a zebra crossing in all five of the evaluation scenarios.
 
-\chapter{Communicative Deep Q-Learning}
+\chapter{Communicative Deep Q-Learning} \label{chapter:communicative_deep_q_learning}
 
 We conclude our algorithms with an extension of Deep Q-learning that enables communication with other agents. Previously, our agents were confined to a single traffic light system without a way of knowing adjacent states, so we will develop a way for agents to exchange messages in a distributed manner via a communication bus. We will then train and evaluate the multi-agent system.
 
@@ -1772,7 +1793,7 @@ This chapter explored the motivation for implementing Communicative Deep Q-learn
 
 Finally, we trained and compared Deep Q-learning agents to Communicative Deep Q-learning agents in a diverse set of scenarios. We conclude that whilst a communication bus provides agents with more information, and may lead to additional emergent behaviours, the internal DQN architecture bottlenecks what can be done with the communication abilities.
 
-\chapter{Conclusions}
+\chapter{Conclusions} \label{chapter:conclusions}
 \section{Achievements}
 Summarise the achievements to confirm the project goals have been met.
 \section{Evaluation}
