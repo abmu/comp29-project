@@ -127,28 +127,14 @@ The main content of the report is structured as shown below, with the goal of ea
 
 \begin{description}
     \item[Chapter \ref{chapter:introduction}] \textbf{-- Introduction} \\ This chapter. Gives an overview of the project.
-    \item[Chapter \ref{chapter:literature_review}] \textbf{--} \\ .
-    \item[Chapter \ref{chapter:simulated_environment}] \textbf{--} \\ .
-    \item[Chapter \ref{chapter:reward_system}] \textbf{--} \\ .
-    \item[Chapter \ref{chapter:q_learning}] \textbf{--} \\ .
-    \item[Chapter \ref{chapter:deep_q_learning}] \textbf{--} \\ .
-    \item[Chapter \ref{chapter:communicative_deep_q_learning}] \textbf{--} \\ .
-    \item[Chapter \ref{chapter:conclusions}] \textbf{--} \\ .
+    \item[Chapter \ref{chapter:literature_review}] \textbf{-- Literature Review} \\ Details the existing traffic systems: fixed-time control, vehicle-actuated control, and adaptive traffic control systems, and motivates our reinforcement learning algorithms. 
+    \item[Chapter \ref{chapter:simulated_environment}] \textbf{-- Simulated Environment} \\ Defines the environment scope and describes the creation of the simulated environments including parameters for traffic generation.
+    \item[Chapter \ref{chapter:reward_system}] \textbf{-- Reward System} \\ Explores the creation of a baseline environment from which we derive a reward formula (that accounts for pedestrians and vehicles) crucial for our agents.
+    \item[Chapter \ref{chapter:q_learning}] \textbf{-- Q-Learning} \\ This chapter firstly explores the background of reinforcement learning, and then the Q-learning algorithm is implemented from scratch, before the limitations are discussed.
+    \item[Chapter \ref{chapter:deep_q_learning}] \textbf{-- Deep Q-Learning} \\ Builds upon the Q-learning algorithm with the use of deep Q-networks, which we implement and evaluate the performance of in varying conditions.
+    \item[Chapter \ref{chapter:communicative_deep_q_learning}] \textbf{-- Communicative Deep Q-Learning} \\ Takes the previous algorithms even further with the introduction of a network layer and communication bus, which we implement before the inherent limitations are discussed.
+    \item[Chapter \ref{chapter:conclusions}] \textbf{-- Conclusions} \\ We conclude with an evaluation of our intelligent agents equipped with decentralised reinforcement learning, and consider what extensions could be made in the \emph{future}.
 \end{description}
-
-\textcolor{red}{\textbf{\emph{!!! MUST REDO SINCE THE STRUCTURE HAS CHANGED !!!}}}
-
-We will begin with defining the environment in which we will be conducting our traffic experiments, and then building out this environment using available open source tools and libraries. Whilst accuracy and scope of the environment are important, they will not take precedence over the implementation and analysis of the intelligent agents themselves.
-
-Following this, the context and theory behind reinforcement learning itself will be explored, as well as definitions and terminology that will be used throughout the dissertation. These foundations will be necessary when explaining the motivation behind decisions made later on.
-
-Next we will discuss the creation of an application programming interface that will enable us to connect to our environment for the purposes of observation and control. Based on the default environment and traffic light systems, we will also define a reward which will be used to evaluate performance.
-
-Upon making our environment, we will implement and explore different reinforcement learning algorithms our intelligent agent may use -- namely Q-learning and Deep Q-learning. These discussions will be supplemented with the theory regarding how each works, as well as the improvements and limitations proposed by each. Further derivatives of these algorithms and the advantages they bring will also be briefly touched upon, however they will not be implemented.
-
-Continuing from this, a novel approach in which multiple intelligent agents interface together through the use of a network layer will be detailed and implemented. The limitations imposed by such an approach will be considered, as well as how it may be implemented in practice outside of the simulated environment setting.
-
-Finally, after testing and evaluating the different approaches in unforeseen traffic scenarios, we will draw our overall conclusions. Feasibility of such a project will be discussed, as well as interesting technical challenges that were encountered. Future work and limitations to consider will then be commented on.
 
 \chapter{Literature Review} \label{chapter:literature_review}
 
@@ -2074,8 +2060,6 @@ This means that if there were 7 vehicles detected all across $NS$, the discretis
 
 Therefore we get just $3\times4\times4\times4=192$ states using smarter state compression! The motivation behind aggregating the North--South and West--East flows respectively, and pedestrian counts, was based on the 3 actions we defined in Table~\ref{tab:phase_actions}. Since the agent can only choose between setting either both northbound/southbound approaches to green, the eastbound/westbound approaches, or \emph{all} pedestrian crossings, it follows the state information could also aggregate as such. 
 
-\subsection{Compression Summary}
-
 \begin{table}[H]
   \centering
   \begin{tabular}{c c c}
@@ -2087,7 +2071,7 @@ Therefore we get just $3\times4\times4\times4=192$ states using smarter state co
     \textbf{C2} & Global Aggregation \& Discretisation & $192$ \\
     \hline
   \end{tabular}
-  \caption{Compression levels comparison.}
+  \caption{Compression levels overview for the demo network.}
 \end{table}
 
 \subsection{Q-Learning Results}
