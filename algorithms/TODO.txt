@@ -2,7 +2,7 @@ TODO
 
 Report
 - Mention how not completely accurate -- cars and pedestrians seem more risk prone in the simulation, results do not show emergency brake and other warnings, in real life people might get annoyed, non-determinism etc.
-- https://sumo.dlr.de/docs/Tools/Visualization.html
+- Add extra SUMO visualisations: https://sumo.dlr.de/docs/Tools/Visualization.html
 
 Algorithms
 - Add offset to traffic light timers

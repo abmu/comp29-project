@@ -1726,7 +1726,7 @@ For each scenario, the Deep Q-learning agents perform the best, followed by the 
 
 Unexpectedly, it appears that Communicative Deep Q-learning has failed to make a meaningful improvement. Although our agents gain extra information, they do not necessarily make better decisions. This is due to one of the fundamental flaws of Q-learning itself that our actions are discrete with no way for our agent to adaptively adjust the timings based on adjacent states.
 
-One possible extension is Parametrised Deep Q-Networks (PDQN)\cite{XiongWanYangEtAl2018} in which we could replace the internal DQN model whilst maintaining the Communicative infrastructure we have developed. PDQN enables our discrete actions -- switching traffic light phase -- to have a duration that is varied dynamically by the agent (e.g.\ the traffic light phase duration could be chosen from a continuous interval instead of being fixed at a single value). Thus enabling agents to carry out smarter, more flexible behaviour based on state communicated to them.
+One possible extension is Parametrised Deep Q-Networks (PDQN) \cite{XiongWanYangEtAl2018} in which we could replace the internal DQN model whilst maintaining the Communicative infrastructure we have developed. PDQN enables our discrete actions -- switching traffic light phase -- to have a duration that is varied dynamically by the agent (e.g.\ the traffic light phase duration could be chosen from a continuous interval instead of being fixed at a single value). Thus enabling agents to carry out smarter, more flexible behaviour based on state communicated to them.
 
 \subsection{Emergent Behaviour}
 
@@ -2069,13 +2069,326 @@ Therefore we get just $3\times4\times4\times4=192$ states using smarter state co
   \caption{Compression levels comparison.}
 \end{table}
 
-\subsection{Results}
+\subsection{Q-Learning Results}
 
 We train 3 agents in parallel, each equipped with the Q-learning algorithm, inside the demo network using the original 1000 traffic routes generated (each following the baseline traffic parameters). Each training episode has a duration of 3600 steps. Each agent will have differing levels of compression applied to their input state: C0, C1, and C2.
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Epoch},
+      ylabel={Reward},
+      title={Demo network reward per epoch},
+      grid=both,
+      legend pos=south west
+  ]
 
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_ft_cleaned.txt};
+  \addlegendentry{Fixed-time control}
 
-\section{Miscellaneous}
+  \addplot[
+      orange,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_ql_c0.txt};
+  \addlegendentry{Q-learning (C0)}
+
+  \addplot[
+      red,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_ql_c1.txt};
+  \addlegendentry{Q-learning (C1)}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Reward per training route in the demo environment.}
+  \label{fig:compressed_q_learning_demo_train_1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Evaluation},
+      ylabel={Reward},
+      title={Demo network reward per evaluation scenario},
+      grid=both,
+      legend style={at={(0.03,0.5)},anchor=west},
+      xtick=data
+  ]
+
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ft.txt};
+  \addlegendentry{Fixed-time control}
+
+  \addplot[
+      orange,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ql_c0.txt};
+  \addlegendentry{Q-learning (C0)}
+
+  \addplot[
+      red,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ql_c1.txt};
+  \addlegendentry{Q-learning (C1)}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Median reward for evaluation routes in the demo environment.}
+  \label{fig:compressed_q_learning_demo_eval_1}
+\end{figure}
+
+It appears that increasing the compression level to C1 does allow the Q-learning agent to learn a better policy for controlling the TLS compared to a level of C0, however the state space is still too large, resulting in the rewards diverging significantly. In the training and evaluation rewards, they are both in the same order of magnitude of $\sim-1\times10^5$ units.
+
+Pushing the compression to C2, the agent finally learns an effective policy using Q-learning. The state space has been compressed such that each state-action pair in the Q-table can be sufficiently visited and updated.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Epoch},
+      ylabel={Reward},
+      title={Demo network reward per epoch},
+      grid=both,
+      legend pos=south east
+  ]
+
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_ft_cleaned.txt};
+  \addlegendentry{Fixed-time control}
+
+  \addplot[
+      purple,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_ql_c2.txt};
+  \addlegendentry{Q-learning (C2)}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Reward per training route in the demo environment.}
+  \label{fig:compressed_q_learning_demo_train_2}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Evaluation},
+      ylabel={Reward},
+      title={Demo network reward per evaluation scenario},
+      grid=both,
+      legend style={at={(0.03,0.5)},anchor=west},
+      xtick=data
+  ]
+
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ft.txt};
+  \addlegendentry{Fixed-time control}
+
+  \addplot[
+      purple,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ql_c2.txt};
+  \addlegendentry{Q-learning (C2)}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Median reward for evaluation routes in the demo environment.}
+  \label{fig:compressed_q_learning_demo_eval_2}
+\end{figure}
+
+\subsection{Deep Q-Learning Results}
+
+How does the agent equipped with Q-learning and a compression level of C2 compare with our previous Deep Q-learning algorithm where we used C0 compression? How about Deep Q-learning with C1 or C2 compression?
+
+Training the required additional agents using the same demo network and 1000 traffic routes, and evaluating them in the same evaluation configurations, we get the following results.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Epoch},
+      ylabel={Reward},
+      title={Demo network reward per epoch},
+      grid=both,
+      legend pos=south east
+  ]
+
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_ft_cleaned.txt};
+  \addlegendentry{Fixed-time control}
+
+  \addplot[
+      purple,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_ql_c2.txt};
+  \addlegendentry{Q-learning (C2)}
+
+  \addplot[
+      cyan,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_dqn_c0.txt};
+  \addlegendentry{Deep Q-learning (C0)}
+
+    \addplot[
+      olive,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_dqn_c1.txt};
+  \addlegendentry{Deep Q-learning (C1)}
+
+    \addplot[
+      green,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_train_dqn_c2.txt};
+  \addlegendentry{Deep Q-learning (C2)}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Reward per training route in the demo environment.}
+  \label{fig:compressed_q_learning_demo_train_3}
+\end{figure}
+
+Interestingly we observe in Figure~\ref{fig:compressed_q_learning_demo_train_3} that the algorithms which use a compression level of C2, i.e.\ the highest compression, converge the slowest to a final training reward of about 4000 units, reached by all 4 of the agents in the graph.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+      width=14cm,
+      height=8cm,
+      xlabel={Evaluation},
+      ylabel={Reward},
+      title={Demo network reward per evaluation scenario},
+      grid=both,
+      legend style={at={(0.03,0.4)},anchor=west},
+      xtick=data
+  ]
+
+  \addplot[
+      blue,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ft.txt};
+  \addlegendentry{Fixed-time control}
+
+  \addplot[
+      purple,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_ql_c2.txt};
+  \addlegendentry{Q-learning (C2)}
+
+  \addplot[
+      cyan,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_dqn_c0.txt};
+  \addlegendentry{Deep Q-learning (C0)}
+
+    \addplot[
+      olive,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_dqn_c1.txt};
+  \addlegendentry{Deep Q-learning (C1)}
+
+    \addplot[
+      green,
+      mark=none
+  ] table[
+      x expr=\coordindex+1,
+      y index=0
+  ] {data/demo_eval_dqn_c2.txt};
+  \addlegendentry{Deep Q-learning (C2)}
+
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Median reward for evaluation routes in the demo environment.}
+  \label{fig:compressed_q_learning_demo_eval_3}
+\end{figure}
+
+Looking at Figure~\ref{fig:compressed_q_learning_demo_eval_3}, we observe that all agents performed somewhat similarly, however the agent which uses Deep Q-learning with the uncompressed state (C0) appears to perform the best on average, followed by Deep Q-learning with a compression level of C1.
+
+Q-learning with a compression level of C2 performs the next best, followed by Deep Q-learning with a compression level of C2 in last. This particular result is expected, since Deep Q-learning uses a neural network to \emph{approximate} the optimal quality function, whereas Q-learning uses a table with individual entires for each possible state-action pair (allowing it to store more explicit information).
+
+\subsection{Conclusion}
+
+Based on our results, it appears state compression provides significant benefit for the standard Q-learning algorithm, whereas for Deep Q-learning it does not -- in fact it may contribute to worse results. Deep Q-learning's neural network combined with a fully uncompressed state still proves to be more powerful in finding an optimal policy.
 
 Although not shown, a few interesting implementation specific features include:
 

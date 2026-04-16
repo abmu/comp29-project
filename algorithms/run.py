@@ -39,7 +39,8 @@ def _make_comm_network(tls_ids: list[str], save_dir: str, train_mode: bool, comp
 
 
 NETWORKS = {
-    # Get cache stats used to calculate reward weights
+### Get cache stats used to calculate reward weights ###
+
     # 'ft': Network(
     #     agents=[
     #         FixedTimer(
@@ -51,18 +52,18 @@ NETWORKS = {
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
     # ),
 
+### Demo network agents ###
 
-
-    # 'ft': Network(
-    #     agents=[
-    #         FixedTimer(
-    #             tls_id='CJ_1',
-    #             save_dir=RESULTS_DIR,
-    #             stats_mode=False
-    #         )
-    #     ],
-    #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
-    # ),
+    'ft': Network(
+        agents=[
+            FixedTimer(
+                tls_id='CJ_1',
+                save_dir=RESULTS_DIR,
+                stats_mode=False
+            )
+        ],
+        sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+    ),
     'ql_c0': Network(
         agents=[
             QLearning(
@@ -130,7 +131,7 @@ NETWORKS = {
         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
     ),
 
-
+### Crossing network agents ###
 
     # 'zebra': Network(
     #     agents=[
@@ -197,7 +198,7 @@ NETWORKS = {
     #     sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME, netfile='tls')
     # ),
 
-
+### Extended network agents ###
 
     # 'ft': Network(
     #     agents=[
