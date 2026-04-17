@@ -1,4 +1,8 @@
-# Decentralised Reinforcement Learning for Traffic Light Control
+# comp29-project
+
+Investigating the use of Decentralised Reinforcement Learning Algorithms in Traffic Environments.
+
+---
 
 Research project investigating decentralised reinforcement learning for traffic light control. The project combines SUMO traffic simulation, learning algorithms, and rigorous experimental analysis.
 

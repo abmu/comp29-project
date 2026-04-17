@@ -1508,7 +1508,7 @@ In the abstracted example, you can imagine that the agents which are connected t
   \end{algorithmic}
 \end{algorithm}
 
-The algorithm\footnotemark\footnotetext{This pseudocode has some simplifications, namely agents complete \emph{multi-step} actions that can finish at \emph{differing} times, therefore additional code is needed to monitor an action's progress.} extends the Deep Q-Learning algorithm. Rather than only running a single agent, we now iterate through and run an indefinite number. The \emph{network layer} we mentioned previously is \emph{where} this algorithm code exists. In other words, the set of agents exist on top of the network layer.
+The algorithm\footnotemark\footnotetext{This pseudocode has some omissions, namely agents complete \emph{multi-step} actions that can finish at \emph{differing} times, therefore additional code is needed to monitor an action's progress.} extends the Deep Q-Learning algorithm. Rather than only running a single agent, we now iterate through and run an indefinite number. The \emph{network layer} we mentioned previously is \emph{where} this algorithm code exists. In other words, the set of agents exist on top of the network layer.
 
 We first set up the communication bus $B$, which maintains a map of key-value pairs, where the keys are the agent IDs and the values are the most recent local state observation $s$ for each agent. We manually define the set of neighbours $\mathcal{N}$ for each agent ID (based on the topology of the traffic lights in the SUMO environment) such that agents can only retrieve their neighbours' state from the bus.
 
@@ -1802,25 +1802,85 @@ Finally, we trained and compared Deep Q-learning agents to Communicative Deep Q-
 
 \section{Achievements}
 
-In what has been a lengthy journey, 
+We began with introducing the problem. Traffic lights are ever-present, typically using an internal clock to cycle through signal phases of a predefined length (fixed-time control). More recently, advanced systems which dynamically respond to observed traffic conditions using rule-based logic and manually defined heuristics have been introduced.
+
+After a comprehensive review of existing traffic light systems, we conclude that there are fundamental limitations; today's systems rely on predefined logic which may fail to perform optimally in all conditions and there is no capability for \emph{self-learning}. Thus, we motivate the need for intelligent agents which use reinforcement learning.
+
+Three detailed simulated environments where traffic experiments could be conducted were created, respectively dubbed `demo', `crossing', and `extended'. Through the use of open source tools provided by the traffic simulation package SUMO, real world locations could be virtualised into abstracted computer representations with synthesised traffic of varying conditions.
+
+Reward, state, and action, and the Markov Decision Process were explicitly defined, essential for intelligent agents. Specifically, we dedicated an entire chapter to discovering a reward formula -- weighing vehicles and pedestrians equally -- which would allow for us to fairly evaluate the performance of our agents.
+
+Finally, we incrementally built three algorithms de novo, justifying each along the way: Q-learning, Deep-Q learning, and Communicative Deep Q-learning. For our purposes, Q-learning was not sufficient for the state space was too large. Deep Q-learning introduced neural networks that serve as powerful approximation machines. We then built a novel Communicative Deep Q-learning algorithm, which allowed for the decentralised agents to confer local state.
 
 \section{Evaluation}
 
-Evaluation of the work (this may be in a separate chapter if there is substantial evaluation) compared with original goals.
+In Chapter~\ref{chapter:introduction}, it was stated the overall aim of this dissertation was to perform a detailed analysis and evaluation of how an intelligent agent may be used to hopefully improve upon existing traffic light systems. The three objectives that were defined -- which we bifurcate even further -- are as follows:
+
+\paragraph{1. Construct an environment in which our experiments will be conducted.}
+
+Firstly, we (a) defined the boundaries of the environment using the OpenStreetMap software, which was namely University College London's Bloomsbury Campus.
+
+Following this, we (b) researched tools which could be used for traffic simulation. We decided on the SUMO, an open source package which allows for creation of a traffic network as well as traffic generation.
+
+Finally, (c) three distinct environments were manually built using SUMO, with attention to detail with regards to things such as lane and junction priorities.
+
+\paragraph{2. Develop our own intelligent agents in a progressive manner.}
+
+In the literature review, (a) existing traffic light systems were analysed in detail, including their inherit limitations -- why intelligent agents are needed in the first place.
+
+From first principles the (b) foundations of intelligent agents, namely the Markov Decision Process, was explored in an intuitive manner. The states and actions were also clearly defined. 
+
+Afterwards, (c) the three algorithms themselves were developed in a way which was (d) incremental with explicit justifications along the way. 
+
+\paragraph{3. Evaluate the intelligent agents in the simulated environment.}
+
+For our intelligent agents, (a) training and evaluation was completed in a diverse set of scenarios that had varying road structure and traffic conditions.
+
+Specifically, (b) the evaluation made use of a reward calculated from a weighted formula which took into account the impact on both pedestrians and vehicles.
+
+The last sub-objective was to (c) assess the feasibility of our agents in reality, which we have not yet done in a clear manner, but we will do below. Our agents require a way to receive state, choose an action, and communicate with other agents in the case of Communicative Deep Q-Learning.
+
+\subsection{Feasibility of Intelligent Agents}
+
+To receive state, cameras could be installed which serve as lane area detectors. A computer vision algorithm could perhaps be run to count how many cars there are in an image. For pedestrians, infrared sensors could be added to detect and count their presence.
+
+In the case of Deep Q-Learning we run a neural network to determine which action to choose given a particular state. Given that the architecture is small, it won't require very powerful hardware to perform inferencing. In fact, the network could be reasonably run on a consumer grade CPU, though one would be needed per traffic light system.
+
+We also require local communication channels between each adjacent agent to share state, perhaps underground copper cables. At a city scale this would likely be cheaper than current centralised systems that would require lengthy connections to a central computer.
+
+Based on our `back-of-the-envelope' analysis, intelligent agents are feasible in practice. Care must be taken to ensure the agent models installed onto traffic light controllers are trained extensively and sufficiently (in simulation), since a poor action policy may have terrible consequences.
 
 \section{Future Work}
 
-How the project might be continued, but don't give the impression you ran out of time!
+Although we have successfully met \emph{all} objectives we initially set out to complete, there remains a few areas of refinement for the project. Furthermore, we will discuss interesting directions in which the project could be continued, building upon the foundations laid by this dissertation.
 
-Q-learning variants
+\subsection{Simulated Environment} 
 
-Continue with communicative deep q-learning, make it so traffic light timings can be dynamic. That would enable even smarter behaviour, can make traffic light systems perhaps line up in time.
+Per the Cambridge Dictionary, a simulation is defined as ``a \emph{model} of a real activity''. As with all models, there are inconsistencies between it and the real deal, and our built environment is no exception.
 
-Make a much larger scale network, this was too small perhaps. But it would take a bit long.
+Firstly, based on observations it appears that cars and pedestrians are more risk prone compared to real life. Their behaviour shows little to no hesitation and they act with perfect reaction times. Human complexities that influence actions such as emotions (e.g.\ being annoyed) are abstracted away, making the entities more predictable or `deterministic'.
 
-Not perfect, possibility that it gets stuck in a scenario where one traffic flow completely dominates, and there is only one pedestrian/vehicle waiting to use the other direction.
+Recalling the traffic parameters, \texttt{--fringe-factor} was set to Max, meaning vehicles are only inserted from the very edges, and edge was given an equal `weighting', meaning there is no notion of more commonly used roads. Therefore behaviour such as starting from a parked area on the side of a road is not accounted for, nor is the act of pedestrians going into or out of buildings.
+
+Lastly, the scope of the extended network is quite small. Ideally, the network would be scaled to be much, much larger than what it is currently to examine the cumulative effects of intelligent agents. Alas, this was not possible due to the time constraints of the project given the process of creating an environment replica was laborious. 
+
+\subsection{Reinforcement Learning Algorithms} 
+
+Our set of algorithms concluded with Communicative Deep Q-Learning in which a limitation was unveiled. Specifically, our defined actions were discrete with no way for the agent to adaptively adjust the timings.
+
+We proposed an extension that would replace the current Deep Q-Network (DQN) with a Parameterised version to enable dynamic timings. This would hopefully allow for better use of the communication abilities. Increasing the state information to include the current phase duration would be desirable as well. 
+
+In addition to Parameterised DQN, there exists a breadth of adjacent Q-learning variants including Double DQN or Dueling DQN. There is even a class of algorithms that follow an entirely different methodology known as Actor-Critic. We won't delve into any of these, but it shows the field of reinforcement learning is very diverse.
+
+Reinforcement learning algorithms do not provide the same guarantees as fixed-time control. To give an example, our agents as they are may find themselves in a scenario where if there is dominant non-stop flow of traffic in one direction, and a single vehicle waiting to go in an orthogonal direction, the latter may be starved indefinitely.
+
+Therefore additional measures should be added to ensure fairness in all scenarios, and we should train for very diverse scenarios. Perhaps a fallback to traditional systems could be put in place in the event of failure.
 
 \section{Closing Remarks}
+
+After what has been a lengthy journey we reach the conclusion.
+
+Mention the final deliverables. Over 100 hours of training locally. 
 
 \appendix
 
@@ -2426,7 +2486,7 @@ Although not shown, a few interesting implementation specific features include:
 \begin{itemize}
   \item The use of workers and queues (multiprocessing) to run distinct environments in parallel to reduce overall time taken for training and evaluation.
   \item Comprehensive easy-to-use settings for switching between agents and modes, and a utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
-  \item A robust, hierarchical system design enabling straight-forward extensions, with extensive documentation.
+  \item A robust, hierarchical system design enabling straight-forward extensions, with documented code.
 \end{itemize}
 
 Whilst we won't delve into the implementation details since it will detract from the main goals of the dissertation, all code can be found in Appendix~\ref{appendix_code_listing} to be viewed at your discretion.
