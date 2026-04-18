@@ -192,7 +192,8 @@ Episode rewards are saved in `results/{NET_NAME}/{MODE}/`:
    NET_NAME = 'demo'   # Choose: 'demo', 'crossing', 'extended'
    MODE = 'train'      # 'train' or 'eval'
    ```
-3. **Select the desired agents**:
+
+2. **Select the desired agents**:
 
    ```python
    NETWORKS = {
@@ -221,7 +222,7 @@ Episode rewards are saved in `results/{NET_NAME}/{MODE}/`:
 
    ```
 
-2. **Execute the training/evaluation**:
+3. **Execute the training/evaluation**:
 
    ```bash
    python run.py
