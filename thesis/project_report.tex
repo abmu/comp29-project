@@ -50,12 +50,13 @@ $\Box$ \end{quotation}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\pagenumbering{roman}
 
 \title{{\vspace{-14em} \includegraphics[scale=0.4]{images/ucl_logo.png}}\\
 {{\Huge Investigating the use of Decentralised Reinforcement Learning Algorithms in Traffic Environments}}\\
 % {\large Optional Subtitle}\\
 }
-\date{Submission date: Day Month Year}
+\date{Submission date: Day April 2026}
 \author{23091179\thanks{
 {\bf Disclaimer:}
 This report is submitted as part requirement for the BSc Degree in Computer Science at UCL. It is
@@ -64,7 +65,7 @@ The report may be freely copied and distributed provided the source is explicitl
 \newline  %% \\ messes it up
 }
 \\ \\
-Bachelor of Science, Computer Science\\ \\
+BSc Computer Science\\ \\
 Supervisor: Prof. Graham Roberts}
 
 
@@ -74,16 +75,16 @@ Supervisor: Prof. Graham Roberts}
 \onehalfspacing
 \maketitle
 
-\chapter*{Acknowledgements}
-
-I would like to extend my gratitude to my supervisor Prof. Graham Roberts for his unwavering support during my final year of study, his patience, and motivation. The numerous meetings and e-mail communications throughout the course of the year have been greatly, greatly appreciated.
+\chapter*{\centering\large Acknowledgements}
+\vspace{-1cm}
+I would like to extend my gratitude to my supervisor Prof. Graham Roberts for his unwavering support during my final year of study, his patience, and motivation. The numerous meetings and e-mail communications throughout the course of the year have been greatly appreciated.
 
 Thank you to the team at the German Aerospace Center (DLR) for the free and open source SUMO traffic simulation suite and documentation used heavily in this dissertation.
 
-And, of course, thank you to my family and everyone else (you know who you are!) for the support throughout my life, particularly during these last few years of education. 
+And, of course, thank you to my family and everyone else (you know who you are!) for the support throughout my life, particularly during these last few years of education.
 
-\begin{abstract}
-
+\chapter*{\centering\large Abstract}
+\vspace{-1cm}
 This project explores the use of intelligent agents for controlling traffic light systems in order to optimise vehicle and pedestrian throughput. Specifically, we explore a family of reinforcement learning algorithms which are decentralised in that each traffic light system runs its own algorithm; we seek to answer the question of whether these agents can provide a non-insignificant improvement upon existing systems.
 
 We begin with a review of existing traffic light systems, motivating the need for agents. Following this, we see how detailed environments for conducting traffic experiments can be built using the SUMO traffic simulation suite, including synthesised traffic of varying conditions. Finally, we incrementally build three Q-learning-based algorithms from scratch, justifying each along the way.
@@ -98,13 +99,12 @@ The final result reached is a system consisting of multiple agents capable of in
     \end{subfigure}
 \end{figure}
 
-\end{abstract}
-
 \tableofcontents
-\setcounter{page}{1}
-
 
 \chapter{Introduction} \label{chapter:introduction}
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 \section{The Problem}
 Traffic lights are ubiquitous signalling devices used to control the flow of vehicle and pedestrian traffic, primarily for safety and better regulation of traffic. First introduced in 1868 on Parliament Square in London \cite{ThamesLeisureFacts2017}, there have been a wide range of designs created with the most common being a three-colour design -- that is green, amber, and red.
