@@ -1,4 +1,4 @@
-# SUMO Traffic Simulation Environment
+# Simulation
 
 This folder contains the SUMO (Simulation of Urban MObility) network definitions, routes, and scripts for generating realistic traffic scenarios. It provides the simulation environment used for training and evaluating traffic light control algorithms.
 
