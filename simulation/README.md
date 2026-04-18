@@ -6,7 +6,7 @@ This folder contains the SUMO (Simulation of Urban MObility) network definitions
 
 The simulation environment models urban traffic networks with:
 - **Three distinct network topologies**: Demo, Crossing, and Extended
-- **Semi-realistic traffic**: Cars, bicycles, and pedestrians with randomized routes -- with adjustable traffic density
+- **Semi-realistic traffic**: Cars, bicycles, and pedestrians with randomised routes -- with adjustable traffic density
 - **Sensor simulation**: Lane area detectors and induction loops for vehicle/pedestrian detection
 
 ## Structure
@@ -94,7 +94,7 @@ netedit networks/demo/main.net.xml  # Open the demo network in netedit editor
 Useful keyboard shortcuts in `netedit`:
 - **F10**: Open edit options menu
   - Enable "Lefthand traffic" for left-hand driving
-- **F9**: Open visualization options
+- **F9**: Open visualisation options
   - Go to "Junctions" and click "Show link tls index" to display traffic light phase numbers
 
 ### Network files (.net.xml)
@@ -118,7 +118,7 @@ python generate_routes.py --netname demo --seed 1 --foldername train
 - `--car-density`: Vehicle density multiplier (default: 1.0)
 - `--bicycle-density`: Bicycle density multiplier (default: 1.0)
 - `--pedestrian-density`: Pedestrian density multiplier (default: 1.0)
-- `--random-factor`: Route randomization factor (default: 1.0)
+- `--random-factor`: Route randomisation factor (default: 1.0)
 - `--foldername`: Destination folder (train, eval, or custom)
 
 Generate routes in batch:

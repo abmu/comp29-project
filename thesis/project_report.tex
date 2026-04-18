@@ -79,7 +79,7 @@ Supervisor: Prof. Graham Roberts}
 \vspace{-1cm}
 I would like to extend my gratitude to my supervisor Prof. Graham Roberts for his unwavering support during my final year of study, his patience, and motivation. The numerous meetings and e-mail communications throughout the course of the year have been greatly appreciated.
 
-Thank you to the team at the German Aerospace Center (DLR) for the free and open source SUMO traffic simulation suite and documentation used heavily in this dissertation.
+Thank you to the team at the German Aerospace Center (DLR) for the free and open source SUMO traffic simulation suite that served as the basis for this dissertation.
 
 And, of course, thank you to my family and everyone else (you know who you are!) for the support throughout my life, particularly during these last few years of education.
 
@@ -2491,6 +2491,233 @@ Whilst we won't delve into the implementation details since it will detract from
 
 \chapter{System Manual}
 
+Please refer to the project repository hosted on GitHub for the complete system manuals:\\https://github.com/abmu/comp29-project.
+\\ \\
+Below is an abridged copy of the \texttt{Agents} algorithms system manual found in the project repository. The remaining manuals have been omitted for the sake of brevity.
+
+\section{Algorithms}
+
+The algorithms are designed to control traffic lights at junctions to minimise vehicle waiting times and optimise traffic throughput. The system supports different network topologies (demo, crossing, extended).
+
+\subsection{Structure}
+
+\begin{verbatim}
+algorithms/
+|---- agent.py                   # Base agent classes and interfaces
+|---- comm_deep_q_learning.py    # Communicative Deep Q-Learning implementation
+|---- deep_q_learning.py         # Deep Q-Learning implementation
+|---- fixed_timer.py             # Fixed timer baseline algorithm
+|---- network.py                 # Multi-agent network coordination
+|---- q_learning.py              # Q-Learning implementation
+|---- run.py                     # Main execution script
+|---- utils.py                   # Utility functions
+|---- environment/               # Environment interfaces
+|    |---- __init__.py
+|    |---- action.py             # Action space definitions
+|    |---- communication.py      # Inter-agent communication
+|    |---- reward.py             # Reward function calculations
+|    |---- route.py              # Route management
+|    |---- settings.py           # SUMO network configurations
+|    |---- state.py              # State representation and compression
+|    |---- utils.py              # Environment utilities
+|---- results/                   # Result processing and analysis
+     |---- format.py             # Result formatting utilities
+     |---- results.py            # Result analysis and plotting
+\end{verbatim}
+
+\subsection{Environment}
+
+Three network topologies with traffic light system (TLS) identifiers:
+
+\begin{itemize}
+  \item \texttt{demo} -- Standard 4-way junction (CJ\_1)
+  \item \texttt{crossing} -- Zebra crossing junction (CJ\_2)
+  \item \texttt{extended} -- Three junctions (CJ\_1, CJ\_2, CJ\_9)
+\end{itemize}
+
+\subsubsection{State Representation}
+
+File: \texttt{environment/state.py}
+
+\noindent
+States are represented as tuples containing:
+\begin{itemize}
+    \item Current traffic light phase
+    \item Vehicle queue lengths
+    \item Pedestrian queue lengths
+\end{itemize}
+
+\noindent
+Compression Levels:
+\begin{itemize}
+    \item C0: No compression (full state)
+    \item C1: Moderate compression
+    \item C2: High compression
+\end{itemize}
+
+\subsubsection{Action Space}
+
+File: \texttt{environment/action.py}
+
+\noindent
+Available actions correspond to traffic light phases:
+\begin{itemize}
+    \item 0: North-South green
+    \item 3: East-West green
+    \item 6: Pedestrian crossing
+\end{itemize}
+
+\noindent
+Each action has associated minimum durations and phase switch sequences.
+
+\subsubsection{Reward Formula}
+
+File: \texttt{environment/reward.py}
+
+\noindent
+Reward combines multiple objectives:
+\begin{itemize}
+    \item Negative vehicle waiting times
+    \item Negative pedestrian waiting times
+    \item Vehicle throughput
+    \item Pedestrian throughput
+    \item Penalty (for jams/teleportations)
+\end{itemize}
+
+\subsubsection{Communication}
+
+File: \texttt{environment/communication.py}
+
+\noindent
+Implements StateBus for multi-agent communication:
+\begin{itemize}
+    \item Agents publish their current states
+    \item Agents read neighbor states
+\end{itemize}
+
+\subsubsection{Settings}
+
+File: \texttt{environment/settings.py}
+
+\noindent
+Manually define network topologies and detector configurations:
+\begin{itemize}
+    \item Traffic light IDs
+    \item Lane detector, induction loop, and crossing placements
+    \item Neighbour relationships
+\end{itemize}
+
+\noindent
+Simulation Parameters:
+\begin{itemize}
+    \item Simulation time: 3600 seconds
+    \item Step length: 1.0 second
+\end{itemize}
+
+\subsection{Agents}
+
+\subsubsection{1. Fixed Timer (FT)}
+
+File: \texttt{fixed\_timer.py}
+
+\noindent
+\\
+A baseline algorithm that cycles through predefined traffic light phases with fixed durations. No learning involved.
+\\
+
+\noindent
+Key Features:
+\begin{itemize}
+    \item Fixed action sequence: [0,0,0,3,3,3,6]
+    \item Collects statistics (cache stats) for reward formula weight calculation
+    \item Deterministic behavior
+\end{itemize}
+
+\subsubsection{2. Q-Learning (QL)}
+
+File: \texttt{q\_learning.py}
+
+\noindent
+\\
+Traditional tabular Q-Learning with epsilon-greedy exploration.
+\\
+
+\noindent
+Key Features:
+\begin{itemize}
+    \item Q-table with state-action pairs
+    \item Exponential epsilon decay
+\end{itemize}
+
+\noindent
+Hyperparameters:
+\begin{itemize}
+    \item Q-Learning rate ($\alpha$): 0.1
+    \item Discount factor ($\gamma$): 0.9
+    \item Epsilon decay: 1.5e-6
+\end{itemize}
+
+\subsubsection{3. Deep Q-Learning (DQN)}
+
+File: \texttt{deep\_q\_learning.py}
+
+\noindent
+\\
+Neural network-based Q-function approximation using experience replay.
+\\
+
+\noindent
+Key Features:
+\begin{itemize}
+    \item Neural network for approximation
+    \item Experience replay buffer (capacity: 16,384)
+    \item Target network for stable learning
+\end{itemize}
+
+\noindent
+Network Architecture:
+\begin{itemize}
+    \item ReLU activations and Adam optimiser
+    \item Input: State vector (size may vary)
+    \item Hidden layers: 64 $\to$ 64 neurons
+    \item Output: Q-values for each action
+\end{itemize}
+
+\noindent
+Hyperparameters:
+\begin{itemize}
+    \item Batch size: 64
+    \item Target update frequency: 72,000 steps
+    \item Learning rate: 0.0005
+    \item Discount factor: 0.9
+\end{itemize}
+
+\subsubsection{4. Communicative Deep Q-Learning (CDQN)}
+
+File: \texttt{comm\_deep\_q\_learning.py}
+
+\noindent
+\\
+Multi-agent extension of DQN with inter-agent communication.
+\\
+
+\noindent
+Key Features:
+\begin{itemize}
+    \item State sharing via a communication bus
+    \item Extended neural network architecture
+\end{itemize}
+
+\noindent
+Network Architecture:
+\begin{itemize}
+    \item Input: Local state + neighbor states
+    \item Hidden layers: 256 $\to$ 128 $\to$ 64 neurons
+\end{itemize}
+
 \chapter{Code Listing} \label{appendix_code_listing}
+
+Please refer to the project repository hosted on GitHub for the complete source code:\\https://github.com/abmu/comp29-project.
+\\ \\
 
 \end{document}

@@ -1,6 +1,6 @@
 # Algorithms
 
-This folder contains implementations of various reinforcement learning algorithms for controlling traffic lights in a simulated urban environment using SUMO. The project implements single-agent and multi-agent approaches for traffic light control optimization.
+This folder contains implementations of various reinforcement learning algorithms for controlling traffic lights in a traffic environment. An interface was developed for interacting with SUMO and variants of Q-learning were created for traffic light control optimisation.
 
 ## Overview
 
@@ -94,12 +94,12 @@ Implements StateBus for multi-agent communication:
 
 **File**: `environment/settings.py`
 
-Manually defines network topologies and detector configurations:
+Manually define network topologies and detector configurations:
 - Traffic light IDs
 - Lane detector, induction loop, and crossing placements
 - Neighbour relationships
 
-Simulation Parameters
+Simulation Parameters:
 - Simulation time: 3600 seconds
 - Step length: 1.0 second
 
@@ -162,7 +162,7 @@ Multi-agent extension of DQN with inter-agent communication.
 
 **Network Architecture**:
 - Input: Local state + neighbor states
-- Hidden layers: 256 → 128 → 64 neurons
+- Hidden layers: 256 -> 128 -> 64 neurons
 
 ## Results
 
@@ -237,7 +237,7 @@ Episode rewards are saved in `results/{NET_NAME}/{MODE}/`:
 ### Python Packages
 - `torch` - Deep learning framework for neural networks
 - `numpy` - Numerical computations
-- `matplotlib` - Plotting and visualization
+- `matplotlib` - Plotting and visualisation
 
 ### Installation
 
