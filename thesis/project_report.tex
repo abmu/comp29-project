@@ -1841,11 +1841,11 @@ The last sub-objective was to (c) assess the feasibility of our agents in realit
 
 \subsection{Feasibility of Intelligent Agents}
 
-To receive state, cameras could be installed which serve as lane area detectors. A computer vision algorithm could perhaps be run to count how many cars there are in an image. For pedestrians, infrared sensors could be added to detect and count their presence.
+Cameras could be installed which serve as lane area detectors. A computer vision algorithm could perhaps be run to count how many cars there are in an image. For pedestrians, infrared sensors could be added to detect and count their presence.
 
-In the case of Deep Q-Learning we run a neural network to determine which action to choose given a particular state. Given that the architecture is small, it won't require very powerful hardware to perform inferencing. In fact, the network could be reasonably run on a consumer grade CPU, though one would be needed per traffic light system.
+In the case of Deep Q-Learning we run a neural networks. Given the architecture is small, it won't require very powerful hardware for inferencing. In fact, it could be reasonably run on a consumer grade CPU, though one would be needed per traffic light system.
 
-We also require local communication channels between each adjacent agent to share state, perhaps underground copper cables. At a city scale this would likely be cheaper than current centralised systems that would require lengthy connections to a central computer.
+Local communication channels between adjacent agents are needed to share state -- perhaps underground copper cables. At a city scale this would likely be cheaper than current centralised systems that would otherwise require lengthy connections to a central computer.
 
 Based on our `back-of-the-envelope' analysis, intelligent agents are feasible in practice. Care must be taken to ensure the agent models installed onto traffic light controllers are trained extensively and sufficiently (in simulation), since a poor action policy may have terrible consequences.
 
@@ -1857,11 +1857,11 @@ Although we have successfully met \emph{all} objectives we initially set out to 
 
 Per the Cambridge Dictionary, a simulation is defined as ``a \emph{model} of a real activity''. As with all models, there are inconsistencies between it and the real deal, and our built environment is no exception.
 
-Firstly, based on observations it appears that cars and pedestrians are more risk prone compared to real life. Their behaviour shows little to no hesitation and they act with perfect reaction times. Human complexities that influence actions such as emotions (e.g.\ being annoyed) are abstracted away, making the entities more predictable or `deterministic'.
+Firstly, based on observations it appears that cars and pedestrians are more risk prone compared to real life. Their behaviour shows little to no hesitation, acting with perfect reaction times. Human emotions that influence actions (e.g.\ being annoyed) are abstracted away, making the entities more predictable or `deterministic'.
 
-Recalling the traffic parameters, \texttt{--fringe-factor} was set to Max, meaning vehicles are only inserted from the very edges, and edge was given an equal `weighting', meaning there is no notion of more commonly used roads. Therefore behaviour such as starting from a parked area on the side of a road is not accounted for, nor is the act of pedestrians going into or out of buildings.
+The traffic parameter \texttt{--fringe-factor} was set to Max meaning vehicles only spawn from the very edges, and each edge was given an equal weighting leading to no notion of more/less commonly used roads. Therefore behaviour such as starting from a parking area in the middle of the road is not accounted for, nor is the act of pedestrians going into or out of buildings.
 
-Lastly, the scope of the extended network is quite small. Ideally, the network would be scaled to be much, much larger than what it currently is to examine the cumulative effects of intelligent agents. Alas, this was not possible due to the resource constraints of the project, given the process of creating an environment replica is laborious. 
+Lastly, ideally, the network would be scaled to be much, much larger than what it currently is to examine the cumulative effects of intelligent agents. Alas, this was not possible due to the resource constraints of the project, given the process of creating an environment replica is laborious. 
 
 \subsection{Reinforcement Learning Algorithms} 
 
@@ -1869,7 +1869,7 @@ Our set of algorithms concluded with Communicative Deep Q-Learning in which a li
 
 We proposed an extension that would replace the current Deep Q-Network (DQN) with a Parameterised version to enable dynamic timings. This would hopefully allow for better use of the communication abilities. Increasing the state information to include the current phase duration would be desirable as well. 
 
-In addition to Parameterised DQN, there exists a breadth of adjacent Q-learning variants including Double DQN or Dueling DQN. There is even a class of algorithms that follow an entirely different methodology known as Actor-Critic. We won't delve into any of these, but it shows the field of reinforcement learning is very diverse.
+In addition to Parameterised DQN, there exists a breadth of adjacent Q-learning variants including Double DQN or Dueling DQN. There is even a class of algorithms that follow an entirely different methodology known as Actor-Critic.
 
 Reinforcement learning algorithms do not provide the same guarantees as fixed-time control. To give an example, our agents as they are may find themselves in a scenario where if there is dominant non-stop flow of traffic in one direction, and a single vehicle waiting to go in an orthogonal direction, the latter may be starved indefinitely. Therefore care should be taken (i.e.\ additional measures added) to avoid these scenarios.
 
@@ -2481,9 +2481,10 @@ Based on our results, it appears state compression provides significant benefit 
 Although not shown, a few interesting implementation specific features include:
 
 \begin{itemize}
-  \item The use of workers and queues (multiprocessing) to run distinct environments in parallel to reduce overall time taken for training and evaluation.
-  \item Comprehensive easy-to-use settings for switching between agents and modes, and a utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
-  \item A robust, hierarchical system design enabling straight-forward extensions, with documented code.
+  \item The use of workers and queues (multiprocessing) to run distinct environments in parallel reducing overall time taken for training.
+  \item Comprehensive easy-to-use settings for switching between agents and modes.
+  \item A utility suite including math, file handling, and statistics-related functions (logging, cleaning, and plotting).
+  \item A hierarchical system design enabling straight-forward extensions.
 \end{itemize}
 
 Whilst we won't delve into the implementation details since it will detract from the main goals of the dissertation, all code can be found in Appendix~\ref{appendix_code_listing} to be viewed at your discretion.
