@@ -23,6 +23,8 @@
 
 \usepackage{makecell}
 
+\usepackage{listings}
+
 \newtheorem{theorem}{THEOREM}
 \newtheorem{lemma}[theorem]{LEMMA}
 \newtheorem{corollary}[theorem]{COROLLARY}
@@ -2520,9 +2522,9 @@ algorithms/
 |    |---- settings.py           # SUMO network configurations
 |    |---- state.py              # State representation and compression
 |    |---- utils.py              # Environment utilities
-|---- results/                   # Result processing and analysis
-     |---- format.py             # Result formatting utilities
-     |---- results.py            # Result analysis and plotting
+|---- results/                   # Result processing
+     |---- format.py             # Export in LaTeX compatible format
+     |---- results.py            # Data plotting
 \end{verbatim}
 
 \subsection{Environment}
@@ -2532,7 +2534,7 @@ Three network topologies with traffic light system (TLS) identifiers:
 \begin{itemize}
   \item \texttt{demo} -- Standard 4-way junction (CJ\_1)
   \item \texttt{crossing} -- Zebra crossing junction (CJ\_2)
-  \item \texttt{extended} -- Three junctions (CJ\_1, CJ\_2, CJ\_9)
+  \item \texttt{extended} -- Adjacent junctions (CJ\_1, CJ\_2, CJ\_9)
 \end{itemize}
 
 \subsubsection{State Representation}
@@ -2715,9 +2717,116 @@ Network Architecture:
     \item Hidden layers: 256 $\to$ 128 $\to$ 64 neurons
 \end{itemize}
 
+\subsection{Results}
+
+Models are saved and loaded from \texttt{results/\{NET\_NAME\}/}.
+
+\noindent
+Episode rewards are saved in \texttt{results/\{NET\_NAME\}/\{MODE\}/}:
+\begin{itemize}
+    \item \texttt{\{algorithm\}.txt}: Episode reward lists
+    \item \texttt{time.txt}: Total execution time
+\end{itemize}
+
+\subsubsection{Analysis Tools}
+
+\noindent
+\texttt{results.py}:
+\begin{itemize}
+    \item Moving average smoothing
+    \item Outlier removal
+    \item Comparison plots
+\end{itemize}
+
+\noindent
+\texttt{format.py}:
+\begin{itemize}
+    \item Result formatting and export
+\end{itemize}
+
+\subsection{Example Usage}
+
+\noindent
+1. Configure the simulation in \texttt{run.py}:
+
+\begin{lstlisting}[language=Python]
+   NET_NAME = 'demo'   # Choose: 'demo', 'crossing', 'extended'
+   MODE = 'train'      # 'train' or 'eval'
+\end{lstlisting}
+
+\noindent
+2. Select the desired agents:
+
+\begin{lstlisting}[language=Python]
+   NETWORKS = {
+      'ft': Network(
+         agents=[
+               FixedTimer(
+                  tls_id='CJ_1',
+                  save_dir=RESULTS_DIR,
+                  stats_mode=False
+               )
+         ],
+         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+      ),
+      'ql_c2': Network(
+         agents=[
+               QLearning(
+                  tls_id='CJ_1',
+                  save_dir=RESULTS_DIR,
+                  train_mode=(MODE == 'train'),
+                  compression_level=2
+               )
+         ],
+         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+      ),
+   }
+\end{lstlisting}
+
+\noindent
+3. Execute the training/evaluation:
+
+\begin{lstlisting}[language=bash]
+   python run.py
+\end{lstlisting}
+
+\subsection{Dependencies}
+
+\subsubsection{Required Software}
+\begin{itemize}
+    \item SUMO (Simulation of Urban MObility)
+    \item Python 3.8+
+\end{itemize}
+
+\subsubsection{Python Packages}
+\begin{itemize}
+    \item \texttt{torch} -- Deep learning framework for neural networks
+    \item \texttt{numpy} -- Numerical computations
+    \item \texttt{matplotlib} -- Plotting and visualisation
+\end{itemize}
+
+\subsubsection{Installation}
+
+\noindent
+1. Install SUMO:
+
+\begin{lstlisting}[language=bash]
+   sudo apt-get install sumo
+\end{lstlisting}
+
+\noindent
+2. Install Python dependencies:
+
+\begin{lstlisting}[language=bash]
+   pip install torch numpy matplotlib
+\end{lstlisting}
+
 \chapter{Code Listing} \label{appendix_code_listing}
 
 Please refer to the project repository hosted on GitHub for the complete source code:\\https://github.com/abmu/comp29-project.
 \\ \\
+Below is a code listing of only the \texttt{Agents}...
+
+\section{Agents}
 
 \end{document}

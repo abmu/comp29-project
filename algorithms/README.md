@@ -33,9 +33,9 @@ algorithms/
 │   ├── settings.py            # SUMO network configurations
 │   ├── state.py               # State representation and compression
 │   └── utils.py               # Environment utilities
-└── results/                   # Result processing and analysis
-    ├── format.py              # Result formatting utilities
-    └── results.py             # Result analysis and plotting
+└── results/                   # Result processing
+    ├── format.py              # Export in LaTeX compatible format
+    └── results.py             # Data plotting
 ```
 
 ## Environment
@@ -44,7 +44,7 @@ Three network topologies with traffic light system (TLS) identifiers:
 
 - **demo**: Standard 4-way junction (CJ_1)
 - **crossing**: Zebra crossing junction (CJ_2)
-- **extended**: Three junctions (CJ_1, CJ_2, CJ_9)
+- **extended**: Adjacent junctions (CJ_1, CJ_2, CJ_9)
 
 ### State Representation
 
@@ -219,7 +219,6 @@ Episode rewards are saved in `results/{NET_NAME}/{MODE}/`:
          sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
       ),
    }
-
    ```
 
 3. **Execute the training/evaluation**:
