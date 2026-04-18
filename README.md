@@ -23,7 +23,7 @@ Please refer to the `README.md` files in the respective folders for more details
 1. **Simulation Setup**: Generate traffic routes using `simulation/scripts/batch.py`.
 2. **Training**: Train algorithms in `algorithms/run.py` on the generated traffic routes.
 3. **Evaluation**: Test trained models on new routes with different traffic densities.
-4. **Analysis**: Results stored in `algorithms/results/` and summarised in thesis.
+4. **Analysis**: Results stored in `algorithms/results/` and summarised in `thesis/project_report.pdf`.
 
 ### Example Setup
 
