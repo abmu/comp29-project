@@ -76,24 +76,19 @@ Supervisor: Prof. Graham Roberts}
 
 \chapter*{Acknowledgements}
 
-I would like to thank...
+I would like to extend my gratitude to my supervisor Prof. Graham Roberts for his unwavering support during my final year of study, his patience, and motivation. The numerous meetings and e-mail communications throughout the course of the year have been greatly, greatly appreciated.
+
+Thank you to the team at the German Aerospace Center (DLR) for the free and open source SUMO traffic simulation suite and documentation used heavily in this dissertation.
+
+And, of course, thank you to my family and everyone else (you know who you are!) for the support throughout my life, particularly during these last few years of education. 
 
 \begin{abstract}
 
-Summarise your report concisely.
+This project explores the use of intelligent agents for controlling traffic light systems in order to optimise vehicle and pedestrian throughput. Specifically, we explore a family of reinforcement learning algorithms which are decentralised in that each traffic light system runs its own algorithm; we seek to answer the question of whether these agents can provide a non-insignificant improvement upon existing systems.
 
-On the page immediately following the title page you must have a short abstract
-giving a descriptive summary of your project. The abstract should be no more than
-half a page and typically consists of three short paragraphs:
-• What the project is about, the primary aims and goals, and specific
-challenges.
-• How you carried out the project and what work it involved.
-• The results and achievements of the project.
-The abstract needs to be read quickly by various people to get an overview of what
-your project is about, so make sure it doesn’t get too long.
-You will also need to upload one separate copy of the abstract when you submit
-your project report, just a single page. This copy should include your name, your
-supervisor’s name, the project title and submission date
+We begin with a review of existing traffic light systems, motivating the need for agents. Following this, we see how detailed environments for conducting traffic experiments can be built using the SUMO traffic simulation suite, including synthesised traffic of varying conditions. Finally, we incrementally build three Q-learning-based algorithms from scratch, justifying each along the way.
+
+The final result reached is a system consisting of multiple agents capable of independently controlling traffic lights and sharing state between one another. The benefits over traditional traffic light systems are provisionally confirmed in numerous evaluation configurations, however there were also a number of caveats unveiled not to be ignored.
 
 \end{abstract}
 
@@ -1806,7 +1801,7 @@ After a comprehensive review of existing traffic light systems, we conclude that
 
 Three detailed simulated environments where traffic experiments could be conducted were created, respectively dubbed `demo', `crossing', and `extended'. Through the use of open source tools provided by the traffic simulation package SUMO, real world locations could be virtualised into abstracted computer representations with synthesised traffic of varying conditions.
 
-Finally, we incrementally built three algorithms de novo, justifying each along the way: Q-learning, Deep-Q learning, and Communicative Deep Q-learning. For our purposes, Q-learning was not sufficient for the state space was too large. Deep Q-learning introduced neural networks that serve as powerful approximation machines. We then built a novel Communicative Deep Q-learning algorithm, which allowed for the decentralised agents to confer local state.
+Finally, we incrementally built three algorithms de novo, justifying each along the way: Q-learning, Deep Q-learning, and Communicative Deep Q-learning. For our purposes, Q-learning was not sufficient for the state space was too large. Deep Q-learning introduced neural networks that serve as powerful approximation machines. We then built a novel Communicative Deep Q-learning algorithm, which allowed for the decentralised agents to confer local state.
 
 \section{Evaluation}
 
@@ -1874,7 +1869,7 @@ Reinforcement learning algorithms do not provide the same guarantees as fixed-ti
 
 After what has been a lengthy journey we reach the eucatastrophe. Close to $\sim50$ distinct training and evaluation results have been gathered\footnotemark\footnotetext{Excluding the \emph{many} that had to be repeated!} in which there has been a cumulative training time of over 100 hours, with some experiments even spanning multiple nights in a row.
 
-Hopefully this dissertation has given insight into how decentralised intelligent agents may be used to save time and take existing traffic light systems a step further -- regardless of how big that step may be.
+Hopefully this dissertation has given insight into how decentralised intelligent agents may be used to save time for both vehicles and pedestrians, taking existing traffic light systems a step further.
 
 \appendix
 
