@@ -40,11 +40,11 @@ algorithms/
 
 ## Environment
 
-Three network topologies with traffic light system (TLS) identifiers:
+Three network topologies with different traffic light system (TLS) identifiers:
 
 - **demo**: Standard 4-way junction (CJ_1)
 - **crossing**: Zebra crossing junction (CJ_2)
-- **extended**: Adjacent junctions (CJ_1, CJ_2, CJ_9)
+- **extended**: Multiple adjacent junctions (CJ_1, CJ_2, CJ_9)
 
 ### State Representation
 
