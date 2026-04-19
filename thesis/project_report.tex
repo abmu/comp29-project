@@ -24,6 +24,30 @@
 \usepackage{makecell}
 
 \usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{green!50!black},
+    commentstyle=\color{gray}\itshape,
+    numberstyle=\tiny\color{gray},
+    numbers=left,
+    numbersep=8pt,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=4,
+    breaklines=true,
+    breakatwhitespace=true,
+    frame=tb,
+    framexleftmargin=15pt,
+    rulecolor=\color{black!30},
+    captionpos=b,
+    xleftmargin=10pt,
+    xrightmargin=5pt
+}
+
 
 \newtheorem{theorem}{THEOREM}
 \newtheorem{lemma}[theorem]{LEMMA}
@@ -2493,7 +2517,7 @@ Whilst we won't delve into the implementation details since it will detract from
 
 \chapter{System Manual}
 
-Please refer to the project repository hosted on GitHub for the complete system manuals:\\https://github.com/abmu/comp29-project.
+Please refer to the project repository hosted on GitHub for the complete system manuals:\\\texttt{https://github.com/abmu/comp29-project}.
 \\ \\
 Below is an abridged copy of the \texttt{Agents} algorithms system manual found in the project repository. The remaining manuals have been omitted for the sake of brevity.
 
@@ -2529,12 +2553,12 @@ algorithms/
 
 \subsection{Environment}
 
-Three network topologies with traffic light system (TLS) identifiers:
+Three network topologies with different traffic light system (TLS) identifiers:
 
 \begin{itemize}
   \item \texttt{demo} -- Standard 4-way junction (CJ\_1)
   \item \texttt{crossing} -- Zebra crossing junction (CJ\_2)
-  \item \texttt{extended} -- Adjacent junctions (CJ\_1, CJ\_2, CJ\_9)
+  \item \texttt{extended} -- Multiple adjacent junctions (CJ\_1, CJ\_2, CJ\_9)
 \end{itemize}
 
 \subsubsection{State Representation}
@@ -2707,10 +2731,16 @@ Key Features:
 \end{itemize}
 
 \noindent
-Network Architecture:
+Extended Network Architecture:
 \begin{itemize}
     \item Input: Local state + neighbor states
     \item Hidden layers: 256 $\to$ 128 $\to$ 64 neurons
+\end{itemize}
+
+\noindent
+Hyperparameters:
+\begin{itemize}
+    \item Same as DQN
 \end{itemize}
 
 \subsection{Results}
@@ -2743,38 +2773,38 @@ Episode rewards are saved in \texttt{results/\{NET\_NAME\}/\{MODE\}/}:
 
 1. Configure the simulation in \texttt{run.py}:
 
-\begin{lstlisting}[language=Python]
-   NET_NAME = 'demo'   # Choose: 'demo', 'crossing', 'extended'
-   MODE = 'train'      # 'train' or 'eval'
+\begin{lstlisting}[style=pythonstyle]
+NET_NAME = 'demo'   # Choose: 'demo', 'crossing', 'extended'
+MODE = 'train'      # 'train' or 'eval'
 \end{lstlisting}
 
 \noindent
 2. Select the desired agents:
 
-\begin{lstlisting}[language=Python]
-   NETWORKS = {
-      'ft': Network(
-         agents=[
-               FixedTimer(
-                  tls_id='CJ_1',
-                  save_dir=RESULTS_DIR,
-                  stats_mode=False
-               )
-         ],
-         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
-      ),
-      'ql_c2': Network(
-         agents=[
-               QLearning(
-                  tls_id='CJ_1',
-                  save_dir=RESULTS_DIR,
-                  train_mode=(MODE == 'train'),
-                  compression_level=2
-               )
-         ],
-         sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
-      ),
-   }
+\begin{lstlisting}[style=pythonstyle]
+NETWORKS = {
+  'ft': Network(
+      agents=[
+            FixedTimer(
+              tls_id='CJ_1',
+              save_dir=RESULTS_DIR,
+              stats_mode=False
+            )
+      ],
+      sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+  ),
+  'ql_c2': Network(
+      agents=[
+            QLearning(
+              tls_id='CJ_1',
+              save_dir=RESULTS_DIR,
+              train_mode=(MODE == 'train'),
+              compression_level=2
+            )
+      ],
+      sumo_cfg=get_sumo_cfg(DIR_PREFIX, NET_NAME)
+  ),
+}
 \end{lstlisting}
 
 \noindent
@@ -2816,17 +2846,30 @@ Episode rewards are saved in \texttt{results/\{NET\_NAME\}/\{MODE\}/}:
 
 \chapter{Code Listing} \label{appendix_code_listing}
 
-Please refer to the project repository hosted on GitHub for the complete source code:\\https://github.com/abmu/comp29-project.
+Please refer to the project repository hosted on GitHub for the complete source code:\\\texttt{https://github.com/abmu/comp29-project}.
 \\ \\
-Below is a code listing of the \texttt{Agents} algorithms, which is only a subset of the entire code. Certain parts have been removed which may include whitespace, comments, documentation strings, or code that was not deemed essential for understanding.
+Below is a code listing of the \texttt{Agents} algorithms, which is only a subset of the entire code. Certain parts have been selectively removed including whitespace, comments, documentation strings, or code that was not deemed essential.
 
 \section{Algorithms}
+
+Below, taken from the root of the \texttt{algorithms/} directory, we have included the code for the:
+\begin{itemize}
+    \item Network Layer
+    \item Trainer
+    \item Agent Algorithms:
+    \begin{itemize}
+      \item Fixed-Time Control
+      \item Q-Learning
+      \item Deep Q-Learning
+      \item Communicative Deep Q-Learning
+  \end{itemize}
+\end{itemize}
 
 \subsection{Network Layer}
 
 File: \texttt{network.py}
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[style=pythonstyle]
 import os
 import sys
 import uuid
@@ -2843,12 +2886,10 @@ if LIBSUMO:
 from environment import TOTAL_STEPS, simulation_step
 from agent import Runner
 
-
 class Network:
     def __init__(self, agents: list[Runner], sumo_cfg: str) -> None:
         self.agents = agents
         self.sumo_cfg = sumo_cfg
-
 
     def run(self, epoch: int = 1) -> float:
         total_reward = 0
@@ -2895,7 +2936,7 @@ class Network:
 
 File: \texttt{run.py}
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[style=pythonstyle]
 import time
 import traceback
 from multiprocessing import Process, Queue, Barrier
@@ -2910,7 +2951,6 @@ from comm_deep_q_learning import CommunicativeDeepQLearning
 from network import Network
 from utils import file_dump
 
-
 DIR_PREFIX = '../simulation/'
 
 NET_NAME = 'extended'
@@ -2918,9 +2958,7 @@ MODE = 'eval'
 
 RESULTS_DIR = f'results/{NET_NAME}/'
 
-
-def _make_comm_network(tls_ids: list[str], save_dir: str, train_mode: bool, \
-                       compression_level: int, sumo_cfg: list[str]) -> Network:
+def _make_comm_network(tls_ids: list[str], save_dir: str, train_mode: bool, compression_level: int, sumo_cfg: list[str]) -> Network:
     state_bus = StateBus()
 
     agents = [
@@ -2936,7 +2974,6 @@ def _make_comm_network(tls_ids: list[str], save_dir: str, train_mode: bool, \
 
     return Network(agents=agents, sumo_cfg=sumo_cfg)
 
-
 NETWORKS = {
     'cdqn_c0': _make_comm_network(
         tls_ids=[
@@ -2951,9 +2988,7 @@ NETWORKS = {
     ),
 }
 
-
-def network_worker(net: str, task_q: Queue, result_q: Queue, \
-                   barrier: Barrier) -> None:
+def network_worker(net: str, task_q: Queue, result_q: Queue, barrier: Barrier) -> None:
     network = NETWORKS[net]
 
     while True:
@@ -2969,7 +3004,6 @@ def network_worker(net: str, task_q: Queue, result_q: Queue, \
             result_q.put((net, episode, None))
 
         barrier.wait()
-
 
 if __name__ == "__main__":
     episode_rewards = {a: [] for a in NETWORKS}
@@ -3029,11 +3063,10 @@ if __name__ == "__main__":
 
 File: \texttt{agent.py}
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[style=pythonstyle]
 from abc import ABC, abstractmethod
 from environment import Controller, compute_stats, get_cache
 from utils import file_dump
-
 
 class Runner(ABC):
     def __init__(self, tls_id: str, save_dir: str) -> None:
@@ -3042,30 +3075,24 @@ class Runner(ABC):
         self.conn = None
         self.controller = None
 
-
     def start_episode(self, conn, offset: float = 0) -> None:
         self.conn = conn
         self.controller = Controller(conn, self.tls_id, offset=offset)
 
-
     @abstractmethod
     def start_step(self) -> None:
         pass
-
     
     def run(self) -> float:
         return self.controller.run()
     
-
     @abstractmethod
     def finish_step(self, done: bool) -> None:
         pass
 
-    
     @abstractmethod
     def finish_episode(self) -> None:
         pass
-
 
 class DefaultRunner(Runner):
     def __init__(self, tls_id: str, save_dir: str, stats_mode: bool) -> None:
@@ -3073,36 +3100,29 @@ class DefaultRunner(Runner):
         self.stats_mode = stats_mode
         self.stats_name = f'cache_stats__{tls_id}.txt'
 
-
     def start_episode(self, conn, offset: float = 0) -> None:
         self.conn = conn
-        self.controller = Controller(conn, self.tls_id, \
-                                     self.stats_mode, offset=offset)
-
+        self.controller = Controller(conn, self.tls_id, self.stats_mode, offset=offset)
 
     def start_step(self):
         pass
 
-
     def finish_step(self, done: bool):
         pass
 
-    
     def finish_episode(self):
         if self.stats_mode:
-            file_dump(self.save_dir + self.stats_name, \
-                      str(compute_stats(get_cache())))
+            file_dump(self.save_dir + self.stats_name, str(compute_stats(get_cache())))
 \end{lstlisting}
 
-\subsection{Fixed Timer}
+\subsection{Fixed-Time Control}
 
 File: \texttt{fixed\_timer.py}
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[style=pythonstyle]
 from agent import Runner
 from environment import Controller, compute_stats, get_cache
 from utils import file_dump
-
 
 class FixedTimer(Runner):
     def __init__(self, tls_id: str, save_dir: str, stats_mode: bool) -> None:
@@ -3113,36 +3133,30 @@ class FixedTimer(Runner):
 
         self.action_loop = [0,0,0,3,3,3,6]
 
-
     def start_episode(self, conn, offset: float = 0):
         self.conn = conn
-        self.controller = Controller(conn, self.tls_id, self.stats_mode, \
-                                     offset=offset)
+        self.controller = Controller(conn, self.tls_id, self.stats_mode, offset=offset)
         self.curr_idx = 0
         
-
     def start_step(self) -> None:
         if self.controller.finished():
             action = self.action_loop[self.curr_idx]
             self.controller.set_action(action)
             self.curr_idx = (self.curr_idx + 1) % len(self.action_loop)
 
-
     def finish_step(self, done: bool):
         pass
 
-    
     def finish_episode(self):
         if self.stats_mode:
-            file_dump(self.save_dir + self.stats_name, \
-                      str(compute_stats(get_cache())))
+            file_dump(self.save_dir + self.stats_name, str(compute_stats(get_cache())))
 \end{lstlisting}
 
 \subsection{Q-Learning}
 
 File: \texttt{q\_learning.py}
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[style=pythonstyle]
 import math
 import numpy as np
 import random
@@ -3150,10 +3164,8 @@ from agent import Runner
 from environment import ACTION_SPACE, get_state
 from utils import file_dump, file_eval
 
-
 class QLearning(Runner):
-    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, \
-                 compression_level: int = 2, seed: int = 0) -> None:
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compression_level: int = 2, seed: int = 0) -> None:
         super().__init__(tls_id, save_dir)
         self.controller = None
         self.train_mode = train_mode
@@ -3175,16 +3187,12 @@ class QLearning(Runner):
             self.t = float('inf')
             self.epsilon_min = 0
 
-
     def get_q(self, state: tuple[int, ...], action: int) -> float:
         return self.q.get((state, action), 0.0)
 
-
     @property
     def epsilon(self) -> float:
-        return self.epsilon_min + (self.epsilon_max - self.epsilon_min) \
-                                   * math.exp(-self.epsilon_decay * self.t)
-
+        return self.epsilon_min + (self.epsilon_max - self.epsilon_min) * math.exp(-self.epsilon_decay * self.t)
 
     def choose_action(self, state: tuple[int, ...]) -> int:
         actions = sorted(ACTION_SPACE.keys())
@@ -3194,16 +3202,11 @@ class QLearning(Runner):
             qs = [self.get_q(state, a) for a in actions]
             return actions[np.argmax(qs)]
 
-
-    def update_q(self, state: tuple[int, ...], action: int, \
-                 reward: float, next_state: tuple[int, ...], \
-                 duration: float) -> None:
+    def update_q(self, state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: float) -> None:
         actions = sorted(ACTION_SPACE.keys())
         old_q = self.get_q(state, action)
         best_next = max(self.get_q(next_state, a) for a in actions)
-        self.q[(state, action)] = old_q + self.alpha * (reward + \
-                                  (self.gamma ** duration) * best_next - old_q)
-
+        self.q[(state, action)] = old_q + self.alpha * (reward + (self.gamma ** duration) * best_next - old_q)
 
     def start_step(self):
         if self.controller.finished():
@@ -3212,23 +3215,18 @@ class QLearning(Runner):
             self.reward = 0
             self.controller.set_action(self.action)
 
-
     def run(self) -> float:
         self.t += 1
         reward = self.controller.run()
         self.reward += reward
         return reward
 
-
     def finish_step(self, done: bool):
-        if self.train_mode and self.controller.finished() and \
-           self.controller.initialised:
+        if self.train_mode and self.controller.finished() and self.controller.initialised:
             next_state = get_state(self.conn, self.tls_id, self.compression_level)
             duration = self.controller.get_total_duration()
-            self.update_q(self.state, self.action, self.reward, \
-                          next_state, duration)
+            self.update_q(self.state, self.action, self.reward, next_state, duration)
 
-    
     def finish_episode(self):
         if self.train_mode:
             file_dump(self.save_dir + self.table_name, str(self.q))
@@ -3238,7 +3236,7 @@ class QLearning(Runner):
 
 File: \texttt{deep\_q\_learning.py}
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[style=pythonstyle]
 import math
 import torch
 import torch.nn as nn
@@ -3248,7 +3246,6 @@ import random
 from collections import deque
 from agent import Runner
 from environment import ACTION_SPACE, get_state, get_blank_state
-
 
 class DQN(nn.Module):
     def __init__(self, state_dim: int, action_dim: int, hidden_dim: int = 64):
@@ -3268,16 +3265,12 @@ class ReplayBuffer:
     def __init__(self, capacity: int = 16384):
         self.buffer = deque(maxlen=capacity)
 
-    def push(self, state: tuple[int, ...], action: int, reward: float, \
-             next_state: tuple[int, ...], duration: float, done: bool) -> None:
+    def push(self, state: tuple[int, ...], action: int, reward: float, next_state: tuple[int, ...], duration: float, done: bool) -> None:
         self.buffer.append((state, action, reward, next_state, duration, done))
 
-    def sample(self, batch_size: int, rng: random.Random = random) -> \
-               tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, \
-                     np.ndarray, np.ndarray]:
+    def sample(self, batch_size: int, rng: random.Random = random) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         batch = rng.sample(self.buffer, batch_size)
-        states, actions, rewards, \
-        next_states, durations, dones = map(np.array, zip(*batch))
+        states, actions, rewards, next_states, durations, dones = map(np.array, zip(*batch))
         return states, actions, rewards, next_states, durations, dones
     
     def __len__(self) -> int:
@@ -3285,8 +3278,7 @@ class ReplayBuffer:
 
 
 class DeepQLearning(Runner):
-    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, \
-                 compression_level: int = 0, seed: int = 0) -> None:
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, compression_level: int = 0, seed: int = 0) -> None:
         super().__init__(tls_id, save_dir)
         self.controller = None
         self.train_mode = train_mode
@@ -3298,18 +3290,16 @@ class DeepQLearning(Runner):
 
         self.learning_rate = 0.0005
         self.batch_size = 64
-        self.target_update = 72000  # steps
-        self.gamma = 0.9  # discount factor
-        self.epsilon_decay = 1.5e-6 #1.5e-7
+        self.target_update = 72000
+        self.gamma = 0.9
+        self.epsilon_decay = 1.5e-6
         self.epsilon_max = 1.0
         self.epsilon_min = 0.01
 
         self.initialised = False
 
-
     def get_state_size(self) -> int:
         return len(get_blank_state(self.tls_id, self.compression_level))
-
 
     def initialise(self) -> None:
         state_size = self.get_state_size()
@@ -3320,8 +3310,7 @@ class DeepQLearning(Runner):
 
         self.policy_net = DQN(state_size, action_size).to(device)
         if not self.train_mode:
-            self.policy_net.load_state_dict(torch.load(self.save_dir + \
-                            self.model_name, map_location=self.device))
+            self.policy_net.load_state_dict(torch.load(self.save_dir + self.model_name, map_location=self.device))
             self.policy_net.eval()
             self.t = float('inf')
             self.epsilon_min = 0
@@ -3329,19 +3318,15 @@ class DeepQLearning(Runner):
         self.target_net = DQN(state_size, action_size).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
-        self.optimiser = optim.Adam(self.policy_net.parameters(), \
-                                    lr=self.learning_rate)
+        self.optimiser = optim.Adam(self.policy_net.parameters(), lr=self.learning_rate)
         self.memory = ReplayBuffer()
 
         self.initialised = True
     
-
     @property
     def epsilon(self) -> float:
-        return self.epsilon_min + (self.epsilon_max - self.epsilon_min) * \
-               math.exp(-self.epsilon_decay * self.t)
+        return self.epsilon_min + (self.epsilon_max - self.epsilon_min) * math.exp(-self.epsilon_decay * self.t)
     
-
     def choose_action(self, state: tuple[int, ...]) -> int:
         actions = sorted(ACTION_SPACE.keys())
         if self.train_mode and self.rng.random() < self.epsilon:
@@ -3353,41 +3338,34 @@ class DeepQLearning(Runner):
             nn_index = torch.argmax(q_values).item()
             return actions[nn_index]
 
-
     def train_policy_net(self) -> None:
         if len(self.memory) < self.batch_size:
             return
 
-        states, actions, rewards, next_states, durations, dones = \
-                      self.memory.sample(self.batch_size, self.rng)
+        states, actions, rewards, next_states, durations, dones = self.memory.sample(self.batch_size, self.rng)
 
         states = torch.FloatTensor(states).to(self.device)
         actions = torch.LongTensor(actions).unsqueeze(1).to(self.device)
         rewards = torch.FloatTensor(rewards).unsqueeze(1).to(self.device)
         next_states = torch.FloatTensor(next_states).to(self.device)
         durations = torch.FloatTensor(durations).unsqueeze(1).to(self.device)
-        dones = torch.FloatTensor(dones.astype(np.float32)).unsqueeze(1).\
-                                                            to(self.device)
+        dones = torch.FloatTensor(dones.astype(np.float32)).unsqueeze(1).to(self.device)
 
         q_values = self.policy_net(states).gather(1, actions)
 
         with torch.no_grad():
-            next_q_values = self.target_net(next_states).max(dim=1)[0].\
-                                                         unsqueeze(1)
-            target = rewards + (1 - dones) * (self.gamma ** durations) * \
-                     next_q_values
+            next_q_values = self.target_net(next_states).max(dim=1)[0].unsqueeze(1)
+            target = rewards + (1 - dones) * (self.gamma ** durations) * next_q_values
 
         loss = nn.MSELoss()(q_values, target)
         self.optimiser.zero_grad()
         loss.backward()
         self.optimiser.step()
 
-
     def start_episode(self, conn, offset) -> None:
         super().start_episode(conn, offset)
         if not self.initialised:
             self.initialise()
-
 
     def start_step(self):
         if self.controller.finished():
@@ -3395,7 +3373,6 @@ class DeepQLearning(Runner):
             self.action = self.choose_action(self.state)
             self.reward = 0
             self.controller.set_action(self.action)
-
 
     def run(self) -> float:
         self.t += 1
@@ -3405,43 +3382,35 @@ class DeepQLearning(Runner):
         self.reward += reward
         return reward
 
-
     def finish_step(self, done: bool):
-        if self.train_mode and self.controller.finished() and \
-           self.controller.initialised:
+        if self.train_mode and self.controller.finished() and self.controller.initialised:
             next_state = get_state(self.conn, self.tls_id, self.compression_level)
             duration = self.controller.get_total_duration()
 
-            action_id_to_idx = {aid: i for i, aid in \
-                                enumerate(sorted(ACTION_SPACE.keys()))}
+            action_id_to_idx = {aid: i for i, aid in enumerate(sorted(ACTION_SPACE.keys()))}
             action_idx = action_id_to_idx[self.action]
-            self.memory.push(self.state, action_idx, self.reward, \
-                             next_state, duration, done)
+            self.memory.push(self.state, action_idx, self.reward, next_state, duration, done)
 
             self.train_policy_net()
 
-    
     def finish_episode(self):
         if self.train_mode:
-            torch.save(self.policy_net.state_dict(), \
-                       self.save_dir + self.model_name)
+            torch.save(self.policy_net.state_dict(), self.save_dir + self.model_name)
 \end{lstlisting}
 
 \subsection{Communicative Deep Q-Learning}
 
 File: \texttt{comm\_deep\_q\_learning.py}
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[style=pythonstyle]
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from environment import StateBus, ACTION_SPACE, get_state, get_blank_state
 from deep_q_learning import ReplayBuffer, DeepQLearning
 
-
 class CDQN(nn.Module):
-    def __init__(self, state_dim: int, neighbour_dim: int, action_dim: int, \
-                 hidden_dim: int = 256):
+    def __init__(self, state_dim: int, neighbour_dim: int, action_dim: int, hidden_dim: int = 256):
         super().__init__()
         input_dim = state_dim + neighbour_dim
         self.model = nn.Sequential(
@@ -3449,8 +3418,7 @@ class CDQN(nn.Module):
             nn.ReLU(),
             nn.Linear(hidden_dim, max(int(hidden_dim/2), action_dim)),
             nn.ReLU(),
-            nn.Linear(max(int(hidden_dim/2), action_dim), \
-                      max(int(hidden_dim/4), action_dim)),
+            nn.Linear(max(int(hidden_dim/2), action_dim), max(int(hidden_dim/4), action_dim)),
             nn.ReLU(),
             nn.Linear(max(int(hidden_dim/4), action_dim), action_dim)
         )
@@ -3458,20 +3426,14 @@ class CDQN(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.model(x)
 
-
 class CommunicativeDeepQLearning(DeepQLearning):
-    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, \
-                 state_bus: StateBus, compression_level: int = 0, \
-                 seed: int = 0) -> None:
+    def __init__(self, tls_id: str, save_dir: str, train_mode: bool, state_bus: StateBus, compression_level: int = 0, seed: int = 0) -> None:
         super().__init__(tls_id, save_dir, train_mode, compression_level, seed)
         self.state_bus = state_bus
-        self.state_bus.publish(self.tls_id, get_blank_state(self.tls_id, \
-                                                  self.compression_level))
+        self.state_bus.publish(self.tls_id, get_blank_state(self.tls_id, self.compression_level))
         self.model_name = 'comm_' + self.model_name
 
-
     def get_state_size(self) -> tuple[int, int]:
-        # return the input state size for the policy net
         state = len(get_blank_state(self.tls_id, self.compression_level))
 
         others = self.state_bus.read(self.tls_id)
@@ -3481,34 +3443,27 @@ class CommunicativeDeepQLearning(DeepQLearning):
 
         return state, neighbour
 
-
     def initialise(self) -> None:
-        # initialise neural networks
         state_size, neighbour_size = self.get_state_size()
         action_size = len(ACTION_SPACE)
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.device = device
 
-        self.policy_net = CDQN(state_size, neighbour_size, action_size).\
-                                                             to(device)
+        self.policy_net = CDQN(state_size, neighbour_size, action_size).to(device)
         if not self.train_mode:
-            self.policy_net.load_state_dict(torch.load(self.save_dir + \
-                             self.model_name, map_location=self.device))
+            self.policy_net.load_state_dict(torch.load(self.save_dir + self.model_name, map_location=self.device))
             self.policy_net.eval()
             self.t = float('inf')
             self.epsilon_min = 0
 
-        self.target_net = CDQN(state_size, neighbour_size, action_size).\
-                                                             to(device)
+        self.target_net = CDQN(state_size, neighbour_size, action_size).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
-        self.optimiser = optim.Adam(self.policy_net.parameters(), \
-                                    lr=self.learning_rate)
+        self.optimiser = optim.Adam(self.policy_net.parameters(), lr=self.learning_rate)
         self.memory = ReplayBuffer()
 
         self.initialised = True
-
 
     def get_comm_state(self) -> tuple[int, ...]:
         state = get_state(self.conn, self.tls_id, self.compression_level)
@@ -3519,14 +3474,12 @@ class CommunicativeDeepQLearning(DeepQLearning):
 
         return tuple(comm_state)
 
-
     def start_step(self):
         if self.controller.finished():
             self.state = self.get_comm_state()
             self.action = self.choose_action(self.state)
             self.reward = 0
             self.controller.set_action(self.action)
-
 
     def run(self) -> float:
         self.t += 1
@@ -3540,18 +3493,14 @@ class CommunicativeDeepQLearning(DeepQLearning):
         self.reward += reward
         return reward
 
-
     def finish_step(self, done: bool):
-        if self.train_mode and self.controller.finished() and \
-           self.controller.initialised:
+        if self.train_mode and self.controller.finished() and self.controller.initialised:
             next_state = self.get_comm_state()
             duration = self.controller.get_total_duration()
 
-            action_id_to_idx = {aid: i for i, aid in \
-                                enumerate(ACTION_SPACE.keys())}
+            action_id_to_idx = {aid: i for i, aid in enumerate(ACTION_SPACE.keys())}
             action_idx = action_id_to_idx[self.action]
-            self.memory.push(self.state, action_idx, self.reward, \
-                             next_state, duration, done)
+            self.memory.push(self.state, action_idx, self.reward, next_state, duration, done)
 
             self.train_policy_net()
 \end{lstlisting}
